@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>slide</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<style>
+			* {
+				outline: 0;
+			}
+			/*header*/
+			header {
+				background-color: #f2f2f2;
+				border-bottom: 1px solid #f2f2f2;
+			}
+			.header {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+			}
+			.header a {
+				display: block;
+				background-size: 30px;
+				background-repeat: no-repeat;
+				background-position: center;
+				padding: 20px;
+			}
+			.title {
+				line-height: 40px;
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				flex: 1;
+				text-align: center;
+			}
+			.header .menu {
+				background-image: url("../image/menu.png");
+			}
+			/*header*/
+		</style>
+	</head>
+	<body>
+		<header>
+			<div class="index header ">
+				<a class="menu" tapmode="" onclick="sliding()"></a>
+				<div class="title" >
+					答题
+				</div>
+				<a></a>
+			</div>
+		</header>
+		<script type="text/javascript" src="../script/api.js"></script>
+		<script>
+			function sliding() {
+				api.openSlidPane({
+					type : 'left'
+				});
+			}
+
+			apiready = function() {
+				$api.fixIos7Bar($api.dom('header'));
+				api.addEventListener({
+					name : 'keyback'
+				}, function(ret, err) {
+					api.closeWidget();
+				});
+			};
+		</script>
+	</body>
+</html>
