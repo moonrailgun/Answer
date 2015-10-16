@@ -27,7 +27,7 @@
         }
 
         .liActive {
-            background-color: #3ABA63;
+            background-color: #919191;
         }
 
         li a {
@@ -37,18 +37,17 @@
             background-repeat: no-repeat;
             background-position: left;
         }
-
     </style>
 </head>
 <body>
 <nav>
     <ul>
-        <li tapmode="liActive" onclick=""><a class="home active">首页</a></li>
-        <li tapmode="liActive" onclick=""><a class="my">频道1</a></li>
-        <li class="arrowD " tapmode="liActive" onclick=""><a class="nearby">频道2</a></li>
-        <li class="arrowD" tapmode="liActive" onclick=""><a class="domestic">频道3</a></li>
-        <li tapmode="liActive" onclick=""><a class="maldives">频道4</a></li>
-        <li tapmode="liActive" onclick=""><a class="Europe">频道5</a></li>
+        <li tapmode="liActive" onclick="OpenWin('home.html')"><a class="home active">首页</a></li>
+        <li tapmode="liActive" onclick="OpenWin('answer.html')"><a class="answer">答题</a></li>
+        <li tapmode="liActive" onclick="OpenWin('rank.html')"><a class="rank">排名</a></li>
+        <li tapmode="liActive" onclick="OpenWin('more.html')"><a class="more">更多</a></li>
+        <li tapmode="liActive" onclick="OpenWin('setting.html')"><a class="setting">设置</a></li>
+        <li tapmode="liActive" onclick="OpenWin('about.html')"><a class="about">关于</a></li>
     </ul>
 </nav>
 </body>
