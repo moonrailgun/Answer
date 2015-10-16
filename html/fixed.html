@@ -53,11 +53,21 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script>
-apiready = function () {
-    api.setStatusBarStyle({
-        style: 'dark'
-    });
-    $api.fixIos7Bar($api.dom('nav'));
-};
+    apiready = function () {
+        api.setStatusBarStyle({
+            style: 'dark'
+        });
+        $api.fixIos7Bar($api.dom('nav'));
+    };
+
+    function OpenWin(url) {
+        api.closeSlidPane();
+
+        var $script = "ChangeWin('" + url + "');";
+        api.execScript({
+            name: "slide",
+            script: $script
+        });
+    }
 </script>
 </html>

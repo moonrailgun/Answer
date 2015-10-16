@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<div class="aui-content" style="padding-top: 220px;">
+    <ul class="aui-grid-nine">
+        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(0)">
+            <span class="aui-iconfont aui-icon-edit aui-text-primary"></span>
+
+            <p>答题</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(1)">
+            <span class="aui-iconfont aui-icon-emoji aui-text-danger"></span>
+
+            <p>排名</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(2)">
+            <span class="aui-iconfont aui-icon-favor aui-text-warning"></span>
+
+            <p>关于</p>
+        </li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var UIScrollPicture = api.require('UIScrollPicture');
+        var paths = ['http://img4.imgtn.bdimg.com/it/u=808969546,4152021286&fm=15&gp=0.jpg', 'http://img5.imgtn.bdimg.com/it/u=884651739,3331686782&fm=15&gp=0.jpg', 'http://f.hiphotos.baidu.com/image/pic/item/4e4a20a4462309f7bdca9423710e0cf3d7cad65d.jpg', 'http://img0.imgtn.bdimg.com/it/u=3286531680,2115541636&fm=21&gp=0.jpg', 'http://img3.imgtn.bdimg.com/it/u=1649512850,2255006275&fm=21&gp=0.jpg'];
+        var captions = ['title1', 'title2', 'title3', 'title4', 'title5'];
+        UIScrollPicture.open({
+            rect: {
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: 200
+            },
+            data: {
+                paths: paths,
+                captions: captions
+            },
+            styles: {
+                caption: {
+                    height: 35,
+                    color: '#E0FFFF',
+                    size: 13,
+                    bgColor: '#696969',
+                    position: 'bottom'
+                },
+                indicator: {
+                    align: 'center',
+                    color: '#FFFFFF',
+                    activeColor: '#DA70D6'
+                }
+            },
+            placeholderImg: 'widget://res/slide1.jpg',
+            contentMode: 'scaleToFill',
+            interval: 3,
+            loop: true,
+            fixedOn: 'home.html',
+            fixed: false
+        }, function (ret, err) {
+            if (ret.status) {
+                if (ret.eventType == 'click') {
+                    //点击图片的操作
+                    alert(ret.index);
+                }
+            }
+        });
+    };
+
+    function Mod(index) {
+        var $script;
+        switch (index) {
+            case 0:
+            {
+                $script = "ChangeWin('answer.html')";
+                break;
+            }
+            case 1:
+            {
+                $script = "ChangeWin('rank.html')";
+                break;
+            }
+            case 2:
+            {
+                $script = "ChangeWin('about.html')";
+                break;
+            }
+        }
+        api.execScript({
+            name: "slide",
+            script: $script
+        });
+    }
+</script>
+</html>
