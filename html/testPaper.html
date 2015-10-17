@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        #main {
+            padding: 0;
+            width: 100%;
+            height: auto;
+        }
+
+        div.aui-input-row {
+            width: 100%;
+        }
+
+        div.aui-input-row span {
+            display: inline-block;
+            line-height: 42px;
+            vertical-align: middle;
+        }
+        div.nextQ{
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="CloseWin()"></span>
+    </a>
+
+    <div class="aui-title">顶部导航栏</div>
+</header>
+<div id="main">
+    <div class="question-content">
+        问题问题问题问题问题问题问题问题问题问题问题问题问题问题
+        问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问
+        题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题
+        问题问题问题问题问题问题问题问题
+    </div>
+    <form class="question-options aui-form">
+        <div class="aui-input-row" onclick="SelectItem(this)">
+            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1" value="答案1"/>
+            <span>答案1</span>
+        </div>
+        <div class="aui-input-row" onclick="SelectItem(this)">
+            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1" value="答案2"/>
+            <span>答案2</span>
+        </div>
+        <div class="aui-input-row" onclick="SelectItem(this)">
+            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1" value="答案3"/>
+            <span>答案3</span>
+        </div>
+        <div class="aui-input-row" onclick="SelectItem(this)">
+            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1" value="答案4"/>
+            <span>答案4</span>
+        </div>
+    </form>
+</div>
+<div class="nextQ">
+    <button class="aui-btn aui-btn-primary">  下一题  </button>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
+        var testName = api.pageParam.testName;
+        $api.html($api.dom('.aui-title'), testName);
+        var testQuestion = api.pageParam.testQuestion;
+        $main = $api.dom('#main');
+        $api.html($main, JSON.stringify(testQuestion));
+    };
+
+    function CloseWin() {
+        api.closeWin();
+    }
+
+    function SelectItem(obj) {
+        $api.dom(obj, 'input').checked = true;
+    }
+</script>
+</html>
