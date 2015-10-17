@@ -16,9 +16,18 @@
             height: auto;
             overflow: hidden;
         }
-        div.question-content img{
+
+        div.question-content img {
             width: 100%;
             height: auto;
+        }
+        div.question{
+            display: none;
+        }
+        div.question.actived {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         div.aui-input-row {
@@ -30,7 +39,8 @@
             line-height: 42px;
             vertical-align: middle;
         }
-        div.nextQ{
+
+        div.nextQ {
             position: fixed;
             bottom: 10px;
             right: 10px;
@@ -46,81 +56,96 @@
     <div class="aui-title">顶部导航栏</div>
 </header>
 <div id="main">
-    <div class="question-content">
-        问题问题问题问题问题问题问题问题问题问题问题问题问题问题
-        问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问
-        题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题问题
-        问题问题问题问题问题问题问题问题
-    </div>
-    <form class="question-options aui-form">
-        <div class="aui-input-row" onclick="SelectItem(this)">
-            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1"/>
-            <span>答案1</span>
-        </div>
-        <div class="aui-input-row" onclick="SelectItem(this)">
-            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1"/>
-            <span>答案2</span>
-        </div>
-        <div class="aui-input-row" onclick="SelectItem(this)">
-            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1"/>
-            <span>答案3</span>
-        </div>
-        <div class="aui-input-row" onclick="SelectItem(this)">
-            <input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="1"/>
-            <span>答案4</span>
-        </div>
-    </form>
 </div>
 <div class="nextQ">
-    <button class="aui-btn aui-btn-primary">  下一题  </button>
+    <button class="aui-btn aui-btn-primary" onclick="NextQuestion()"> 下一题</button>
 </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    var testName = "";
+    var rightNum = 0;//正确答案数
+    var currentNum = 1;//当前题目号
+    var currentSelectedRight = false;//当前选择的是否正确
+    var testQuestion;//所有问题
     apiready = function () {
+        testName = api.pageParam.testName;
+        testQuestion = api.pageParam.testQuestion;
         $api.fixIos7Bar($api.dom('header'));
-        var testName = api.pageParam.testName;
-        $api.html($api.dom('.aui-title'), testName);
-
-        var testQuestion = api.pageParam.testQuestion;
         $main = $api.dom('#main');
 
-        for(var i=0;i<testQuestion.length;i++){
+        for (var i = 0; i < testQuestion.length; i++) {
             var data = testQuestion[i];
             var content = data.questionContent;
             var trueanswer = parseInt(data.trueanswer);
-            var answer = [data.answer1,data.answer2,data.answer3,data.answer4];
+            var answer = [data.answer1, data.answer2, data.answer3, data.answer4];
 
-            var html ='';
-            html += '<div class="question-content">';
-            if(data.pic){
-                html += '<img src="'+data.pic.url+'"></img>'
+            var html = '';
+            if(i == 0){
+                html += '<div class="question actived">';
+            }else{
+                html += '<div class="question">';
             }
-            html += content+'</div>';
+            html += '<div class="question-content">';
+            //添加图片
+            if (data.pic) {
+                html += '<img src="' + data.pic.url + '"></img>'
+            }
+            html += (i + 1).toString() + '.' + content + '</div>';
             html += '<form class="question-options aui-form">';
-            for(var j=0;j<4;j++){
-                if(j+1 == trueanswer){
+            for (var j = 0; j < 4; j++) {
+                if (j + 1 == trueanswer) {
                     html += '<div class="aui-input-row" onclick="SelectItem(this,true)">';
                 }
-                else{
+                else {
                     html += '<div class="aui-input-row" onclick="SelectItem(this)">';
                 }
-                html +='<input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="'+i+'"/>';
-                html += '<span>'+ answer[j] +'</span>';
-                html+='</div>'
+                html += '<input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="' + i + '"/>';
+                html += '<span>' + answer[j] + '</span>';
+                html += '</div>'
             }
             html += '</form>';
+            html += '</div></div>';
 
             $api.append($main, html);
         }
+
+        $api.html($api.dom('.aui-title'), testName+ '('+currentNum+'/'+testQuestion.length+')');
     };
 
     function CloseWin() {
         api.closeWin();
     }
 
-    function SelectItem(obj) {
+    function SelectItem(obj,res) {
         $api.dom(obj, 'input').checked = true;
+        if(res){
+            //答案正确
+            currentSelectedRight = true;
+        }
+        else{
+            currentSelectedRight = false;
+        }
+    }
+
+    //切换到下一题
+    function NextQuestion(){
+        //切换到下一题
+        if(currentSelectedRight){
+            rightNum++;//如果当前正确则正确数+1
+            currentSelectedRight = false;
+        }
+        //当前题目数加1
+        currentNum++;
+        $api.html($api.dom('.aui-title'), testName+ '('+currentNum+'/'+testQuestion.length+')');
+
+        $contents = $api.domAll('div.question');
+        alert($contents.length);
+        for(var i=0;i<testQuestion.length;i++){
+            $api.removeCls($contents[i], 'actived');
+        }
+
+        $api.addCls($contents[currentNum - 1], 'actived')
     }
 </script>
 </html>
