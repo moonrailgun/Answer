@@ -36,7 +36,6 @@
                     qid: queryId
                 }, function (ret, err) {
                     if (ret) {
-                        //alert(JSON.stringify(ret));
                         $questionType = $api.dom('#questionType');
                         $api.html($questionType, "");//清空提示
                         for (var i = 0; i < ret.length; i++) {
@@ -57,7 +56,6 @@
             column: 'questions'
         }, function (ret, err) {
             if (ret) {
-                alert(JSON.stringify(ret));
                 api.openWin({
                     name: 'testPaper',
                     url: './testPaper.html',
