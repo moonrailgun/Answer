@@ -21,9 +21,11 @@
             width: 100%;
             height: auto;
         }
-        div.question{
+
+        div.question {
             display: none;
         }
+
         div.question.actived {
             width: 100%;
             height: auto;
@@ -40,40 +42,22 @@
             vertical-align: middle;
         }
 
-        div.nextQ {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-        }
     </style>
 </head>
 <body>
-<header class="aui-bar aui-bar-nav aui-bar-info">
-    <a class="aui-pull-left">
-        <span class="aui-iconfont aui-icon-left" onclick="CloseWin()"></span>
-    </a>
-
-    <div class="aui-title">顶部导航栏</div>
-</header>
 <div id="main">
-</div>
-<div class="nextQ">
-    <button class="aui-btn aui-btn-primary" onclick="NextQuestion()"> 下一题</button>
 </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-    var testName = "";
     var rightNum = 0;//正确答案数
-    var currentNum = 1;//当前题目号
+    var currentNum = 1;//当前题目编号
     var currentSelectedRight = false;//当前选择的是否正确
-    var testQuestion;//所有问题
+    var testQuestion;//所有问题数组
     apiready = function () {
-        testName = api.pageParam.testName;
         testQuestion = api.pageParam.testQuestion;
-        $api.fixIos7Bar($api.dom('header'));
-        $main = $api.dom('#main');
 
+        //循环添加题目
         for (var i = 0; i < testQuestion.length; i++) {
             var data = testQuestion[i];
             var content = data.questionContent;
@@ -81,9 +65,9 @@
             var answer = [data.answer1, data.answer2, data.answer3, data.answer4];
 
             var html = '';
-            if(i == 0){
+            if (i == 0) {
                 html += '<div class="question actived">';
-            }else{
+            } else {
                 html += '<div class="question">';
             }
             html += '<div class="question-content">';
@@ -107,45 +91,43 @@
             html += '</form>';
             html += '</div></div>';
 
-            $api.append($main, html);
+            $api.append($api.dom('#main'), html);
         }
-
-        $api.html($api.dom('.aui-title'), testName+ '('+currentNum+'/'+testQuestion.length+')');
     };
 
-    function CloseWin() {
-        api.closeWin();
-    }
-
-    function SelectItem(obj,res) {
-        $api.dom(obj, 'input').checked = true;
-        if(res){
-            //答案正确
-            currentSelectedRight = true;
+    function SelectItem(obj, res) {
+        $api.dom(obj, 'input').checked = true;//显示切换
+        if (res) {
+            currentSelectedRight = true;//答案正确
         }
-        else{
+        else {
             currentSelectedRight = false;
         }
     }
 
     //切换到下一题
-    function NextQuestion(){
-        //切换到下一题
-        if(currentSelectedRight){
+    function NextQuestion() {
+        //判断是否正确
+        if (currentSelectedRight) {
             rightNum++;//如果当前正确则正确数+1
             currentSelectedRight = false;
         }
-        //当前题目数加1
-        currentNum++;
-        $api.html($api.dom('.aui-title'), testName+ '('+currentNum+'/'+testQuestion.length+')');
-
+        currentNum++;//当前题目编号自增
+        //切换到下一题
         $contents = $api.domAll('div.question');
-        alert($contents.length);
-        for(var i=0;i<testQuestion.length;i++){
+        for (var i = 0; i < testQuestion.length; i++) {
             $api.removeCls($contents[i], 'actived');
         }
+        $api.addCls($contents[currentNum - 1], 'actived');
+    }
 
-        $api.addCls($contents[currentNum - 1], 'actived')
+    //todo 交卷
+    function SubmitQuestion() {
+        alert("交卷");
+    }
+    //todo 切换上一题
+    function PrevQuestion() {
+        alert("上一题");
     }
 </script>
 </html>

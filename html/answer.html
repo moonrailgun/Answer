@@ -8,6 +8,12 @@
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        div.questionType{
+
+        }
+    </style>
 </head>
 <body>
 <h1>请选择题目类型</h1>
@@ -38,10 +44,12 @@
                     if (ret) {
                         $questionType = $api.dom('#questionType');
                         $api.html($questionType, "");//清空提示
+                        $api.append($questionType,'<ul class="aui-grid-nine">');
                         for (var i = 0; i < ret.length; i++) {
                             var data = ret[i];
-                            $api.append($questionType, "<a onclick=\"GenerateTest('" + data.id + "','" + data.name + "')\"> " + data.name + "</a>");
+                            $api.append($questionType, "<li class='aui-col-xs-4 aui-text-center questionType' onclick=\"GenerateTest('" + data.id + "','" + data.name + "')\"><a> " + data.name + "</a></li>");
                         }
+                        $api.append($questionType,'</ul>');
                     }
                 });
             }
@@ -57,8 +65,8 @@
         }, function (ret, err) {
             if (ret) {
                 api.openWin({
-                    name: 'testPaper',
-                    url: './testPaper.html',
+                    name: 'testPaperFrame',
+                    url: './testPaperFrame.html',
                     pageParam: {
                         testName: typeName,
                         testQuestion: ret

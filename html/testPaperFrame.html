@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        footer{
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 54px;
+            background-color: #ebe8e7;
+        }
+        footer div{
+            display: inline-block;
+        }
+        div.prevQ {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+
+        div.nextQ {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        div.submit {
+            position: absolute;
+            bottom: 10px;
+            width: 40%;
+            margin: 0 30%;
+        }
+
+        div.submit button {
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="CloseWin()"></span>
+    </a>
+
+    <div class="aui-title">顶部导航栏</div>
+</header>
+<footer>
+    <div class="prevQ">
+        <button class="aui-btn aui-btn-default" onclick="PrevQuestion()">上一题</button>
+    </div>
+    <div class="submit">
+        <button class="aui-btn aui-btn-danger" onclick="SubmitQuestion()"> 交卷</button>
+    </div>
+    <div class="nextQ">
+        <button class="aui-btn aui-btn-primary" onclick="NextQuestion()"> 下一题</button>
+    </div>
+</footer>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var testName = "";//测试名
+    var testQuestion;//所有问题数组
+    var currentNum = 1;//当前题目号
+    apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
+        testName = api.pageParam.testName;
+        testQuestion = api.pageParam.testQuestion;
+        var pageParam = api.pageParam;
+
+        //更新
+        UpdateTitle();
+        UpdateFooter();
+
+        //显示内容
+        var headerHeight =$api.offset($api.dom('header')).h;
+        api.openFrame({
+            name: 'testPaper',
+            url: './testPaper.html',
+            rect:{
+                x:0,
+                y:headerHeight,
+                w:api.winWidth,
+                h:api.winHeight - headerHeight - 54
+            },
+            pageParam: pageParam,
+            bounces: true,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled:true,
+            hScrollBarEnabled:true
+        });
+    };
+
+    //修改标题
+    function UpdateTitle(){
+        $api.html($api.dom('.aui-title'), testName + '(' + currentNum + '/' + testQuestion.length + ')');
+    }
+    //更新footer显示
+    function UpdateFooter(){
+        //上一题按钮显示切换
+        if(currentNum == 1){
+            $api.css($api.dom('div.prevQ'), 'display:none');
+        }else{
+            $api.css($api.dom('div.prevQ'), 'display:inline-block');
+        }
+
+        //下一题按钮显示切换
+        if (currentNum == testQuestion.length) {
+            $api.css($api.dom('div.nextQ'), 'display:none');
+        } else {
+            $api.css($api.dom('div.nextQ'), 'display:inline-block');
+        }
+    }
+
+    //函数传递
+    function PrevQuestion(){
+        UpdateTitle();
+        UpdateFooter();
+
+        api.execScript({
+            frameName: 'testPaper',
+            script: 'PrevQuestion()'
+        });
+    }
+    function SubmitQuestion(){
+        api.execScript({
+            frameName: 'testPaper',
+            script: 'SubmitQuestion()'
+        });
+    }
+    function NextQuestion(){
+        //当前题目数加1
+        currentNum++;
+        UpdateTitle();
+        UpdateFooter();
+
+        api.execScript({
+            frameName: 'testPaper',
+            script: 'NextQuestion()'
+        });
+    }
+
+    function CloseWin() {
+        api.closeFrame({
+            name: 'testPaper'
+        });
+        api.closeWin();
+    }
+</script>
+</html>
