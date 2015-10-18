@@ -54,6 +54,8 @@
     var currentNum = 1;//当前题目编号
     var currentSelectedRight = false;//当前选择的是否正确
     var testQuestion;//所有问题数组
+    var answerList = [];//答案列表
+    var rightList = [];//正确答案数组
     apiready = function () {
         testQuestion = api.pageParam.testQuestion;
 
@@ -78,12 +80,7 @@
             html += (i + 1).toString() + '.' + content + '</div>';
             html += '<form class="question-options aui-form">';
             for (var j = 0; j < 4; j++) {
-                if (j + 1 == trueanswer) {
-                    html += '<div class="aui-input-row" onclick="SelectItem(this,true)">';
-                }
-                else {
-                    html += '<div class="aui-input-row" onclick="SelectItem(this)">';
-                }
+                html += '<div class="aui-input-row" onclick="SelectItem(this, ' + (j + 1).toString() + ')">';
                 html += '<input class="aui-pull-left aui-radio aui-radio-info" type="radio" name="' + i + '"/>';
                 html += '<span>' + answer[j] + '</span>';
                 html += '</div>'
@@ -91,43 +88,52 @@
             html += '</form>';
             html += '</div></div>';
 
+            rightList[i] = trueanswer;//添加到正确列表
             $api.append($api.dom('#main'), html);
         }
     };
 
-    function SelectItem(obj, res) {
+    function SelectItem(obj, index) {
         $api.dom(obj, 'input').checked = true;//显示切换
-        if (res) {
-            currentSelectedRight = true;//答案正确
-        }
-        else {
-            currentSelectedRight = false;
-        }
+        answerList[currentNum - 1] = index;//添加到答案列表
     }
 
     //切换到下一题
     function NextQuestion() {
-        //判断是否正确
-        if (currentSelectedRight) {
-            rightNum++;//如果当前正确则正确数+1
-            currentSelectedRight = false;
-        }
         currentNum++;//当前题目编号自增
-        //切换到下一题
+        SwitchToCurrentQuestionContent();//切换到下一题
+    }
+    //切换到上一题
+    function PrevQuestion() {
+        currentNum--;//当前题目编号自减
+        SwitchToCurrentQuestionContent();//切换到上一题
+    }
+
+    //todo 交卷批卷
+    function SubmitQuestion() {
+        var res = [];
+        var score = 0;
+        for (var i = 0; i < rightList.length; i++) {
+            if (rightList[i] == answerList[i]) {
+                score++;
+            }
+
+            var ret = {
+                right: rightList[i],
+                select: answerList[i]
+            };
+            res.push(ret);
+        }
+        alert("得分:" + score + "\n总分:" + rightList.length + "\n结果:\n" + JSON.stringify(res));
+    }
+
+    //切换到当前题号的问题
+    function SwitchToCurrentQuestionContent() {
         $contents = $api.domAll('div.question');
         for (var i = 0; i < testQuestion.length; i++) {
             $api.removeCls($contents[i], 'actived');
         }
         $api.addCls($contents[currentNum - 1], 'actived');
-    }
-
-    //todo 交卷
-    function SubmitQuestion() {
-        alert("交卷");
-    }
-    //todo 切换上一题
-    function PrevQuestion() {
-        alert("上一题");
     }
 </script>
 </html>
