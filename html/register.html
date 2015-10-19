@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        #register,#warp {
+            margin: 10px auto;
+        }
+        .aui-btn-block{
+            width: 95%;
+        }
+        .mrg-login-form {
+            border: solid 1px #ddd;
+            border-radius: 5px;
+            width: 95%;
+            margin: auto;
+            overflow: hidden;
+            background-color: #ddd;
+        }
+
+        .mrg-login-form input {
+            border: none;
+            margin: 0 0 1px 0;
+            font-size: 18px;
+            padding: 15px !important;
+            border-radius: 0px;
+            height: auto;
+        }
+
+        .mrg-login-form input:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-btn aui-btn-info aui-pull-left" onclick="Back()"> <span class="aui-iconfont aui-icon-left"></span></a>
+
+    <div class="aui-title">注册</div>
+</header>
+<div id="warp">
+    <form class="mrg-login-form">
+        <input id="data00" type="text" class="aui-input-clear aui-input" placeholder="用户名">
+        <input id="data01" type="text" class="aui-input-clear aui-input" placeholder="昵称">
+        <input id="data02" type="password" class="aui-input-clear mui-input" placeholder="录入密码">
+        <input id="data03" type="password" class="aui-input-clear mui-input" placeholder="再次输入密码">
+        <!--<input id="data04" type="text" class="aui-input-clear aui-input" placeholder="电子邮箱">-->
+    </form>
+    <button id="register" class="aui-btn-block aui-btn-primary" onclick="Register()">注册</button>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var $header = $api.dom('header');
+        $api.fixIos7Bar($header);
+    };
+    function Back() {
+        api.closeWin();
+    }
+    function Register(){
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '先喝杯茶...'
+        });
+        var $username =$api.val($api.dom('#data00')) ;
+        var $nickname = $api.val($api.dom('#data01'));
+        var $password = $api.val($api.dom('#data02'));
+        if($username == ""||$nickname == ""||$password == ""){
+            api.hideProgress();
+            api.alert({msg: '(╯‵□′)╯︵┻━┻不要留空啊混蛋'});
+            return;
+        }
+
+        if ($password != $api.val($api.dom('#data03'))) {
+            api.hideProgress();
+            api.alert({msg: '(╯‵□′)╯︵┻━┻两次密码不一样啊混蛋'});
+        } else {
+            var user = api.require('user');
+            user.register({
+                username: $username,
+                password: $password
+            }, function (ret, err) {
+                if (!ret) {
+                    api.hideProgress();
+                    api.alert({msg: '注册失败，可能是您的用户名已被占用'});
+                } else {
+                    var user = api.require('user');
+                    user.login({
+                        username: $username,
+                        password: $password
+                    }, function(ret, err) {
+                        if (!ret) {
+                            api.hideProgress();
+                            api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
+                        } else {
+                            var userId = ret.userId;
+                            var model = api.require('model');
+                            model.updateById({
+                                class: 'user',
+                                id: userId,
+                                value: {
+                                    nickname: $nickname
+                                }
+                            }, function (ret, err) {
+                                if (!ret) {
+                                    api.hideProgress();
+                                    api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' +JSON.stringify(err)});
+                                } else {
+                                    api.hideProgress();
+                                    api.alert({msg: "o(*≧▽≦)ツ\n恭喜！注册成功"});
+                                    Back();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+</script>
+</html>
