@@ -11,16 +11,18 @@
             background-color: #dfdede !important;
         }
 
-        #account{
+        #account {
             display: -webkit-box;
             height: 60px;
             border-bottom: solid 1px #d4d3d3;
         }
-        #username{
+
+        #username {
             line-height: 60px;
             -webkit-box-flex: 1;
             padding-left: 10px;
         }
+
         #head-img {
             height: 60px;
             width: 60px;
@@ -95,6 +97,17 @@
             name: "slide",
             script: $script
         });
+    }
+
+    function UpdateAvatar() {
+        $img = $api.dom('#head-img img');
+        var avatar = $api.getStorage('avatar');
+        if (avatar) {
+            $api.attr($img, 'src', avatar);
+        }
+        else {
+            $api.attr($img, 'src', '../image/default_head.jpg');
+        }
     }
 </script>
 </html>

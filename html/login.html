@@ -68,7 +68,7 @@
             <div class="arrow"></div>
             <form class="login-form">
                 <input id="username" name="username" type="text" placeholder="用户名" />
-                <input id="password" name="password" type="text" placeholder="密码" />
+                <input id="password" name="password" type="password" placeholder="密码" />
             </form>
             <button class="aui-btn-block aui-btn-primary" onclick="OnLogin()">登陆</button>
             <button class="aui-btn-block aui-btn-negative" onclick="OnRegister()">注册</button>
@@ -80,5 +80,62 @@
 <script type="text/javascript">
     apiready = function () {
     };
+
+    function OnLogin(){
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '先喝杯茶...'
+        });
+        var $username = $api.val($api.dom('#username'));
+        var $password = $api.val($api.dom('#password'));
+        var user = api.require('user');
+        user.login({
+            username: $username,
+            password: $password
+        }, function(ret, err) {
+            if (ret) {
+                api.hideProgress();
+
+                var model = api.require('model');
+                model.findById({
+                    class: 'user',
+                    id: ret.userId
+                },function(ret, err){
+                    if(ret){
+                        $api.setStorage("avatar",ret.avatar.url);
+                        //更新头像
+                        api.execScript({
+                            name: "fixed",
+                            script: "UpdateAvatar()"
+                        });
+                    }
+                });
+
+                api.alert({msg:'登陆成功，回到首页'});
+                //页面跳转
+                api.execScript({
+                    name: "slide",
+                    script: "ChangeWin('home.html')"
+                });
+            }
+            else
+            {
+                api.hideProgress();
+                api.alert({msg:'登陆失败，请确认您的账号密码正确'});
+            }
+        });
+    }
+
+    function OnRegister(){
+        api.openWin({
+            name:'register',
+            url:'./register.html'
+        });
+    }
+    function OnForgotPassword(){
+        api.alert({msg:"你记性真差"});
+    }
 </script>
 </html>
