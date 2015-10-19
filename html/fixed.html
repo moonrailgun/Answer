@@ -11,6 +11,29 @@
             background-color: #dfdede !important;
         }
 
+        #account{
+            display: -webkit-box;
+            height: 60px;
+            border-bottom: solid 1px #d4d3d3;
+        }
+        #username{
+            line-height: 60px;
+            -webkit-box-flex: 1;
+            padding-left: 10px;
+        }
+        #head-img {
+            height: 60px;
+            width: 60px;
+            margin-left: 10px;
+        }
+
+        #head-img img {
+            height: 40px;
+            width: 40px;
+            border-radius: 20px;
+            margin: 10px;
+        }
+
         li {
             position: relative;
             padding: 3px 10px;
@@ -41,6 +64,10 @@
 </head>
 <body>
 <nav>
+    <div id="account" tapmode="liActive" onclick="OpenWin('login.html')">
+        <div id="head-img"><img src="../image/default_head.jpg"/></div>
+        <div id="username">游客</div>
+    </div>
     <ul>
         <li tapmode="liActive" onclick="OpenWin('home.html')"><a class="home active">首页</a></li>
         <li tapmode="liActive" onclick="OpenWin('answer.html')"><a class="answer">答题</a></li>
