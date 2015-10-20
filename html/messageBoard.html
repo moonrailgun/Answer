@@ -53,6 +53,7 @@
             padding: 10px;
             color: #666666;
             font-size: 14px;
+            max-width: 160px;
         }
     </style>
 </head>
@@ -100,14 +101,15 @@
         if(msg.img){
             img = msg.img;
         }
+
         message += '<div class="message">';
         message += '<div class="chatPortrait"><img src="' + img + '"/></div>';
         message += '<div class="messageInfoLeft">';
-        message += '<div class="author">' + msg.userId + '</div>';
+        message += '<div class="author">' + msg.author + '</div>';
         message += '<div class="content">' + msg.content + '</div>';
         message += '<div class="comment"><span class="aui-iconfont aui-icon-commentfill"></span>';
         message += '<span class="comment-num">' + msg.comment.length + '</span></div></div>';
-        message += '<div class="messageInfoRight"><div class="time">' + msg.time + '</div></div>';
+        message += '<div class="messageInfoRight"><div class="time">' + ParseTime(msg.time) + '</div></div>';
 
         if (isToTop) {
             $api.prepend($main, message);
@@ -148,28 +150,30 @@
                         //循环添加数据
                         for (var i = 0; i < ret.length; i++) {
                             var data = ret[i];
-                            //获取评论
-                            var relation = api.require('relation');
-                            relation.findAll({
-                                class: 'MessageBoard',
-                                id: data.id,
-                                column: 'comment'
-                            }, (function (ret, err) {
-                                if (!ret) {
-                                    api.alert({msg: '出现错误:' + JSON.stringify(err)});
-                                }
-                                else{
-                                    var msg = new Message();
-                                    msg.userId = data.userId.id;//data可能需要闭包缓存
-                                    msg.author = data.userId.nickname;
-                                    msg.img = data.userId.avatar.url;
-                                    msg.content = data.content;
-                                    msg.comment = ret;
-                                    msg.time = data.createdAt;
+                            //闭包获取评论
+                            (function(data){
+                                var relation = api.require('relation');
+                                relation.findAll({
+                                    class: 'MessageBoard',
+                                    id: data.id,
+                                    column: 'comment'
+                                }, function (res,err) {
+                                    if (!res) {
+                                        api.alert({msg: '出现错误:' + JSON.stringify(err)});
+                                    }
+                                    else{
+                                        var msg = new Message();
+                                        msg.userId = data.userId.id;
+                                        msg.author = data.userId.nickname;
+                                        msg.img = data.userId.avatar.url;
+                                        msg.content = data.content;
+                                        msg.comment = res;
+                                        msg.time = data.createdAt;
 
-                                    AddMessage(msg);//添加一条数据
-                                }
-                            })(data));
+                                        AddMessage(msg);//添加一条数据
+                                    }
+                                })
+                            })(data);
                         }
                     }
                 });
@@ -181,5 +185,38 @@
     function ClearMessage() {
         $api.html($api.dom('#main'), '');
     }
+
+    /**
+     * 解析时间
+     * @return {string}
+     */
+    function ParseTime(time){
+        var date = Date.parse(time);
+        var now = Date.now();
+        var diff = now - date;
+        var diffSec = parseInt(diff/1000);//间隔秒数
+        var diffMin = parseInt(diffSec/60);//间隔分钟
+        var diffHour = parseInt(diffMin/60);//间隔小时
+        var diffDay = parseInt(diffHour/24);//间隔天数
+
+        var retStr = '';
+        if(diffDay > 0){
+            retStr = diffDay+" 天前";
+        }else if(diffHour > 0){
+            retStr = diffHour + " 小时前";
+        }
+        else if(diffMin > 0){
+            retStr = diffMin + " 分钟前";
+        }
+        else if(diffSec > 0){
+            retStr = diffSec + " 秒前";
+        }
+        else{
+            retStr = '(╯‵□′)╯︵┻━┻';
+        }
+        return retStr;
+    }
+
+    console.log(ParseTime('2015-10-20T08:55:47.889Z'));
 </script>
 </html>
