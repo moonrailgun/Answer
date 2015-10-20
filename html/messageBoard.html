@@ -82,5 +82,104 @@
         //获取最近20条数据
         QueryMessage();
     };
+
+    //消息类
+    var Message = function () {
+        this.userId = '';
+        this.author = '';
+        this.img = '';
+        this.content = '';
+        this.comment = [];
+        this.time = '';
+    };
+    //添加一条留言
+    function AddMessage(msg, isToTop) {
+        var message = '',
+                img = '../image/default_head.jpg';
+        $main = $api.dom('#main');
+        if(msg.img){
+            img = msg.img;
+        }
+        message += '<div class="message">';
+        message += '<div class="chatPortrait"><img src="' + img + '"/></div>';
+        message += '<div class="messageInfoLeft">';
+        message += '<div class="author">' + msg.userId + '</div>';
+        message += '<div class="content">' + msg.content + '</div>';
+        message += '<div class="comment"><span class="aui-iconfont aui-icon-commentfill"></span>';
+        message += '<span class="comment-num">' + msg.comment.length + '</span></div></div>';
+        message += '<div class="messageInfoRight"><div class="time">' + msg.time + '</div></div>';
+
+        if (isToTop) {
+            $api.prepend($main, message);
+        }
+        else {
+            $api.append($main, message);
+        }
+    }
+    //查询留言
+    function QueryMessage() {
+        var query = api.require("query");
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+
+                query.whereEqual({
+                    qid: queryId,
+                    column: "",
+                    value: ""
+                });
+                query.limit({
+                    qid: queryId,
+                    value: "20"
+                });
+                query.include({
+                    qid: queryId,
+                    column: 'userId'
+                });
+                var model = api.require("model");
+                model.findAll({
+                    class: "MessageBoard",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (!ret) {
+                        api.alert({msg: '出现错误:' + JSON.stringify(err)});
+                    }
+                    else {
+                        //循环添加数据
+                        for (var i = 0; i < ret.length; i++) {
+                            var data = ret[i];
+                            //获取评论
+                            var relation = api.require('relation');
+                            relation.findAll({
+                                class: 'MessageBoard',
+                                id: data.id,
+                                column: 'comment'
+                            }, (function (ret, err) {
+                                if (!ret) {
+                                    api.alert({msg: '出现错误:' + JSON.stringify(err)});
+                                }
+                                else{
+                                    var msg = new Message();
+                                    msg.userId = data.userId.id;//data可能需要闭包缓存
+                                    msg.author = data.userId.nickname;
+                                    msg.img = data.userId.avatar.url;
+                                    msg.content = data.content;
+                                    msg.comment = ret;
+                                    msg.time = data.createdAt;
+
+                                    AddMessage(msg);//添加一条数据
+                                }
+                            })(data));
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    //清空数据
+    function ClearMessage() {
+        $api.html($api.dom('#main'), '');
+    }
 </script>
 </html>
