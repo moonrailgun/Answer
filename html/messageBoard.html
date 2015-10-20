@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        div.message {
+            display: -webkit-box;
+            width: 100%;
+            height: auto;
+            border-bottom: solid 1px #ddd;
+        }
+
+        div.message:last-child {
+            border: 0;
+        }
+
+        div.message .chatPortrait img {
+            width: 40px;
+            height: 40px;
+            margin: 10px;
+            border-radius: 20px;
+        }
+
+        .messageInfoLeft {
+            display: -webkit-box;
+            padding: 10px;
+            -webkit-box-flex: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .messageInfoLeft .author {
+            height: 16px;
+            line-height: 16px;
+            font-size: 16px;
+            color: #15b5e9;
+        }
+
+        .messageInfoLeft .content {
+            color: #666;
+        }
+
+        .messageInfoLeft .comment {
+            color: #15b5e9;
+        }
+
+        .messageInfoRight {
+            padding: 10px;
+            color: #666666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        //配置下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            bgColor: '#fff',
+            textColor: '#d4d3d3',
+            textDown: '再拉。再拉就给你刷新哦...',
+            textUp: '不要拉了啦。人家给你刷新就是了',
+            showTime: true
+        }, function (ret, err) {
+            //从服务器加载数据，完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+            //刷新页面
+            ClearMessage();//清空数据
+            QueryMessage();//重新获取数据
+            api.refreshHeaderLoadDone();
+        });
+
+        //获取最近20条数据
+        QueryMessage();
+    };
+</script>
+</html>
