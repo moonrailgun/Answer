@@ -43,15 +43,12 @@
         .header .menu {
             background-image: url("../image/menu.png");
         }
-
-        /*header*/
     </style>
 </head>
 <body>
 <header>
     <div class="index header ">
         <a class="menu" onclick="sliding()"></a>
-
         <div class="title">Answer</div>
         <a></a>
     </div>
@@ -63,7 +60,7 @@
             type: 'left'
         });
     }
-
+    //变更窗口
     function ChangeWin(url) {
         var $header = $api.dom("header");
         api.openFrame({
@@ -80,8 +77,13 @@
             hScrollBarEnabled: false
         });
     }
-
-
+    //打开新窗口
+    function OpenWin(url){
+        api.openWin({
+            name: url,
+            url: './'+url
+        });
+    }
 
     apiready = function () {
         $api.fixIos7Bar($api.dom('header'));
