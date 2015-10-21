@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">写留言</div>
+</header>
+<div id="main">
+    <form class="messageArea">
+        <div class="userInfo"></div>
+        <textarea onchange="UpdateTextNum()" onkeyup="UpdateTextNum()" class="message" maxlength="100" rows="6"
+                  title="说点什么吧"></textarea>
+
+        <div id="textNum" class="aui-pull-right">字数：<span>0/100</span></div>
+        <button class="aui-btn aui-btn-block aui-btn-danger" onclick="SendMessage();">发表</button>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var $header = $api.dom('header');
+        $api.fixIos7Bar($header);
+
+        //todo 在输入页上显示头像
+//        var userInfo = $api.getStorage('userInfo');
+//        if(userInfo != null){
+//
+//        }
+    };
+
+    function UpdateTextNum() {
+        var $textArea = $api.dom('.messageArea textarea');
+        var textNum = $api.val($textArea).length;
+        $api.text($api.dom('#textNum span'), textNum + "/100");
+    }
+
+    //todo
+    //发送留言
+    function SendMessage() {
+        var userInfo = $api.getStorage('userInfo');
+        if (!userInfo) {
+            api.alert({msg: "发表失败，可能是您没有登录"});
+        } else {
+            var content = $api.val($api.dom('.messageArea textarea'));
+            if (content == "") {
+                alert('请输入留言');
+                return;
+            }
+            var userId = userInfo.userId;
+            //写入数据
+            var model = api.require("model");
+            model.insert({
+                class: 'MessageBoard',
+                value: {
+                    content: content,
+                    userId: userId
+                }
+            }, function (ret, err) {
+                if (ret) {
+                    api.alert({msg: '发表成功!'});
+                    api.closeWin();
+                }
+                else {
+                    api.alert({msg: '出现错误' + JSON.stringify(err)});
+                }
+            });
+        }
+    }
+</script>
+</html>
