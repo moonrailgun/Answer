@@ -27,29 +27,22 @@
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
                 var queryId = ret.qid;
-                query.whereEqual({
-                    qid: queryId,
-                    column: "",
-                    value: ""
-                });
-                query.limit({
-                    qid: queryId,
-                    value: "20"
-                });
                 var model = api.require('model');
                 model.findAll({
                     class: "QuestionType",
                     qid: queryId
                 }, function (ret, err) {
-                    if (ret) {
+                    if (!ret) {
+                        api.alert('获取题型失败，请重试...');
+                    } else {
                         $questionType = $api.dom('#questionType');
                         $api.html($questionType, "");//清空提示
-                        $api.append($questionType,'<ul class="aui-grid-nine">');
+                        $api.append($questionType, '<ul class="aui-grid-nine">');
                         for (var i = 0; i < ret.length; i++) {
                             var data = ret[i];
                             $api.append($questionType, "<li class='aui-col-xs-4 aui-text-center questionType' onclick=\"GenerateTest('" + data.id + "','" + data.name + "')\"><a> " + data.name + "</a></li>");
                         }
-                        $api.append($questionType,'</ul>');
+                        $api.append($questionType, '</ul>');
                     }
                 });
             }

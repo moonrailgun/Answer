@@ -9,6 +9,10 @@
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <style>
+        body{
+            min-height: 100%;
+            height: auto;
+        }
         div.message {
             display: -webkit-box;
             width: 100%;
@@ -63,6 +67,7 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    //todo 回调乱序
     apiready = function () {
         //配置下拉刷新
         api.setRefreshHeaderInfo({
@@ -83,7 +88,6 @@
         //获取最近20条数据
         QueryMessage();
     };
-
     //消息类
     var Message = function () {
         this.userId = '';
@@ -94,7 +98,7 @@
         this.time = '';
     };
     //添加一条留言
-    function AddMessage(msg, isToTop) {
+    function AddMessage(msg) {
         var message = '',
                 img = '../image/default_head.jpg';
         $main = $api.dom('#main');
@@ -111,14 +115,10 @@
         message += '<span class="comment-num">' + msg.comment.length + '</span></div></div>';
         message += '<div class="messageInfoRight"><div class="time">' + ParseTime(msg.time) + '</div></div>';
 
-        if (isToTop) {
-            $api.prepend($main, message);
-        }
-        else {
-            $api.append($main, message);
-        }
+        $api.append($main, message);
     }
     //查询留言
+    var msgList = [];
     function QueryMessage() {
         var query = api.require("query");
         query.createQuery(function (ret, err) {
@@ -138,6 +138,10 @@
                     qid: queryId,
                     column: 'userId'
                 });
+                query.desc({
+                    qid:queryId,
+                    column : 'createdAt'
+                });
                 var model = api.require("model");
                 model.findAll({
                     class: "MessageBoard",
@@ -148,10 +152,11 @@
                     }
                     else {
                         //循环添加数据
-                        for (var i = 0; i < ret.length; i++) {
+                        var dataNum = ret.length;
+                        for (var i = 0; i < dataNum; i++) {
                             var data = ret[i];
-                            //闭包获取评论
-                            (function(data){
+                            //闭包缓存评论
+                            (function(data,index){
                                 var relation = api.require('relation');
                                 relation.findAll({
                                     class: 'MessageBoard',
@@ -163,27 +168,38 @@
                                     }
                                     else{
                                         var msg = new Message();
-                                        msg.userId = data.userId.id;
-                                        msg.author = data.userId.nickname;
-                                        msg.img = data.userId.avatar.url;
+                                        if(data.userId){
+	                                        msg.userId = data.userId.id;
+	                                        msg.author = data.userId.nickname;
+	                                        msg.img = data.userId.avatar.url;
+                                        }
                                         msg.content = data.content;
                                         msg.comment = res;
                                         msg.time = data.createdAt;
-
-                                        AddMessage(msg);//添加一条数据
+                                        msgList[index] = msg;
+                                        if(msgList.length == dataNum){
+                                            GenerateMessage();//生成UI
+                                        }
                                     }
                                 })
-                            })(data);
+                            })(data,i);
                         }
                     }
                 });
             }
         });
     }
+    //生成留言
+    function GenerateMessage(){
+        for(var i = 0;i<msgList.length;i++){
+            AddMessage(msgList[i]);//添加一条数据
+        }
+    }
 
     //清空数据
     function ClearMessage() {
         $api.html($api.dom('#main'), '');
+        msgList = [];//清空内存
     }
 
     /**
@@ -216,7 +232,5 @@
         }
         return retStr;
     }
-
-    console.log(ParseTime('2015-10-20T08:55:47.889Z'));
 </script>
 </html>
