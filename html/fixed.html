@@ -66,7 +66,7 @@
 </head>
 <body>
 <nav>
-    <div id="account" tapmode="liActive" onclick="OpenWin('login.html')">
+    <div id="account" tapmode="liActive" onclick="ShowProfile();">
         <div id="head-img"><img src="../image/default_head.jpg"/></div>
         <div id="nickname">游客</div>
     </div>
@@ -101,7 +101,7 @@
         });
     }
     //打开新窗口
-    function OpenNewWin(url){
+    function OpenNewWin(url) {
         api.closeSlidPane();
 
         var $script = "OpenWin('" + url + "');";
@@ -110,11 +110,10 @@
             script: $script
         });
     }
-
-    //todo 添加nickname更新
+    //更新头像与昵称
     function UpdateAvatar() {
         var userInfo = $api.getStorage('userInfo');
-        if(userInfo){
+        if (userInfo) {
             $img = $api.dom('#head-img img');
             $nickname = $api.dom('#nickname');
             //更新头像
@@ -125,12 +124,21 @@
                 $api.attr($img, 'src', '../image/default_head.jpg');
             }
             //更新昵称
-            if(userInfo.nickname){
+            if (userInfo.nickname) {
                 $api.html($nickname, userInfo.nickname);
             }
             else {
                 $api.html($nickname, '游客');
             }
+        }
+    }
+
+    function ShowProfile() {
+        var userInfo = $api.getStorage('userInfo');
+        if (!userInfo) {
+            OpenWin('login.html')
+        } else {
+            OpenWin('profile.html');
         }
     }
 

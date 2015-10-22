@@ -7,13 +7,89 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        #userInfo {
+            display: -webkit-box;
+        }
+
+        #userMain {
+            -webkit-box-flex: 1;
+            margin-left: 10px;
+        }
+
+        #username {
+            font-size: 12px;
+        }
+
+        #userLeft {
+            margin: 19px 20px 20px 0;
+            width: 24px;
+            height: 24px;
+            font-size: 20px;
+            color: #949494;
+        }
+
+        .liActive {
+            background-color: #919191;
+        }
+    </style>
 </head>
 <body>
+<div class="aui-content">
+    <ul class="aui-list-view">
+        <li id="userInfo" class="aui-list-view-cell aui-img">
+            <div id="userHead"><img class="aui-img-object" src="../image/default_head.jpg"></div>
+            <div id="userMain" class="aui-img-body">
+                <div id="nickname">游客</div>
+                <div id="username">游客</div>
+            </div>
+            <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right"></div>
+        </li>
+    </ul>
+    <ul class="aui-list-view">
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">我的资料</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">我的红包</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">
+                我的收藏
+                <span class="aui-badge aui-badge-danger">12</span>
+            </a>
+        </li>
+    </ul>
+    <button class="aui-btn aui-btn-danger aui-btn-block">退出登录</button>
+</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        UpdateUserInfo();
     };
+
+    function UpdateUserInfo() {
+        var userInfo = $api.getStorage('userInfo');
+        if (userInfo) {
+            $img = $api.dom('#userInfo img');
+            $nickname = $api.dom('#userInfo span');
+            //更新头像
+            if (userInfo.avatar) {
+                $api.attr($img, 'src', userInfo.avatar.url);
+            }
+            else {
+                $api.attr($img, 'src', '../image/default_head.jpg');
+            }
+            //更新昵称
+            if (userInfo.nickname) {
+                $api.html($nickname, userInfo.nickname);
+            }
+            else {
+                $api.html($nickname, '游客');
+            }
+        }
+    }
 </script>
 </html>
