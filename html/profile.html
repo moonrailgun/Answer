@@ -61,7 +61,7 @@
             </a>
         </li>
     </ul>
-    <button class="aui-btn aui-btn-danger aui-btn-block">退出登录</button>
+    <button class="aui-btn aui-btn-danger aui-btn-block" onclick="Logout()">退出登录</button>
 </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -73,8 +73,9 @@
     function UpdateUserInfo() {
         var userInfo = $api.getStorage('userInfo');
         if (userInfo) {
-            $img = $api.dom('#userInfo img');
-            $nickname = $api.dom('#userInfo span');
+            $img = $api.dom('#userHead img');
+            $nickname = $api.dom('#nickname');
+            $username = $api.dom('#username');
             //更新头像
             if (userInfo.avatar) {
                 $api.attr($img, 'src', userInfo.avatar.url);
@@ -89,7 +90,36 @@
             else {
                 $api.html($nickname, '游客');
             }
+            //更新用户名
+            if(userInfo.username){
+                $api.html($username, userInfo.username);
+            }
+            else{
+                $api.html($username, '');
+            }
         }
+    }
+    //登出
+    function Logout(){
+        var user = api.require('user');
+        user.logout(function(ret, err){
+            if(ret){
+                $api.rmStorage('userInfo');
+                //更新侧滑页
+                api.execScript({
+                    name: "fixed",
+                    script: 'UpdateAvatar();'
+                });
+                //回到登录界面
+                var $script = "ChangeWin('login.html');";
+                api.execScript({
+                    name: "slide",
+                    script: $script
+                });
+            }else{
+                api.alert({msg:'登出失败'})
+            }
+        });
     }
 </script>
 </html>
