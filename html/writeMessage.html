@@ -20,10 +20,10 @@
 <div id="main">
     <form class="messageArea">
         <div class="userInfo"></div>
-        <textarea onchange="UpdateTextNum()" onkeyup="UpdateTextNum()" class="message" maxlength="100" rows="6"
+        <textarea style="padding: 10px;" onchange="UpdateTextNum()" onkeyup="UpdateTextNum()" class="message" maxlength="100" rows="6"
                   title="说点什么吧"></textarea>
 
-        <div id="textNum" class="aui-pull-right">字数：<span>0/100</span></div>
+        <div id="textNum" class="aui-pull-right" style="font-size: 14px">字数：<span>0/100</span></div>
         <button class="aui-btn aui-btn-block aui-btn-danger" onclick="SendMessage();">发表</button>
     </form>
 </div>

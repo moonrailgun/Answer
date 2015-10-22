@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<div><a>我的资料</a></div>
+<div><a>资料库</a></div>
+<div><a onclick="ShowDownloadManager()">下载</a></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var fs = api.require('fs');
+        //创建资料文件夹
+        fs.exist({
+            path: 'fs://Document'
+        },function(ret,err){
+            if(!ret.exist){
+                fs.createDir({
+                    path:'fs://Document'
+                },function(ret,err){
+                    var status = ret.status;
+                    if (status) {
+                        api.alert({msg:'创建目录成功'});
+                    }else {
+                        api.alert({msg:err.msg});
+                    }
+                });
+            }
+        });
+    };
+
+    function ShowDownloadManager(){
+        var manager = api.require('downloadManager');
+        manager.openManagerView({
+            title: '下载'
+        },function(ret){
+            var id = ret.id;
+            var mimeType = ret.mimeType;
+            var savePath = ret.savePath;
+            manager.openDownloadedFile({
+                id: id
+            },function(ret,err){
+                if (ret.status) {
+
+                } else {
+                    var msg = ret.msg;
+                }
+            });
+        });
+    }
+</script>
+</html>
