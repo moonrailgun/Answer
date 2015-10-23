@@ -28,6 +28,21 @@
 
             <p>关于</p>
         </li>
+        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(3)">
+            <span class="aui-iconfont aui-icon-profile aui-text-info"></span>
+
+            <p>个人</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(4)">
+            <span class="aui-iconfont aui-icon-file aui-text-default"></span>
+
+            <p>资料</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(5)">
+            <span class="aui-iconfont aui-icon-message aui-text-pink"></span>
+
+            <p>留言</p>
+        </li>
     </ul>
 </div>
 </body>
@@ -94,6 +109,27 @@
             case 2:
             {
                 $script = "ChangeWin('about.html')";
+                break;
+            }
+            case 3:
+            {
+                var userInfo = $api.getStorage('userInfo');
+                if (userInfo) {
+                    $script = "ChangeWin('profile.html')";
+                }
+                else {
+                    $script = "ChangeWin('login.html')";
+                }
+                break;
+            }
+            case 4:
+            {
+                $script = "ChangeWin('document.html')";
+                break;
+            }
+            case 5:
+            {
+                $script = "OpenWin('messageBoardFrame.html')";
                 break;
             }
         }
