@@ -10,8 +10,10 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
 </head>
 <body>
+<div onclick="Search();"><a>搜索资料</a></div>
 <div><a>我的资料</a></div>
 <div><a>资料库</a></div>
+<div id="upload"><a onclick="Upload()">上传资料</a><span>进度:0.0</span></div>
 <div><a onclick="ShowDownloadManager()">下载</a></div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -21,39 +23,148 @@
         //创建资料文件夹
         fs.exist({
             path: 'fs://Document'
-        },function(ret,err){
-            if(!ret.exist){
+        }, function (ret, err) {
+            if (!ret.exist) {
                 fs.createDir({
-                    path:'fs://Document'
-                },function(ret,err){
+                    path: 'fs://Document'
+                }, function (ret, err) {
                     var status = ret.status;
                     if (status) {
-                        api.alert({msg:'创建目录成功'});
-                    }else {
-                        api.alert({msg:err.msg});
+                        api.alert({msg: '创建目录成功'});
+                    } else {
+                        api.alert({msg: err.msg});
                     }
                 });
             }
         });
     };
 
-    function ShowDownloadManager(){
+    //打开下载管理页面
+    function ShowDownloadManager() {
         var manager = api.require('downloadManager');
         manager.openManagerView({
             title: '下载'
-        },function(ret){
+        }, function (ret) {
             var id = ret.id;
             var mimeType = ret.mimeType;
             var savePath = ret.savePath;
             manager.openDownloadedFile({
                 id: id
-            },function(ret,err){
+            }, function (ret, err) {
                 if (ret.status) {
 
                 } else {
                     var msg = ret.msg;
                 }
             });
+        });
+    }
+
+    //todo 上传文件后缀验证与进度回调与把文件链接到文档中
+    //打开上传页面并上传文件（目前为简单传输）
+    function Upload() {
+        var userInfo = $api.getStorage('userInfo');
+        if (!userInfo) {
+            api.alert({msg: '请先登录'});
+            return;
+        }
+
+        var fb = api.require('fileBrowser');
+        fb.open(
+                function (ret, err) {
+                    fb.close();
+                    var $process = $api.dom('#upload span');
+                    var temp = ret.url.split('/');
+                    var filename = temp[temp.length - 1];
+
+                    var model = api.require('model');
+                    model.uploadFile({
+                        report: true,
+                        data: {
+                            file: {
+                                name: filename,
+                                url: ret.url
+                            }
+                        }
+                    }, function (ret, err) {
+                        if (ret) {
+                            var state = ret.state;
+                            if (state == 1) {
+                                //上传完成
+                                var body = ret.body;
+                                if (body) {
+                                    var file = {
+                                        id: body.id,
+                                        name : body.name,
+                                        url : body.url
+                                    };
+                                    model.insert({
+                                        class : 'Document',
+                                        value : {
+                                            file: file,
+                                            uploadId: userInfo.userId
+                                        }
+                                    },function(ret, err){
+                                        if(ret){
+                                            $api.html($process, '进度:100.0  上传完毕');
+                                        }else{
+                                            $api.html($process, '进度:100.0  <span class="aui-text-danger">上传失败</span>');
+                                        }
+                                    });
+                                }
+                            } else {
+                                $api.html($process, '进度:' + ret.progress);
+                            }
+                        } else {
+
+                        }
+                    });
+                }
+        );
+    }
+
+    //打开搜索页面
+    function Search() {
+        var obj = api.require('UISearchBar');
+        obj.open({
+            placeholder: '请输入搜索关键字',
+            historyCount: 10,
+            showRecordBtn: false,
+            texts: {
+                cancelText: '取消',
+                clearText: '清除搜索记录'
+            },
+            styles: {
+                navBar: {
+                    bgColor: '#FFFFFF',
+                    borderColor: '#ccc'
+                },
+                searchBox: {
+                    bgImg: '',
+                    color: '#000',
+                    height: 44
+                },
+                cancel: {
+                    bg: 'rgba(0,0,0,0)',
+                    color: '#D2691E',
+                    size: 16
+                },
+                list: {
+                    color: '#696969',
+                    bgColor: '#FFFFFF',
+                    borderColor: '#eee',
+                    size: 16
+                },
+                clear: {
+                    color: '#000000',
+                    borderColor: '#ccc',
+                    size: 16
+                }
+            }
+        }, function (ret) {
+            if (ret) {
+                api.alert({msg: "搜索功能未实现:" + ret.text});
+            }
         });
     }
 </script>

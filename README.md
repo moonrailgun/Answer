@@ -23,6 +23,16 @@ Answer
 - 收藏
 - 错题记录
 
+# 模块 #
+## 所用APICloud模块列表 ##
+- mcm
+- UIScrollPicture
+- UISearchBar
+- FNScanner
+- fs
+- fileBrower
+- downloadManager
+
 # 数据库架构 #
 ## 数据库 ##
 - QuestionBank 题库
@@ -53,3 +63,6 @@ Answer
 - Favorite 题目收藏
 	- questionId (关联QuestionBank) 收藏的题目ID*
 	- userId (关联_user) 该用户ID*
+- Document 资料类
+	- file 上传的文件*
+	- uploadId 上传人ID
