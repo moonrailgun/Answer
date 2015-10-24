@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="CloseWin();"></span>
+    </a>
+
+    <div class="aui-title">我的资料</div>
+    <a class="aui-pull-right">
+        <span class="aui-iconfont aui-icon-scan" onclick="OpenScanner();"></span>
+    </a>
+</header>
+<div class="aui-text-center">
+    <h1>我的二维码</h1>
+    <h5>扫一扫加我为好友</h5>
+</div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var $header = $api.dom('header');
+        $api.fixIos7Bar($header);
+
+        var userInfo = $api.getStorage('userInfo');
+        var scanner = api.require('FNScanner');
+        scanner.encodeImg({
+            type: 'qr_image',
+            content: userInfo.userId,
+            saveToAlbum: false,
+            saveImg: {
+                path: 'fs://myqrcode.jpg',
+                w: 200,
+                h: 200
+            }
+        }, function (ret) {
+            if (ret.status) {
+                //使用一个原生frame显示fs协议的图片
+                var winWidth = api.winWidth;
+                api.openFrame({
+                    name: 'qrcode',
+                    url: ret.imgPath,
+                    rect: {
+                        x: winWidth / 2 - 100,
+                        y: 140,
+                        w: 200,
+                        h: 200
+                    },
+                    vScrollBarEnabled: false,
+                    hScrollBarEnabled: false
+                });
+            }
+        });
+    };
+
+    function OpenScanner() {
+        var scanner = api.require('FNScanner');
+        scanner.openScanner({
+            autorotation: true,
+            saveToAlbum: false
+        }, function (ret) {
+            if (ret && (ret.eventType == 'success')) {
+                alert(JSON.stringify(ret.content));
+            }
+            else if (ret && ret.eventType == 'fail') {
+                api.alert('扫码失败。请重试');
+            }
+        });
+    }
+
+    function CloseWin() {
+        api.closeFrame({
+            name: 'qrcode'
+        });
+        api.closeWin();
+    }
+</script>
+</html>

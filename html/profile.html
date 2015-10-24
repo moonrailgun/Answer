@@ -33,12 +33,15 @@
         .liActive {
             background-color: #919191;
         }
+        .aui-btn-block{
+            border-radius: 0;
+        }
     </style>
 </head>
 <body>
 <div class="aui-content">
     <ul class="aui-list-view">
-        <li id="userInfo" class="aui-list-view-cell aui-img">
+        <li id="userInfo" class="aui-list-view-cell aui-img"  onclick="OpenInfoWin()">
             <div id="userHead"><img class="aui-img-object" src="../image/default_head.jpg"></div>
             <div id="userMain" class="aui-img-body">
                 <div id="nickname">游客</div>
@@ -49,16 +52,33 @@
     </ul>
     <ul class="aui-list-view">
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">我的资料</a>
+            <a class="aui-arrow-right">我的红包</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">我的红包</a>
+            <a class="aui-arrow-right">我的好友</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
             <a class="aui-arrow-right">
                 我的收藏
                 <span class="aui-badge aui-badge-danger">12</span>
             </a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">我的下载</a>
+        </li>
+    </ul>
+    <ul class="aui-list-view">
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">资料库</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">学习圈</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">错题集</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right">计划</a>
         </li>
     </ul>
     <button class="aui-btn aui-btn-danger aui-btn-block" onclick="Logout()">退出登录</button>
@@ -98,6 +118,14 @@
                 $api.html($username, '');
             }
         }
+    }
+
+    //打开信息窗口
+    function OpenInfoWin(){
+        api.openWin({
+            name:'userInfo',
+            url:'./userInfo.html'
+        })
     }
     //登出
     function Logout(){
