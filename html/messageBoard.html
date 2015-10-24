@@ -9,10 +9,11 @@
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <style>
-        body{
+        body {
             min-height: 100%;
             height: auto;
         }
+
         div.message {
             display: -webkit-box;
             width: 100%;
@@ -102,7 +103,7 @@
         var message = '',
                 img = '../image/default_head.jpg';
         $main = $api.dom('#main');
-        if(msg.img){
+        if (msg.img) {
             img = msg.img;
         }
 
@@ -139,8 +140,8 @@
                     column: 'userId'
                 });
                 query.desc({
-                    qid:queryId,
-                    column : 'createdAt'
+                    qid: queryId,
+                    column: 'createdAt'
                 });
                 var model = api.require("model");
                 model.findAll({
@@ -156,33 +157,33 @@
                         for (var i = 0; i < dataNum; i++) {
                             var data = ret[i];
                             //闭包缓存评论
-                            (function(data,index){
+                            (function (data, index) {
                                 var relation = api.require('relation');
                                 relation.findAll({
                                     class: 'MessageBoard',
                                     id: data.id,
                                     column: 'comment'
-                                }, function (res,err) {
+                                }, function (res, err) {
                                     if (!res) {
                                         api.alert({msg: '出现错误:' + JSON.stringify(err)});
                                     }
-                                    else{
+                                    else {
                                         var msg = new Message();
-                                        if(data.userId){
-	                                        msg.userId = data.userId.id;
-	                                        msg.author = data.userId.nickname;
-	                                        msg.img = data.userId.avatar.url;
+                                        if (data.userId) {
+                                            msg.userId = data.userId.id;
+                                            msg.author = data.userId.nickname;
+                                            msg.img = data.userId.avatar.url;
                                         }
                                         msg.content = data.content;
                                         msg.comment = res;
                                         msg.time = data.createdAt;
                                         msgList[index] = msg;
-                                        if(msgList.length == dataNum){
+                                        if (msgList.length == dataNum) {
                                             GenerateMessage();//生成UI
                                         }
                                     }
                                 })
-                            })(data,i);
+                            })(data, i);
                         }
                     }
                 });
@@ -190,8 +191,8 @@
         });
     }
     //生成留言
-    function GenerateMessage(){
-        for(var i = 0;i<msgList.length;i++){
+    function GenerateMessage() {
+        for (var i = 0; i < msgList.length; i++) {
             AddMessage(msgList[i]);//添加一条数据
         }
     }
@@ -206,28 +207,32 @@
      * 解析时间
      * @return {string}
      */
-    function ParseTime(time){
+    function ParseTime(time) {
         var date = Date.parse(time);
         var now = Date.now();
         var diff = now - date;
-        var diffSec = parseInt(diff/1000);//间隔秒数
-        var diffMin = parseInt(diffSec/60);//间隔分钟
-        var diffHour = parseInt(diffMin/60);//间隔小时
-        var diffDay = parseInt(diffHour/24);//间隔天数
+        var diffSec = parseInt(diff / 1000);//间隔秒数
+        var diffMin = parseInt(diffSec / 60);//间隔分钟
+        var diffHour = parseInt(diffMin / 60);//间隔小时
+        var diffDay = parseInt(diffHour / 24);//间隔天数
 
         var retStr = '';
-        if(diffDay > 0){
-            retStr = diffDay+" 天前";
-        }else if(diffHour > 0){
+        if (diffDay > 0) {
+            if (diffDay = 1) {
+                retStr = '昨天';
+            } else {
+                retStr = diffDay + " 天前";
+            }
+        } else if (diffHour > 0) {
             retStr = diffHour + " 小时前";
         }
-        else if(diffMin > 0){
+        else if (diffMin > 0) {
             retStr = diffMin + " 分钟前";
         }
-        else if(diffSec > 0){
+        else if (diffSec > 0) {
             retStr = diffSec + " 秒前";
         }
-        else{
+        else {
             retStr = '(╯‵□′)╯︵┻━┻';
         }
         return retStr;
