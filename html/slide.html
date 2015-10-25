@@ -62,14 +62,15 @@
     //变更窗口
     function ChangeWin(url) {
         var $header = $api.dom("header");
+        var headerHeight = $api.offset($header).h;
         api.openFrame({
             name: url,
             url: url,
             rect: {
                 x: 0,
-                y: $api.offset($header).h,
+                y: headerHeight,
                 w: api.winWidth,
-                h: api.winHeight
+                h: api.winHeight - headerHeight
             },
             bounces: false,
             vScrollBarEnabled: true,

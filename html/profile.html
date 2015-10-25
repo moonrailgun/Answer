@@ -36,6 +36,25 @@
         .aui-btn-block{
             border-radius: 0;
         }
+
+        .infoBlock{
+            width: 100%;
+            display: -webkit-box;
+        }
+        .infoBlock .infoBlockCell{
+            width: 50%;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            text-align: center;
+            font-size: 14px;
+            line-height: 22px;
+            color: #6d6d72;
+        }
+        .infoBlock .infoBlockCell .infoBlockCellNum{
+            line-height: 42px;
+            color: #fa6359;
+            font-size: 32px;
+        }
     </style>
 </head>
 <body>
@@ -48,6 +67,16 @@
                 <div id="username">游客</div>
             </div>
             <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right"></div>
+        </li>
+        <li class="infoBlock">
+            <div tapmode="liActive" class="infoBlockCell" style="border-right: 1px solid #c8c7cc;">
+                <div class="infoBlockCellNum">12.2</div>
+                <div>积分</div>
+            </div>
+            <div tapmode="liActive" class="infoBlockCell">
+                <div class="infoBlockCellNum">1</div>
+                <div>排名</div>
+            </div>
         </li>
     </ul>
     <ul class="aui-list-view">
