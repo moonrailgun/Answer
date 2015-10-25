@@ -7,10 +7,129 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mrg.css"/>
+    <style>
+        .rank{
+            margin-bottom: 50px;
+        }
+        .rankCell {
+            display: -webkit-box;
+            width: 100%;
+            line-height: 60px;
+            padding: 0 10px;
+            border-bottom: solid 1px #c8c7cc;;
+        }
+
+        .rankCell:last-child {
+            border: 0;
+        }
+
+        .rankCell .rankNum {
+            width: 60px;
+            margin-right: 10px;
+            text-align: center;
+            font-family: specialNum, sans-serif;
+            font-size: 26px;
+        }
+
+        .rankCell .userInfo {
+            display: -webkit-box;
+            -webkit-box-flex: 1;
+        }
+
+        .rankCell .userInfo .username {
+            -webkit-box-flex: 1;
+            font-size: 24px;
+            font-family: 'Microsoft YaHei',sans-serif;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .rankCell .userInfo .userscore {
+            font-size: 18px;
+            font-family: specialNum, sans-serif;
+        }
+        .rankCell.first,.rankCell.second,.rankCell.third{
+            padding: 10px 10px;
+        }
+        .rankCell.first .rankNum {
+            background: url("../image/firstMedal.png");
+        }
+
+        .rankCell.second .rankNum {
+            background: url("../image/secondMedal.png");
+        }
+
+        .rankCell.third .rankNum {
+            background: url("../image/thirdMedal.png");
+        }
+        .myRank{
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            background-color: #0062cc;
+            height: 50px;
+            width: 100%;
+            display: -webkit-box;
+        }
+        .myRank div{
+            padding: 10px;
+            text-align: center;
+            -webkit-box-flex: 1;
+            vertical-align: middle;
+        }
+        .myRank div span{
+            color: #e74c3c;
+            font-size: 24px;
+            font-family: specialNum, sans-serif;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
-<h1>rank</h1>
+<div class="rank">
+    <div class="rankCell first">
+        <div class="rankNum">1</div>
+        <div class="userInfo">
+            <div class="username">AqnaLotus</div>
+            <div class="userscore">100</div>
+        </div>
+    </div>
+    <div class="rankCell second">
+        <div class="rankNum">2</div>
+        <div class="userInfo">
+            <div class="username">AqnaLotus</div>
+            <div class="userscore">100</div>
+        </div>
+    </div>
+    <div class="rankCell third">
+        <div class="rankNum">3</div>
+        <div class="userInfo">
+            <div class="username">AqnaLotus</div>
+            <div class="userscore">100</div>
+        </div>
+    </div>
+    <div class="rankCell">
+        <div class="rankNum">4</div>
+        <div class="userInfo">
+            <div class="username">AqnaLotus</div>
+            <div class="userscore">100</div>
+        </div>
+    </div>
+    <div class="rankCell">
+        <div class="rankNum">5</div>
+        <div class="userInfo">
+            <div class="username">AqnaLotus</div>
+            <div class="userscore">100</div>
+        </div>
+    </div>
+</div>
+<div class="myRank">
+    <div class="myRankNum">我的排名：<span>1000</span></div>
+    <div class="myRankScore">我的积分：<span>2000</span></div>
+</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
