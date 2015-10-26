@@ -42,6 +42,14 @@
         .header .menu {
             background-image: url("../image/menu.png");
         }
+        .header .home{
+            line-height: 40px;
+            padding-right: 10px;
+        }
+        .aui-icon-home:before{
+            font-size: 22px;
+            color: #5C5F70;
+        }
     </style>
 </head>
 <body>
@@ -49,7 +57,9 @@
     <div class="index header ">
         <a class="menu" onclick="sliding()"></a>
         <div class="title">Answer</div>
-        <a></a>
+        <div class="home" onclick="BackHome()">
+            <div class="aui-iconfont aui-icon-home"></div>
+        </div>
     </div>
 </header>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -58,6 +68,10 @@
         api.openSlidPane({
             type: 'left'
         });
+    }
+    //回到首页
+    function BackHome(){
+        ChangeWin('home.html');
     }
     //变更窗口
     function ChangeWin(url) {
@@ -92,7 +106,8 @@
         api.addEventListener({
             name: 'keyback'
         }, function (ret, err) {
-            api.closeWidget();//关闭应用
+            //api.closeWidget();//关闭应用
+            BackHome();//回到首页
         });
 
         //打开首页
