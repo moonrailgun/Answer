@@ -10,15 +10,28 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../css/mrg.css"/>
     <style>
+        body{
+            min-height: 100%;
+            height: auto;
+        }
         .rank{
             margin-bottom: 50px;
+            padding: 0 10px;
+        }
+        .rankHeader{
+            background-color: #acacac;
+            display: -webkit-box;
+            text-align: center;
+            color: #f4f4f4;
+            line-height: 32px;
+            font-size: 18px;
         }
         .rankCell {
             display: -webkit-box;
             width: 100%;
             line-height: 60px;
             padding: 0 10px;
-            border-bottom: solid 1px #c8c7cc;;
+            border-bottom: dashed 1px #c8c7cc;
         }
 
         .rankCell:last-child {
@@ -69,7 +82,7 @@
             position: fixed;
             left: 0;
             bottom: 0;
-            background-color: #0062cc;
+            background-color: #2b9ea7;
             height: 50px;
             width: 100%;
             display: -webkit-box;
@@ -89,6 +102,11 @@
     </style>
 </head>
 <body>
+<div class="rankHeader">
+    <div style="width: 70px;text-align: right;">排名</div>
+    <div style="-webkit-box-flex: 1;">昵称</div>
+    <div style="width: 50px;text-align: left;">积分</div>
+</div>
 <div class="rank">
     <div class="rankCell first">
         <div class="rankNum">1</div>
