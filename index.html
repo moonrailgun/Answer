@@ -29,11 +29,19 @@
 <h1>请等待</h1>
 <script>
     apiready = function () {
-        var model = api.require('model');
-        model.config({
+        api.loadSecureValue({
+            key: 'appKey'
+        }, function (ret, err) {
+            var appKey = ret.value;
+            var model = api.require('model');
+            model.config({
+                appId: 'A6999447157608',
+                appKey: appKey,
+                host: 'https://d.apicloud.com'
+            });
         });
 
-        apialert({msg: "载入完毕"});
+        alert("载入完毕");
         api.openSlidLayout({
             type: 'left',
             leftEdge: 60,
