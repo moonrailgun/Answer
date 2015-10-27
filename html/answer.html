@@ -23,6 +23,7 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     var randomColorCls = ['default', 'primary', 'success', 'info', 'warning', 'danger', 'blue', 'pink', 'dark'];//随机颜色类
+    var allTypeList = [];
     apiready = function () {
         var query = api.require('query');
         query.createQuery(function (ret, err) {
@@ -46,10 +47,16 @@
                         str += '<div class="aui-content"><ul class="aui-grid-sixteen">';
                         for (var i = 0; i < ret.length; i++) {
                             var data = ret[i];
+                            var id = data.id;
+                            var name = data.name;
                             var colorStr = GetRandomValFromArray(randomColorCls);//设置随机颜色
-                            str += "<li class='aui-col-xs-3 aui-text-center questionTypeCell' onclick=\"SelectTest('" + data.id + "','" + data.name + "')\">"
+                            str += "<li class='aui-col-xs-3 aui-text-center questionTypeCell' onclick=\"SelectTest('" + id + "','" + name + "')\">"
                                     + "<span class='aui-iconfont aui-icon-form aui-text-" + colorStr + "'></span>"
                                     + "<p> " + data.name + "</p></li>";
+                            allTypeList[i] = {
+                                id: id,
+                                name: name
+                            }
                         }
                         str += '</ul></div>';
                         $api.append($questionType, str);
@@ -73,7 +80,8 @@
             url: './answerSelectFrame.html',
             pageParam: {
                 typeId: typeId,
-                typeName: typeName
+                typeName: typeName,
+                allTypeList: allTypeList
             }
         });
     }

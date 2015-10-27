@@ -34,7 +34,8 @@
             border-right: solid 1px #c8c8c8;
             border-bottom: solid 1px #c8c8c8;
         }
-        #normalTop{
+
+        #normalTop {
             height: 50%;
             width: 100%;
             display: -webkit-box;
@@ -62,6 +63,11 @@
             height: 50%;
             margin-bottom: 4px;
         }
+
+        .blockActive {
+            color: #fff;
+            background-color: #666666;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +76,8 @@
         <span class="aui-iconfont aui-icon-left" onclick="CloseWin()"></span>
     </a>
 
-    <div class="aui-title">分类选择</div>
+    <div class="aui-title" onclick="SwitchType();">分类选择<i class="aui-iconfont aui-icon-unfold"
+                                                          style="font-size: 14px"></i></div>
 </header>
 <div id="main">
     <div id="document">
@@ -86,29 +93,32 @@
     </div>
     <div id="selectContainer">
         <div id="hot">
-            <div id="exam" onclick="GenerateExamTest();">真题检测</div>
+            <div id="exam" tapmode="blockActive" onclick="GenerateExamTest();">真题检测</div>
         </div>
         <div id="normal">
             <div id="normalTop">
-                <div id="random" onclick="GenerateRandomTest();">随便做做</div>
-                <div id="unit" onclick="GenerateUnitTest();">章节练习</div>
+                <div id="random" tapmode="blockActive" onclick="GenerateRandomTest();">随便做做</div>
+                <div id="unit" tapmode="blockActive" onclick="GenerateUnitTest();">章节练习</div>
             </div>
-            <div id="composite" onclick="GenerateCompositeTest();">综合练习</div>
+            <div id="composite" tapmode="blockActive" onclick="GenerateCompositeTest();">综合练习</div>
         </div>
     </div>
 </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
+    //todo 分类选择切换科目
     var questionTypeId;
+    var allTypeList = [];
     apiready = function () {
         var pageParam = api.pageParam;
         var typeId = pageParam.typeId;
         var typeName = pageParam.typeName;
+        allTypeList = pageParam.allTypeList;
         //标题
         $api.fixIos7Bar($api.dom('header'));
         var $title = $api.dom('header .aui-title');
-        $api.html($title, typeName + ' - 分类选择');
+        $api.html($title, typeName + ' - 分类选择' + '<i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>');
 
         questionTypeId = typeId;
     };
@@ -139,6 +149,31 @@
                 testQuestion: testQuestion
             },
             slidBackEnabled: false
+        });
+    }
+
+    function SwitchType() {
+        //切换分类
+        var buttonList = [];
+        for (var i = 0; i < allTypeList.length; i++) {
+            buttonList[i] = allTypeList[i].name;
+        }
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: buttonList
+        }, function (ret, err) {
+            var index = ret.buttonIndex;
+            var item = allTypeList[index - 1];
+            if(index <= allTypeList.length){
+                api.alert({
+                    msg: '你刚点击索引' + index + '名称为' + item.name + 'ID为' + item.id
+                });
+            }
+            else{
+                api.alert({
+                    msg: '你刚点击了取消'
+                });
+            }
         });
     }
 
