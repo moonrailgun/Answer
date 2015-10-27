@@ -34,7 +34,11 @@
                     qid: queryId
                 }, function (ret, err) {
                     if (!ret) {
-                        api.alert({msg: '获取题型失败，请重试...'});
+                        api.toast({
+                            msg: '获取题型失败，请重试...',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
                     } else {
                         $questionType = $api.dom('#questionType');
                         $api.html($questionType, "");//清空提示
@@ -43,7 +47,7 @@
                         for (var i = 0; i < ret.length; i++) {
                             var data = ret[i];
                             var colorStr = GetRandomValFromArray(randomColorCls);//设置随机颜色
-                            str += "<li class='aui-col-xs-3 aui-text-center questionTypeCell' onclick=\"GenerateTest('" + data.id + "','" + data.name + "')\">"
+                            str += "<li class='aui-col-xs-3 aui-text-center questionTypeCell' onclick=\"SelectTest('" + data.id + "','" + data.name + "')\">"
                                     + "<span class='aui-iconfont aui-icon-form aui-text-" + colorStr + "'></span>"
                                     + "<p> " + data.name + "</p></li>";
                         }
@@ -62,26 +66,37 @@
         var index = Math.floor(random * length);//[0,length-1]
         return arr[index];
     }
-
-    function GenerateTest(typeId, typeName) {
-        var relation_m = api.require('relation');
-        relation_m.findAll({
-            class: 'QuestionType',
-            id: typeId,
-            column: 'questions'
-        }, function (ret, err) {
-            if (ret) {
-                api.openWin({
-                    name: 'testPaperFrame',
-                    url: './testPaperFrame.html',
-                    pageParam: {
-                        testName: typeName,
-                        testQuestion: ret
-                    },
-                    slidBackEnabled: false
-                });
+    //打开测试题选择页面
+    function SelectTest(typeId, typeName) {
+        api.openWin({
+            name: 'answerSelectFrame',
+            url: './answerSelectFrame.html',
+            pageParam: {
+                typeId: typeId,
+                typeName: typeName
             }
         });
     }
+    //
+    //    function GenerateTest(typeId, typeName) {
+    //        var relation_m = api.require('relation');
+    //        relation_m.findAll({
+    //            class: 'QuestionType',
+    //            id: typeId,
+    //            column: 'questions'
+    //        }, function (ret, err) {
+    //            if (ret) {
+    //                api.openWin({
+    //                    name: 'testPaperFrame',
+    //                    url: './testPaperFrame.html',
+    //                    pageParam: {
+    //                        testName: typeName,
+    //                        testQuestion: ret
+    //                    },
+    //                    slidBackEnabled: false
+    //                });
+    //            }
+    //        });
+    //    }
 </script>
 </html>
