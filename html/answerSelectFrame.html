@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        #selectContainer {
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            display: -webkit-box;
+            text-align: center;
+        }
+
+        #hot {
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border: solid 1px #c8c8c8;
+        }
+
+        #normal {
+            height: 80px;
+            line-height: 40px;
+            -webkit-box-flex: 1;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            border-top: solid 1px #c8c8c8;
+            border-right: solid 1px #c8c8c8;
+            border-bottom: solid 1px #c8c8c8;
+        }
+        #normalTop{
+            height: 50%;
+            width: 100%;
+            display: -webkit-box;
+            border-bottom: solid 1px #c8c8c8;
+        }
+
+        #exam {
+            width: 100%;
+            height: 100%;
+        }
+
+        #random {
+            width: 50%;
+            height: 100%;
+            border-right: solid 1px #c8c8c8;
+        }
+
+        #unit {
+            width: 50%;
+            height: 100%;
+        }
+
+        #composite {
+            width: 100%;
+            height: 50%;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="CloseWin()"></span>
+    </a>
+
+    <div class="aui-title">分类选择</div>
+</header>
+<div id="main">
+    <div id="document">
+        <ul class="aui-list-view">
+            <li class="aui-list-view-cell" data-win="list_thumb">
+                <a class="aui-arrow-right">
+                    <i class="aui-iconfont aui-icon-file"></i>
+                    参考资料
+                    <span class="aui-badge aui-badge-danger">12</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="selectContainer">
+        <div id="hot">
+            <div id="exam" onclick="GenerateExamTest();">真题检测</div>
+        </div>
+        <div id="normal">
+            <div id="normalTop">
+                <div id="random" onclick="GenerateRandomTest();">随便做做</div>
+                <div id="unit" onclick="GenerateUnitTest();">章节练习</div>
+            </div>
+            <div id="composite" onclick="GenerateCompositeTest();">综合练习</div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var questionTypeId;
+    apiready = function () {
+        var pageParam = api.pageParam;
+        var typeId = pageParam.typeId;
+        var typeName = pageParam.typeName;
+        //标题
+        $api.fixIos7Bar($api.dom('header'));
+        var $title = $api.dom('header .aui-title');
+        $api.html($title, typeName + ' - 分类选择');
+
+        questionTypeId = typeId;
+    };
+    //生成试卷
+    function GenerateRandomTest() {
+        //随便做做
+        api.toast({
+            msg: '做人不要那么随便。认真点吧',
+            duration: 2000,
+            location: 'bottom'
+        });
+    }
+    function GenerateUnitTest() {
+        //单元测试
+    }
+    function GenerateCompositeTest() {
+        //综合测试
+    }
+    function GenerateExamTest() {
+        //真题测试
+    }
+    function GenerateTest(testName, testQuestion) {
+        api.openWin({
+            name: 'testPaperFrame',
+            url: './testPaperFrame.html',
+            pageParam: {
+                testName: testName,
+                testQuestion: testQuestion
+            },
+            slidBackEnabled: false
+        });
+    }
+
+    function CloseWin() {
+        api.closeWin();
+    }
+</script>
+</html>
