@@ -34,27 +34,26 @@
         }, function (ret, err) {
             var appKey = ret.value;
             var model = api.require('model');
+
             model.config({
                 appId: 'A6999447157608',
                 appKey: appKey,
                 host: 'https://d.apicloud.com'
             });
-        });
 
-        alert("载入完毕");
-        api.openSlidLayout({
-            type: 'left',
-            leftEdge: 60,
-            fixedPane: {
-                name: 'fixed',
-                url: 'html/fixed.html'
-            },
-            slidPane: {
-                name: 'slide',
-                url: 'html/slide.html'
-            }
-        }, function (ret) {
-
+            api.alert({msg: "载入完毕"});
+            api.openSlidLayout({
+                type: 'left',
+                leftEdge: 60,
+                fixedPane: {
+                    name: 'fixed',
+                    url: 'html/fixed.html'
+                },
+                slidPane: {
+                    name: 'slide',
+                    url: 'html/slide.html'
+                }
+            });
         });
     }
 </script>
