@@ -31,14 +31,30 @@
         var $main = $api.dom('#main');
         var str = '';
         for (var i = 0; i < allChapterList.length; i++) {
-            str += '<div><a onclick="GenerateChapterTestPaper(\''+ allChapterList[i].id +'\')">'+ allChapterList[i].cname + '</a></div>';
+            str += '<div><a onclick="GenerateChapterTestPaper(\'' + allChapterList[i].id + '\',\'' + allChapterList[i].cname +'\')">' + allChapterList[i].cname + '</a></div>';
         }
         $api.html($main, str);
-        alert(str);
     };
 
-    function GenerateChapterTestPaper(chapterId){
-        alert(chapterId);
+    function GenerateChapterTestPaper(chapterId, chapterName) {
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'Chapter',
+            id: chapterId,
+            column: 'questions'
+        }, function (ret, err) {
+            if (ret) {
+                api.openWin({
+                    name: 'testPaperFrame',
+                    url: './testPaperFrame.html',
+                    pageParam: {
+                        testName: chapterName,
+                        testQuestion: ret
+                    },
+                    slidBackEnabled: false
+                });
+            }
+        });
     }
 
     function CloseWin() {
