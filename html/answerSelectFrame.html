@@ -177,9 +177,19 @@
     }
     function GenerateCompositeTest() {
         //综合测试
+        api.toast({
+            msg: '测什么测。直接上真题吧！',
+            duration: 2000,
+            location: 'bottom'
+        });
     }
     function GenerateExamTest() {
         //真题测试
+        api.toast({
+            msg: '还没做完',
+            duration: 2000,
+            location: 'bottom'
+        });
     }
     function GenerateTest(testName, testQuestion) {
         api.openWin({
