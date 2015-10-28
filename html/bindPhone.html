@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
+
+    <div class="aui-title">绑定手机</div>
+</header>
+<div>
+    手机名:<span id="deviceName"></span>
+</div>
+<div>
+    手机型号:<span id="deviceModel"></span>
+</div>
+<div>
+    系统:<span id="systemType"></span>  (版本号:<span id="systemVersion"></span>)
+</div>
+<div>
+    设备唯一标识码:<span id="deviceId"></span>
+</div>
+<button class="aui-btn aui-btn-block aui-btn-danger">是否绑定手机到该账号？</button>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));//标题
+        $api.text($api.dom('#deviceName'), api.deviceName);
+        $api.text($api.dom('#deviceModel'), api.deviceModel);
+        $api.text($api.dom('#systemType'), api.systemType);
+        $api.text($api.dom('#systemVersion'), api.systemVersion);
+        $api.text($api.dom('#deviceId'), api.deviceId);
+    };
+</script>
+</html>

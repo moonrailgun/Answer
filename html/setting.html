@@ -7,14 +7,76 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
 </head>
 <body>
-<h1>setting</h1>
+<div class="aui-content">
+    <ul class="aui-list-view">
+        <li class="aui-list-view-cell" data-win="list_arrow" onclick="bindPhone();">
+            <div class="aui-arrow-right">绑定手机</div>
+        </li>
+        <li class="aui-list-view-cell" data-win="list_thumb" onclick="ClearCache();">
+            <div>清空缓存<i id="CacheSize" class="aui-pull-right"></i></div>
+        </li>
+        <li class="aui-list-view-cell" data-win="list_thumb" onclick="SMSToFriend();">
+            <div class="aui-arrow-right">推荐给好友</div>
+        </li>
+    </ul>
+</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        //缓存大小
+        UpdateCacheSize();
     };
+    //绑定手机
+    function bindPhone(){
+        api.openWin({
+            name: 'bindPhone',
+            url: './bindPhone.html',
+            slidBackEnabled: false
+        });
+    }
+
+
+    function SMSToFriend() {
+        api.openContacts(function (ret, err) {
+            if (ret.status) {
+                var msg = '姓名:' + ret.name + '--电话:' + ret.phone;
+                api.sms({
+                    numbers: [ret.phone],
+                    text: ret.name + ",推荐你一款学霸专用的手机应用APP——Answer，快来和我一起加入学霸的圈子吧！"
+                },function(ret, err){
+                    if(ret.status){
+                        api.alert({msg:'发送成功'});
+                    } else{
+                        api.alert({msg:'发送失败'});
+                    }
+                });
+            } else {
+                api.alert({msg:'错误：' +  err.msg});
+            }
+        });
+    }
+
+    //清空缓存
+    function ClearCache() {
+        api.clearCache(function (ret, err) {
+            api.toast({
+                msg: '清除成功',
+                location: 'middle'
+            });
+            UpdateCacheSize();
+        });
+    }
+    //更新缓存显示数据
+    function UpdateCacheSize() {
+        api.getCacheSize(function (ret, err) {
+            var size = ret.size;
+            size = size / 1024 / 1024;
+            $api.text($api.dom('#CacheSize'), size.toFixed(2) + 'MB');
+        });
+    }
 </script>
 </html>
