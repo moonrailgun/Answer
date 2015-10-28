@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>Hello APP</title>
+    <title></title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <style>
@@ -76,8 +76,10 @@
         <span class="aui-iconfont aui-icon-left" onclick="CloseWin()"></span>
     </a>
 
-    <div class="aui-title" onclick="SwitchType();">分类选择<i class="aui-iconfont aui-icon-unfold"
-                                                          style="font-size: 14px"></i></div>
+    <div class="aui-title" onclick="SwitchType();">
+        分类选择
+        <i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>
+    </div>
 </header>
 <div id="main">
     <div id="document">
@@ -133,6 +135,45 @@
     }
     function GenerateUnitTest() {
         //单元测试
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '先喝杯茶...'
+        });
+
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'QuestionType',
+            id: questionTypeId,
+            column: 'chapter'
+        }, function (ret, err) {
+            api.hideProgress();
+            if (ret) {
+                var allChapterList = [];
+                for (var i = 0; i < ret.length; i++) {
+                    var dat = {
+                        id: ret[i].id,
+                        cname: ret[i].chapterName
+                    };
+                    allChapterList.push(dat);
+                }
+
+                api.openWin({
+                    name: 'chapterSelectFrame',
+                    url: './chapterSelectFrame.html',
+                    pageParam: {
+                        allChapterList: allChapterList
+                    }
+                });
+            } else {
+                api.toast({
+                    msg: '获取章节失败，请重试...',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
     }
     function GenerateCompositeTest() {
         //综合测试
@@ -164,12 +205,12 @@
         }, function (ret, err) {
             var index = ret.buttonIndex;
             var item = allTypeList[index - 1];
-            if(index <= allTypeList.length){
+            if (index <= allTypeList.length) {
                 api.alert({
                     msg: '你刚点击索引' + index + '名称为' + item.name + 'ID为' + item.id
                 });
             }
-            else{
+            else {
                 api.alert({
                     msg: '你刚点击了取消'
                 });

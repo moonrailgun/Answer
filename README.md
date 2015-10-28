@@ -66,3 +66,6 @@ Answer
 - Document 资料类
 	- file 上传的文件*
 	- uploadId 上传人ID
+- Rank 排行榜
+	- userId (关联_user) 该用户ID*
+	- score 该用户积分

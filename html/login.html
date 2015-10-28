@@ -101,8 +101,8 @@
             username: $username,
             password: $password
         }, function (ret, err) {
+            api.hideProgress();
             if (ret) {
-                api.hideProgress();
                 var token = ret.id;
                 var model = api.require('model');
                 model.findById({
@@ -133,7 +133,6 @@
                 });
             }
             else {
-                api.hideProgress();
                 api.alert({msg: '登陆失败，请确认您的账号密码正确'});
             }
         });

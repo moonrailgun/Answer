@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="CloseWin()"></span>
+    </a>
+
+    <div class="aui-title" onclick="SwitchChapter();">
+        章节选择
+    </div>
+</header>
+<div id="main"></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var pageParam = api.pageParam;
+        var allChapterList = pageParam.allChapterList;
+        $api.fixIos7Bar($api.dom('header'));//标题
+        //生成页
+        var $main = $api.dom('#main');
+        var str = '';
+        for (var i = 0; i < allChapterList.length; i++) {
+            str += '<div><a onclick="GenerateChapterTestPaper(\''+ allChapterList[i].id +'\')">'+ allChapterList[i].cname + '</a></div>';
+        }
+        $api.html($main, str);
+        alert(str);
+    };
+
+    function GenerateChapterTestPaper(chapterId){
+        alert(chapterId);
+    }
+
+    function CloseWin() {
+        api.closeWin();
+    }
+</script>
+</html>
