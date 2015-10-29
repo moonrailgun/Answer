@@ -5,62 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <style>
         html, body {
-            background-color: #dfdede !important;
+            /*background-color: #dfdede !important;*/
+            background: -webkit-linear-gradient(top, #4fbcf4, #32cabe);
+        }
+
+        a {
+            color: #000;
+        }
+
+        i.aui-iconfont {
+            font-size: 24px;
+            color: #ffffff;
         }
 
         #account {
             display: -webkit-box;
-            height: 60px;
-            border-bottom: solid 1px #d4d3d3;
+            color: #FFFFFF;
+            height: 260px;
+            width: 260px;
+            background-color: #2da1da;
+            position: relative;
+            margin-bottom: 10px;
         }
 
         #nickname {
-            line-height: 60px;
-            -webkit-box-flex: 1;
-            padding-left: 10px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            line-height: 80px;
+            font-size: 22px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         #head-img {
-            height: 60px;
-            width: 60px;
-            margin-left: 10px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -65px;
+            margin-top: -91px;
+            height: 130px;
+            width: 130px;
+            background-color: #88caec;
+            border-radius: 400px;
         }
 
         #head-img img {
-            height: 40px;
-            width: 40px;
-            border-radius: 20px;
-            margin: 10px;
+            height: 90%;
+            width: 90%;
+            border-radius: 400px;
+            margin: 5%;
         }
 
         li {
             position: relative;
             padding: 3px 10px;
-            border-bottom: 1px solid #d4d3d3;
-            background-size: 10px;
-            background-repeat: no-repeat;
-            background-position: 78%;
-        }
-
-        li:first-child {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             height: 46px;
             display: -webkit-box;
             -webkit-box-align: center;
         }
 
         .liActive {
-            background-color: #919191;
+            background-color: rgba(0, 0, 0, 0.3);
         }
 
         li a {
             display: block;
             padding: 10px 30px;
             background-size: 20px;
-            background-repeat: no-repeat;
-            background-position: left;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -69,27 +90,51 @@
     <div id="account" tapmode="liActive" onclick="ShowProfile();">
         <div id="head-img"><img src="../image/default_head.jpg"/></div>
         <div id="nickname">游客</div>
+        <div style="height: 10px;width: 100%;background-color: #33abdd;position: absolute;bottom: -10px;"></div>
     </div>
     <ul>
-        <li tapmode="liActive" onclick="OpenWin('home.html')"><a class="home active">首页</a></li>
-        <li tapmode="liActive" onclick="OpenWin('answer.html')"><a class="answer">答题</a></li>
-        <li tapmode="liActive" onclick="OpenWin('rank.html')"><a class="rank">排名</a></li>
-        <li tapmode="liActive" onclick="OpenNewWin('messageBoardFrame.html')"><a class="messageBoard">留言</a></li>
-        <li tapmode="liActive" onclick="OpenWin('document.html')"><a class="document">资料</a></li>
-        <li tapmode="liActive" onclick="OpenWin('entertaining.html')"><a class="entertaining">娱乐</a></li>
-        <li tapmode="liActive" onclick="OpenWin('more.html')"><a class="more">更多</a></li>
-        <li tapmode="liActive" onclick="OpenWin('setting.html')"><a class="setting">设置</a></li>
-        <li tapmode="liActive" onclick="OpenWin('about.html')"><a class="about">关于</a></li>
+        <li tapmode="liActive" onclick="OpenWin('home.html')">
+            <i class="aui-iconfont aui-icon-home"></i><a>首页</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenWin('answer.html')">
+            <i class="aui-iconfont aui-icon-edit"></i><a>答题</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenWin('rank.html')">
+            <i class="aui-iconfont aui-icon-order"></i><a>排名</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenNewWin('messageBoardFrame.html')">
+            <i class="aui-iconfont aui-icon-message"></i><a>留言</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenWin('document.html')">
+            <i class="aui-iconfont aui-icon-file"></i><a>资料</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenWin('entertaining.html')">
+            <i class="aui-iconfont aui-icon-game"></i><a>娱乐</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenWin('more.html')">
+            <i class="aui-iconfont aui-icon-more"></i><a>更多</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenWin('setting.html')">
+            <i class="aui-iconfont aui-icon-settings"></i><a>设置</a>
+        </li>
+        <li tapmode="liActive" onclick="OpenWin('about.html')">
+            <i class="aui-iconfont aui-icon-info"></i><a>关于</a>
+        </li>
     </ul>
 </nav>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script>
     apiready = function () {
-        api.setStatusBarStyle({
-            style: 'dark'
-        });
+        //动态适配UI
         $api.fixIos7Bar($api.dom('nav'));
+        var navWidth = api.winWidth - 60;
+
+        var $account = $api.dom('#account');
+        $api.css($account, 'height:' + navWidth + 'px;width:' + navWidth + 'px;background-color:#2da1da;');
+        var $img = $api.dom('#head-img');
+        var imgWidth = navWidth * 0.5;
+        $api.css($img, 'height:' + imgWidth + 'px;width:' + imgWidth + 'px;margin-left:-' + imgWidth * 0.5 + 'px;margin-top:-' + imgWidth * 0.7 + 'px;');
     };
     //变更窗口
     function OpenWin(url) {
