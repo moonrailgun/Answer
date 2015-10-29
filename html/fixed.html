@@ -52,15 +52,13 @@
             margin-top: -91px;
             height: 130px;
             width: 130px;
-            background-color: #88caec;
-            border-radius: 400px;
         }
 
         #head-img img {
-            height: 90%;
-            width: 90%;
+            height: 100%;
+            width: 100%;
+            border: 8px solid #88caec;
             border-radius: 400px;
-            margin: 5%;
         }
 
         li {
@@ -80,14 +78,13 @@
         li a {
             display: block;
             padding: 10px 30px;
-            background-size: 20px;
             color: #ffffff;
         }
     </style>
 </head>
 <body>
 <nav>
-    <div id="account" tapmode="liActive" onclick="ShowProfile();">
+    <div id="account" onclick="ShowProfile();">
         <div id="head-img"><img src="../image/default_head.jpg"/></div>
         <div id="nickname">游客</div>
         <div style="height: 10px;width: 100%;background-color: #33abdd;position: absolute;bottom: -10px;"></div>
@@ -127,15 +124,18 @@
 <script>
     apiready = function () {
         //动态适配UI
-        $api.fixIos7Bar($api.dom('nav'));
+        var $nav = $api.dom('nav');
+        $api.fixIos7Bar($nav);
         var navWidth = api.winWidth - 60;
+        $api.css($nav, 'width:' + navWidth + 'px;');
 
         var $account = $api.dom('#account');
         $api.css($account, 'height:' + navWidth + 'px;width:' + navWidth + 'px;background-color:#2da1da;');
-        var $img = $api.dom('#head-img');
+        var $imgContainer = $api.dom('#head-img');
         var imgWidth = navWidth * 0.5;
-        $api.css($img, 'height:' + imgWidth + 'px;width:' + imgWidth + 'px;margin-left:-' + imgWidth * 0.5 + 'px;margin-top:-' + imgWidth * 0.7 + 'px;');
+        $api.css($imgContainer, 'height:' + imgWidth + 'px;width:' + imgWidth + 'px;margin-left:-' + imgWidth * 0.5 + 'px;margin-top:-' + imgWidth * 0.7 + 'px;');
     };
+
     //变更窗口
     function OpenWin(url) {
         api.closeSlidPane();
