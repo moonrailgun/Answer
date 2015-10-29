@@ -30,7 +30,11 @@
                 }, function (ret, err) {
                     var status = ret.status;
                     if (status) {
-                        api.alert({msg: '创建目录成功'});
+                        api.toast({
+                            msg: '创建文档目录成功',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
                     } else {
                         api.alert({msg: err.msg});
                     }
@@ -106,7 +110,11 @@
                                         }
                                     },function(ret, err){
                                         if(ret){
-                                            $api.html($process, '进度:100.0  上传完毕');
+                                            api.toast({
+                                                msg: '上传完毕',
+                                                duration: 2000,
+                                                location: 'bottom'
+                                            });
                                         }else{
                                             $api.html($process, '进度:100.0  <span class="aui-text-danger">上传失败</span>');
                                         }

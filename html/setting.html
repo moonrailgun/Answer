@@ -8,18 +8,35 @@
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        .liActive {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
 <div class="aui-content">
     <ul class="aui-list-view">
-        <li class="aui-list-view-cell" data-win="list_arrow" onclick="bindPhone();">
+        <li tapmode="liActive" class="aui-list-view-cell" data-win="list_arrow" onclick="BindPhone();">
             <div class="aui-arrow-right">绑定手机</div>
         </li>
-        <li class="aui-list-view-cell" data-win="list_thumb" onclick="ClearCache();">
+        <li tapmode="liActive" class="aui-list-view-cell" data-win="list_thumb" onclick="ClearCache();">
             <div>清空缓存<i id="CacheSize" class="aui-pull-right"></i></div>
         </li>
-        <li class="aui-list-view-cell" data-win="list_thumb" onclick="SMSToFriend();">
+        <li tapmode="liActive" class="aui-list-view-cell" data-win="list_thumb" onclick="SMSToFriend();">
             <div class="aui-arrow-right">推荐给好友</div>
+        </li>
+        <li class="aui-list-view-cell aui-switch-body">
+            <div class="aui-switch-title">通知</div>
+            <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+        </li>
+    </ul>
+    <ul class="aui-list-view">
+        <li tapmode="liActive" class="aui-list-view-cell" data-win="list_arrow" onclick="Feedback();">
+            <div class="aui-arrow-right">意见反馈</div>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell" data-win="list_arrow" onclick="About();">
+            <div class="aui-arrow-right">关于作品</div>
         </li>
     </ul>
 </div>
@@ -31,7 +48,7 @@
         UpdateCacheSize();
     };
     //绑定手机
-    function bindPhone(){
+    function BindPhone(){
         api.openWin({
             name: 'bindPhone',
             url: './bindPhone.html',
@@ -39,7 +56,7 @@
         });
     }
 
-
+    //发送信息给好友
     function SMSToFriend() {
         api.openContacts(function (ret, err) {
             if (ret.status) {
@@ -59,7 +76,6 @@
             }
         });
     }
-
     //清空缓存
     function ClearCache() {
         api.clearCache(function (ret, err) {
@@ -76,6 +92,21 @@
             var size = ret.size;
             size = size / 1024 / 1024;
             $api.text($api.dom('#CacheSize'), size.toFixed(2) + 'MB');
+        });
+    }
+    //意见反馈
+    function Feedback(){
+        api.openWin({
+            name: 'writeMessage',
+            url: './writeMessage.html'
+        });
+    }
+    //关于作品
+    function About(){
+        var $script = "OpenWin('about.html');";
+        api.execScript({
+            name: "slide",
+            script: $script
         });
     }
 </script>

@@ -25,6 +25,13 @@
     </style>
 </head>
 <body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">关于</div>
+</header>
 <div id="header"><img src="../icon/icon150x150.png"/></div>
 <div id="main">
     <h1>关于作品</h1>
@@ -34,6 +41,7 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
     };
 </script>
 </html>

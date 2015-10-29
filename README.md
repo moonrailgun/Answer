@@ -66,6 +66,9 @@ Answer
 - Document 资料类
 	- file 上传的文件*
 	- uploadId 上传人ID
+- DocumenType 资料分类
+	- typeName 资料类型名*
+	- document (关联Document) 资料
 - Rank 排行榜
 	- userId (关联_user) 该用户ID*
 	- score 该用户积分
