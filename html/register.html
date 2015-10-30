@@ -10,12 +10,14 @@
     <link rel="stylesheet" type="text/css" href="../css/common.css"/>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
     <style>
-        #register,#warp {
+        #register, #warp {
             margin: 10px auto;
         }
-        .aui-btn-block{
+
+        .aui-btn-block {
             width: 95%;
         }
+
         .mrg-login-form {
             border: solid 1px #ddd;
             border-radius: 5px;
@@ -65,22 +67,31 @@
     function Back() {
         api.closeWin();
     }
-    function Register(){
+    function Register() {
         api.showProgress({
             style: 'default',
             animationType: 'fade',
             title: '努力加载中...',
             text: '先喝杯茶...'
         });
-        var $username =$api.val($api.dom('#data00')) ;
+        var $username = $api.val($api.dom('#data00'));
         var $nickname = $api.val($api.dom('#data01'));
         var $password = $api.val($api.dom('#data02'));
-        if($username == ""||$nickname == ""||$password == ""){
+        if ($username == "" || $nickname == "" || $password == "") {
             api.hideProgress();
             api.alert({msg: '(╯‵□′)╯︵┻━┻不要留空啊混蛋'});
             return;
         }
-
+        if (!(/^([a-zA-z_]{1})([\w]*)$/g.test($username))) {
+            api.hideProgress();
+            api.alert({msg: '用户名不合法,请不要输入中文'});
+            return;
+        }
+        if ($password.length < 6) {
+            api.hideProgress();
+            api.alert({msg: '密码长度必须大于6'});
+            return;
+        }
         if ($password != $api.val($api.dom('#data03'))) {
             api.hideProgress();
             api.alert({msg: '(╯‵□′)╯︵┻━┻两次密码不一样啊混蛋'});
@@ -98,7 +109,7 @@
                     user.login({
                         username: $username,
                         password: $password
-                    }, function(ret, err) {
+                    }, function (ret, err) {
                         if (!ret) {
                             api.hideProgress();
                             api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
@@ -114,7 +125,7 @@
                             }, function (ret, err) {
                                 if (!ret) {
                                     api.hideProgress();
-                                    api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' +JSON.stringify(err)});
+                                    api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
                                 } else {
                                     api.hideProgress();
                                     api.alert({msg: "o(*≧▽≦)ツ\n恭喜！注册成功"});
