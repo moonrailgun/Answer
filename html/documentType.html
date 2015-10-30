@@ -10,64 +10,72 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
 </head>
 <body>
-<h1 style="color: #15b5e9">请选择学科</h1>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
 
-<div id="questionType"><h3>正在获取学科请稍后</h3></div>
+    <div class="aui-title">资料库 - 分类</div>
+</header>
+<div id="documentType">
+    <div style="text-align: center;"><img src="../image/nodata_s01.png"></div>
+</div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/mrg.js"></script>
 <script type="text/javascript">
-    var allTypeList = [];
     apiready = function () {
+        var $header = $api.dom('header');
+        $api.fixIos7Bar($header);
+
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
                 var queryId = ret.qid;
+                query.limit({
+                    qid: queryId,
+                    value: 20
+                });
                 var model = api.require('model');
                 model.findAll({
-                    class: "QuestionType",
+                    class: "DocumentType",
                     qid: queryId
                 }, function (ret, err) {
                     if (!ret) {
                         api.toast({
-                            msg: '获取题型失败，请重试...',
+                            msg: '获取数据库失败，请重试...',
                             duration: 2000,
                             location: 'bottom'
                         });
                     } else {
-                        $questionType = $api.dom('#questionType');
-                        $api.html($questionType, "");//清空提示
+                        var $documentType = $api.dom('#documentType');
+                        $api.html($documentType, '');
                         var str = '';
                         str += '<div class="aui-content"><ul class="aui-grid-sixteen">';
                         for (var i = 0; i < ret.length; i++) {
-                            var data = ret[i];
-                            var id = data.id;
-                            var name = data.name;
+                            var id = ret[i].id;
+                            var name = ret[i].name;
                             var colorStr = GetRandomValColor();//设置随机颜色
-                            str += "<li class='aui-col-xs-3 aui-text-center' onclick=\"SelectTest('" + id + "','" + name + "')\">"
+                            str += "<li class='aui-col-xs-3 aui-text-center' onclick=\"OpenDocumentContent('" + id + "','" + name + "')\">"
                                     + "<span class='aui-iconfont aui-icon-form aui-text-" + colorStr + "'></span>"
                                     + "<p> " + name + "</p></li>";
-                            allTypeList[i] = {
-                                id: id,
-                                name: name
-                            }
                         }
                         str += '</ul></div>';
-                        $api.html($questionType, str);
+
+                        $api.html($documentType, str);
                     }
                 });
             }
         });
     };
-    //打开测试题选择页面
-    function SelectTest(typeId, typeName) {
+
+    function OpenDocumentContent(id, name) {
         api.openWin({
-            name: 'answerSelectFrame',
-            url: './answerSelectFrame.html',
+            name: 'documentContent',
+            url: './documentContent.html',
             pageParam: {
-                typeId: typeId,
-                typeName: typeName,
-                allTypeList: allTypeList
+                id: id,
+                name: name
             }
         });
     }

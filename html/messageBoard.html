@@ -68,7 +68,6 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-    //todo 回调乱序
     apiready = function () {
         //配置下拉刷新
         api.setRefreshHeaderInfo({
@@ -172,7 +171,9 @@
                                         if (data.userId) {
                                             msg.userId = data.userId.id;
                                             msg.author = data.userId.nickname;
-                                            msg.img = data.userId.avatar.url;
+                                            if(data.userId.avatar){
+                                                msg.img = data.userId.avatar.url;
+                                            }
                                         }
                                         msg.content = data.content;
                                         msg.comment = res;
@@ -193,7 +194,9 @@
     //生成留言
     function GenerateMessage() {
         for (var i = 0; i < msgList.length; i++) {
-            AddMessage(msgList[i]);//添加一条数据
+            if(typeof msgList[i] == 'object'){
+                AddMessage(msgList[i]);//添加一条数据
+            }
         }
     }
 

@@ -12,7 +12,7 @@
 <body>
 <div onclick="Search();"><a>搜索资料</a></div>
 <div><a>我的资料</a></div>
-<div><a>资料库</a></div>
+<div id="documentBank"><a onclick="ShowDocumentBank();">资料库</a></div>
 <div id="upload"><a onclick="Upload()">上传资料</a><span>进度:0.0</span></div>
 <div><a onclick="ShowDownloadManager()">下载</a></div>
 </body>
@@ -62,6 +62,14 @@
                 }
             });
         });
+    }
+
+    //打开资料库
+    function ShowDocumentBank(){
+        api.openWin({
+            name: 'documentType',
+            url: './documentType.html'
+        })
     }
 
     //todo 上传文件后缀验证与进度回调与把文件链接到文档中
