@@ -11,11 +11,10 @@
             /*background-color: #dfdede !important;*/
             background: -webkit-linear-gradient(top, #4fbcf4, #32cabe);
         }
-
-        a {
-            color: #000;
+        nav{
+            height: 100%;
+            position: relative;
         }
-
         i.aui-iconfont {
             font-size: 24px;
             color: #ffffff;
@@ -60,25 +59,66 @@
             border: 8px solid #88caec;
             border-radius: 400px;
         }
+        ul.mainCell{
+            width: 100%;
+            padding: 0 4px;
+        }
 
-        li {
+        ul.mainCell li {
+            width: 33%;
+            height: 86px;
             position: relative;
-            padding: 3px 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            height: 46px;
+            float: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-right-color: rgba(0, 0, 0, 0.1);
+            border-bottom-color: rgba(0, 0, 0, 0.1);
             display: -webkit-box;
             -webkit-box-align: center;
+            text-align: center;
+        }
+        ul.mainCell li:nth-child(1),ul.mainCell li:nth-child(4),ul.mainCell li:nth-child(7){
+            border-left:0;
+        }
+        ul.mainCell li:nth-child(3),ul.mainCell li:nth-child(6),ul.mainCell li:nth-child(9){
+            border-right:0;
+        }
+        ul.mainCell li div{
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            margin: 0 auto;
+        }
+        ul.mainCell li div a {
+            display: block;
+            color: #FFFFFF;
+        }
+
+        ul.bottomCell{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            padding-bottom: 6px;
+        }
+        ul.bottomCell li{
+            width: 50%;
+            height: 40px;
+            float: left;
+            display: -webkit-box;
+            -webkit-box-align: center;
+        }
+        ul.bottomCell li:first-child{
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        ul.bottomCell li div{
+            margin: 0 auto;
+        }
+        ul.bottomCell li div a{
+            color: #FFFFFF;
         }
 
         .liActive {
             background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        li a {
-            display: block;
-            padding: 10px 30px;
-            color: #ffffff;
         }
     </style>
 </head>
@@ -89,30 +129,32 @@
         <div id="nickname">游客</div>
         <div style="height: 10px;width: 100%;background-color: #33abdd;position: absolute;bottom: -10px;"></div>
     </div>
-    <ul>
+    <ul class="mainCell">
         <li tapmode="liActive" onclick="OpenWin('home.html')">
-            <i class="aui-iconfont aui-icon-home"></i><a>首页</a>
+            <div><i class="aui-iconfont aui-icon-home"></i><a>首页</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenWin('answer.html')">
-            <i class="aui-iconfont aui-icon-edit"></i><a>答题</a>
+            <div><i class="aui-iconfont aui-icon-edit"></i><a>答题</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenWin('rank.html')">
-            <i class="aui-iconfont aui-icon-order"></i><a>排名</a>
+            <div><i class="aui-iconfont aui-icon-order"></i><a>排名</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenNewWin('messageBoardFrame.html')">
-            <i class="aui-iconfont aui-icon-message"></i><a>留言</a>
+            <div><i class="aui-iconfont aui-icon-message"></i><a>留言</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenWin('document.html')">
-            <i class="aui-iconfont aui-icon-file"></i><a>资料</a>
+            <div><i class="aui-iconfont aui-icon-file"></i><a>资料</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenWin('entertaining.html')">
-            <i class="aui-iconfont aui-icon-game"></i><a>娱乐</a>
+            <div><i class="aui-iconfont aui-icon-game"></i><a>娱乐</a></div>
         </li>
+    </ul>
+    <ul class="bottomCell">
         <li tapmode="liActive" onclick="OpenWin('more.html')">
-            <i class="aui-iconfont aui-icon-more"></i><a>更多</a>
+            <div><i class="aui-iconfont aui-icon-more"></i><a>更多</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenWin('setting.html')">
-            <i class="aui-iconfont aui-icon-settings"></i><a>设置</a>
+            <div><i class="aui-iconfont aui-icon-settings"></i><a>设置</a></div>
         </li>
     </ul>
 </nav>
@@ -125,12 +167,15 @@
         $api.fixIos7Bar($nav);
         var navWidth = api.winWidth - 60;
         $api.css($nav, 'width:' + navWidth + 'px;');
-
         var $account = $api.dom('#account');
         $api.css($account, 'height:' + navWidth + 'px;width:' + navWidth + 'px;background-color:#2da1da;');
         var $imgContainer = $api.dom('#head-img');
         var imgWidth = navWidth * 0.5;
         $api.css($imgContainer, 'height:' + imgWidth + 'px;width:' + imgWidth + 'px;margin-left:-' + imgWidth * 0.5 + 'px;margin-top:-' + imgWidth * 0.7 + 'px;');
+        var $listItem = $api.domAll('ul li');
+        for(var i=0;i<$listItem.length;i++){
+            $api.css($listItem[i], 'height:' + $api.cssVal($listItem, 'width'));
+        }
     };
 
     //变更窗口
