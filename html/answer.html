@@ -10,9 +10,9 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
 </head>
 <body>
-<h1 style="color: #15b5e9">请选择学科</h1>
+<h1 style="color: #15b5e9;font-size: 20px;text-align: center;">请选择学科</h1>
 
-<div id="questionType"><h3>正在获取学科请稍后</h3></div>
+<div id="questionType"><div style="text-align: center"><img src="../image/loading.gif"></div></div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/mrg.js"></script>
@@ -46,7 +46,7 @@
                             var colorStr = GetRandomValColor();//设置随机颜色
                             str += "<li class='aui-col-xs-3 aui-text-center' onclick=\"SelectTest('" + id + "','" + name + "')\">"
                                     + "<span class='aui-iconfont aui-icon-form aui-text-" + colorStr + "'></span>"
-                                    + "<p> " + name + "</p></li>";
+                                    + "<p>" + name + "</p></li>";
                             allTypeList[i] = {
                                 id: id,
                                 name: name

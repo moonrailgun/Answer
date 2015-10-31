@@ -84,10 +84,9 @@
 <div id="main">
     <div id="document">
         <ul class="aui-list-view">
-            <li class="aui-list-view-cell" data-win="list_thumb">
+            <li class="aui-list-view-cell">
                 <a class="aui-arrow-right">
-                    <i class="aui-iconfont aui-icon-file"></i>
-                    参考资料
+                    <i class="aui-iconfont aui-icon-file"></i>参考资料
                     <span class="aui-badge aui-badge-danger">12</span>
                 </a>
             </li>
@@ -109,9 +108,9 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-    //todo 分类选择切换科目
     var questionTypeId;
     var allTypeList = [];
+    var currentTypeDocument = [];
     apiready = function () {
         var pageParam = api.pageParam;
         var typeId = pageParam.typeId;
@@ -119,9 +118,8 @@
         allTypeList = pageParam.allTypeList;
         //标题
         $api.fixIos7Bar($api.dom('header'));
-        var $title = $api.dom('header .aui-title');
-        $api.html($title, typeName + ' - 分类选择' + '<i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>');
-
+        SetTitle(typeName);
+        GetDocumentNum(typeName);
         questionTypeId = typeId;
     };
     //生成试卷
@@ -216,13 +214,65 @@
             var index = ret.buttonIndex;
             var item = allTypeList[index - 1];
             if (index <= allTypeList.length) {
-                api.alert({
-                    msg: '你刚点击索引' + index + '名称为' + item.name + 'ID为' + item.id
-                });
+                questionTypeId = item.id;
+                SetTitle(item.name);
+                GetDocumentNum(item.name);
             }
             else {
-                api.alert({
-                    msg: '你刚点击了取消'
+                //取消
+            }
+        });
+    }
+
+    function SetTitle(typeName){
+        var $title = $api.dom('header .aui-title');
+        $api.html($title, typeName + ' - 分类选择' + '<i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>');
+    }
+    function GetDocumentNum(typeName){
+        currentTypeDocument = [];//清空之前的数据
+        var query = api.require('query');
+        query.createQuery(function(ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereLike({
+                    qid: queryId,
+                    column: 'name',
+                    value : typeName
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "DocumentType",
+                    qid: queryId
+                }, function(ret, err) {
+                    if (ret) {
+                        var count = 0;
+                        for(var i = 0;i<ret.length;i++){
+                            var id = ret[i].id;
+                            var relation_m = api.require('relation');
+                            relation_m.findAll({
+                                class: 'DocumentType',
+                                id: id,
+                                column: 'documents'
+                            }, function (ret, err) {
+                                if (ret) {
+                                    count += ret.length;
+                                    currentTypeDocument.push(ret);//将资料数据添加到当前的分类资料数组里
+                                    
+                                    var str = '';
+                                    if(count > 0)
+                                    {
+                                        str += '<i class="aui-iconfont aui-icon-file"></i>参考资料<span class="aui-badge aui-badge-danger">'+count+'</span>';
+                                    }else{
+                                        str += '<i class="aui-iconfont aui-icon-file"></i>参考资料';
+                                    }
+                                    $api.html($api.dom('#document a'), str);
+                                }
+                            });
+                        }
+                    }
+                    else{
+                        alert('出现错误:' + JSON.stringify(err));
+                    }
                 });
             }
         });
