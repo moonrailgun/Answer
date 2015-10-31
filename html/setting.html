@@ -28,7 +28,11 @@
         </li>
         <li class="aui-list-view-cell aui-switch-body">
             <div class="aui-switch-title">通知</div>
-            <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right" checked>
+            <input id="notify" type="checkbox" class="aui-switch aui-switch-success aui-pull-right" onchange="SetPrefs()">
+        </li>
+        <li class="aui-list-view-cell aui-switch-body">
+            <div class="aui-switch-title">是否允许3G网络下载</div>
+            <input id="_3G" type="checkbox" class="aui-switch aui-switch-success aui-pull-right" onchange="SetPrefs()">
         </li>
     </ul>
     <ul class="aui-list-view">
@@ -44,8 +48,8 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
-        //缓存大小
-        UpdateCacheSize();
+        UpdateCacheSize();//更新缓存大小
+        GetPrefs();//设置偏好设置
     };
     //绑定手机
     function BindPhone(){
@@ -92,6 +96,32 @@
             var size = ret.size;
             size = size / 1024 / 1024;
             $api.text($api.dom('#CacheSize'), size.toFixed(2) + 'MB');
+        });
+    }
+    function GetPrefs(){
+        var notify = $api.dom('#notify');
+        var _3G = $api.dom('#_3G');
+        api.getPrefs({
+            key: 'notify'
+        }, function(ret, err){
+            notify.checked = ret.value;
+        });
+        api.getPrefs({
+            key: '3g'
+        }, function(ret, err){
+            _3G.checked = ret.value;
+        });
+    }
+    function SetPrefs(){
+        var notify = $api.dom('#notify');
+        var _3G = $api.dom('#_3G');
+        api.setPrefs({
+            key: 'notify',
+            value: notify.checked
+        });
+        api.setPrefs({
+            key: '3g',
+            value: _3G.checked
         });
     }
     //意见反馈

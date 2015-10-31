@@ -88,11 +88,14 @@
             },
             bounces: false,
             vScrollBarEnabled: true,
-            hScrollBarEnabled: false
+            hScrollBarEnabled: false,
+            reload:true
         });
     }
     //打开新窗口
     function OpenWin(url){
+        //打开首页
+        ChangeWin('home.html');
         api.openWin({
             name: url,
             url: './'+url

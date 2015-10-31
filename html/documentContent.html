@@ -22,6 +22,7 @@
 <div>收藏:1000</div>
 <div>资料</div>
 <div>评论</div>
+<div id="documentList"></div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
@@ -35,7 +36,48 @@
         var $title = $api.dom('header .aui-title');
         $api.text($title, name);
 
-        //todo根据id获取资料列表
+        //根据id获取资料列表
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'DocumentType',
+            id: id,
+            column: 'documents'
+        }, function (ret, err) {
+            if (ret) {
+                var str = '';
+                for (var i = 0; i < ret.length; i++) {
+                    var file = ret[i].file;
+                    var uploadId = ret[i].uploadId;
+                    if (file) {
+                        str += '<a onclick=\'OpenDocument("' + file.url + '","' + file.name + '","doc")\'>' + file.name + '</a>'
+                    }
+                }
+                $api.html($api.dom('#documentList'), str);
+            }
+        });
     };
+
+    //todo 对不同格式使用不同的处理
+    function OpenDocument(url, name, type) {
+        api.download({
+            url: url,
+            savePath: 'cache://' + name,
+            report: true,
+            cache: true,
+            allowResume: true
+        }, function (ret, err) {
+            if (ret) {
+//                var value = ('文件大小：' + ret.fileSize + '；下载进度：' + ret.percent + '；下载状态' + ret.state + '存储路径: ' + ret.savePath);
+                if (ret.state == 1) {
+                    var docReader = api.require('docReader');
+                    docReader.open({
+                        path: 'cache://' + name
+                    });
+                }
+            } else {
+//                var value = err.msg;
+            }
+        });
+    }
 </script>
 </html>
