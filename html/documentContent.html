@@ -64,18 +64,35 @@
             savePath: 'cache://' + name,
             report: true,
             cache: true,
-            allowResume: true
+            allowResume: false
         }, function (ret, err) {
             if (ret) {
-//                var value = ('文件大小：' + ret.fileSize + '；下载进度：' + ret.percent + '；下载状态' + ret.state + '存储路径: ' + ret.savePath);
-                if (ret.state == 1) {
+                if (ret.state == 0) {
+                    api.showProgress({
+                        style: 'default',
+                        animationType: 'fade',
+                        title: '正在打开...',
+                        text: ret.percent + '%'
+                    });
+                }
+                else if (ret.state == 1) {
+                    api.hideProgress();
                     var docReader = api.require('docReader');
                     docReader.open({
                         path: 'cache://' + name
                     });
                 }
+                else if (ret.state == 2) {
+                    api.hideProgress();
+                    api.toast({
+                        msg: '打开失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
             } else {
-//                var value = err.msg;
+                api.hideProgress();
+                api.alert({msg: err.msg});
             }
         });
     }
