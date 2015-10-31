@@ -179,7 +179,14 @@
             }
         }, function (ret) {
             if (ret) {
-                api.alert({msg: "搜索功能未实现:" + ret.text});
+                var text = ret.text;
+                api.openWin({
+                    name: 'searching',
+                    url:'./searching.html',
+                    pageParam: {
+                        word : text
+                    }
+                });
             }
         });
     }

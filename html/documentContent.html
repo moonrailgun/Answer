@@ -27,8 +27,7 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
-        var $header = $api.dom('header');
-        $api.fixIos7Bar($header);
+        $api.fixIos7Bar($api.dom('header'));
         var pageParam = api.pageParam;
         var id = pageParam.id;
         var name = pageParam.name;
@@ -49,7 +48,9 @@
                     var file = ret[i].file;
                     var uploadId = ret[i].uploadId;
                     if (file) {
-                        str += '<a onclick=\'OpenDocument("' + file.url + '","' + file.name + '","doc")\'>' + file.name + '</a>'
+                        var temp = file.name.split('.');
+                        var type = temp[temp.length -1];
+                        str += '<a onclick=\'OpenDocument("' + file.url + '","' + file.name + '","'+type+'")\'>' + file.name + '</a>'
                     }
                 }
                 $api.html($api.dom('#documentList'), str);
@@ -57,7 +58,6 @@
         });
     };
 
-    //todo 对不同格式使用不同的处理
     function OpenDocument(url, name, type) {
         api.download({
             url: url,
@@ -77,15 +77,30 @@
                 }
                 else if (ret.state == 1) {
                     api.hideProgress();
-                    var docReader = api.require('docReader');
-                    docReader.open({
-                        path: 'cache://' + name
-                    });
+                    if(type == 'doc' || type == 'docx' || type == 'xls' || type == 'xlsx'||type=='txt'){
+                        var docReader = api.require('docReader');
+                        docReader.open({
+                            path: 'cache://' + name
+                        });
+                    }
+                    else if(type == 'pdf'){
+                        var pdfReader = api.require('pdfReader');
+                        pdfReader.open({
+                            path:'cache://' + name
+                        });
+                    }
+                    else{
+                        api.toast({
+                            msg: '打开失败',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
                 }
                 else if (ret.state == 2) {
                     api.hideProgress();
                     api.toast({
-                        msg: '打开失败',
+                        msg: '打开失败,无法打开后缀为'+ type + '的文件',
                         duration: 2000,
                         location: 'bottom'
                     });

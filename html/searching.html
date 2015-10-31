@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
+
+    <div class="aui-title"></div>
+</header>
+<div id="result">
+    <div style="text-align: center"><img src="../image/nodata_s01.png"></div>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
+        var pageParam = api.pageParam;
+        var $title = $api.dom('header .aui-title');
+        var word = pageParam.word;
+        $api.text($title, '搜索结果 - ' + word);
+        var words = word.split(' ');
+        var $result = $api.dom('#result');
+
+        api.alert({msg: '暂时未实现搜索功能: '+ word});
+        //GetResult(words);
+    };
+
+    //todo
+    function GetResult(words){
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '先喝杯茶...'
+        });
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.justFields({
+                    qid: queryId,
+                    value:['id']
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "Document",
+                    qid: queryId
+                }, function (ret, err) {
+                    api.hideProgress();
+
+//                    if (ret) {
+//                        alert(JSON.stringify(ret));
+//                    }else if (err) {
+//                        alert(JSON.stringify(err));
+//                    }
+                });
+            }
+        });
+    }
+</script>
+</html>
