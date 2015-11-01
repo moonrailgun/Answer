@@ -45,7 +45,9 @@
     <div class="aui-title">资料库</div>
 </header>
 <div class="aui-content">
-    <ul class="aui-list-view"></ul>
+    <ul id="list" class="aui-list-view">
+
+    </ul>
 </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -66,13 +68,13 @@
                         str += '<li class="aui-list-view-cell" onclick="SwitchState(this)">'
                                 + '<div class="title">' + name + '</div>'
                                 + '<div class="operate">'
-                                + '<div><div onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
-                                + '<div><div onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
-                                + '<div><div onclick="AddFavour();">收藏</div></div>'
+                                + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
+                                + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
+                                + '<div><div class="aui-iconfont aui-icon-favor" onclick="AddFavour();">收藏</div></div>'
                                 + '</div>';
                     }
                 }
-                $api.html($api.dom('ul.aui-list-view'), str);
+                $api.html($api.dom('#list'), str);
             }
         }
     };
