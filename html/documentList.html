@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">资料库</div>
+</header>
+<div class="aui-content">
+    <ul class="aui-list-view">
+        <li class="aui-list-view-cell">
+            单行列表标题效果
+        </li>
+        <li class="aui-list-view-cell">
+            单行列表标题效果
+        </li>
+        <li class="aui-list-view-cell">
+            单行列表标题效果
+        </li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/mrg.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
+
+        if (api.pageParam) {
+            var documentFileList = api.pageParam.documentList;
+            if (documentFileList.length > 0) {
+                var str = '';
+                for (var i = 0; i < documentFileList.length; i++) {
+                    if (documentFileList[i].file) {
+                        var url = documentFileList[i].file.url;
+                        var name = documentFileList[i].file.name;
+                        var uploadId = documentFileList[i].uploadId;
+                        str += '<li class="aui-list-view-cell" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>' + name + '</div>'
+                    }
+                }
+                $api.html($api.dom('ul.aui-list-view'), str);
+            }
+        }
+
+    };
+</script>
+</html>

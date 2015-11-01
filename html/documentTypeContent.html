@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
+
+    <div class="aui-title"></div>
+</header>
+<div>高等数学</div>
+<div>下载:1000</div>
+<div>收藏:1000</div>
+<div>资料</div>
+<div>评论</div>
+<div id="documentList"></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/mrg.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
+        var pageParam = api.pageParam;
+        var id = pageParam.id;
+        var name = pageParam.name;
+
+        var $title = $api.dom('header .aui-title');
+        $api.text($title, name);
+
+        //根据id获取资料列表
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'DocumentType',
+            id: id,
+            column: 'documents'
+        }, function (ret, err) {
+            if (ret) {
+                var str = '';
+                for (var i = 0; i < ret.length; i++) {
+                    var file = ret[i].file;
+                    var uploadId = ret[i].uploadId;
+                    if (file) {
+                        str += '<a onclick=\'OpenDocumentFile("' + file.url + '","' + file.name + '")\'>' + file.name + '</a>'
+                    }
+                }
+                $api.html($api.dom('#documentList'), str);
+            }
+        });
+    };
+</script>
+</html>

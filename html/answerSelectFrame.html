@@ -84,10 +84,9 @@
 <div id="main">
     <div id="document">
         <ul class="aui-list-view">
-            <li class="aui-list-view-cell">
+            <li class="aui-list-view-cell" onclick="OpenDoucment()">
                 <a class="aui-arrow-right">
                     <i class="aui-iconfont aui-icon-file"></i>参考资料
-                    <span class="aui-badge aui-badge-danger">12</span>
                 </a>
             </li>
         </ul>
@@ -201,6 +200,7 @@
         });
     }
 
+    //切换分类
     function SwitchType() {
         //切换分类
         var buttonList = [];
@@ -223,11 +223,12 @@
             }
         });
     }
-
+    //根据分类名重设标题
     function SetTitle(typeName){
         var $title = $api.dom('header .aui-title');
         $api.html($title, typeName + ' - 分类选择' + '<i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>');
     }
+    //获取资料数目
     function GetDocumentNum(typeName){
         currentTypeDocument = [];//清空之前的数据
         var query = api.require('query');
@@ -256,7 +257,7 @@
                             }, function (ret, err) {
                                 if (ret) {
                                     count += ret.length;
-                                    currentTypeDocument.push(ret);//将资料数据添加到当前的分类资料数组里
+                                    currentTypeDocument = currentTypeDocument.concat(ret);//将资料数据合并到当前的分类资料数组里
                                     
                                     var str = '';
                                     if(count > 0)
@@ -276,6 +277,16 @@
                 });
             }
         });
+    }
+    //打开资料档
+    function OpenDoucment(){
+        api.openWin({
+            name:'documentList',
+            url:'./documentList.html',
+            pageParam:{
+                documentList : currentTypeDocument
+            }
+        })
     }
 
     function CloseWin() {
