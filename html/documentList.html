@@ -8,6 +8,33 @@
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        li .title {
+            color: #676767;
+        }
+
+        li .operate {
+            display: none;
+            padding: 0 10px;
+            padding-top: 6px;
+        }
+
+        li.actived .operate {
+            display: -webkit-box;
+        }
+
+        li.actived .operate > div {
+            -webkit-box-flex: 1;
+            text-align: center;
+            padding: 0 4px;
+            color: #FFFFFF;
+        }
+
+        li.actived .operate > div > div {
+            background-color: #41b5e4;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-primary">
@@ -18,17 +45,7 @@
     <div class="aui-title">资料库</div>
 </header>
 <div class="aui-content">
-    <ul class="aui-list-view">
-        <li class="aui-list-view-cell">
-            单行列表标题效果
-        </li>
-        <li class="aui-list-view-cell">
-            单行列表标题效果
-        </li>
-        <li class="aui-list-view-cell">
-            单行列表标题效果
-        </li>
-    </ul>
+    <ul class="aui-list-view"></ul>
 </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -46,13 +63,31 @@
                         var url = documentFileList[i].file.url;
                         var name = documentFileList[i].file.name;
                         var uploadId = documentFileList[i].uploadId;
-                        str += '<li class="aui-list-view-cell" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>' + name + '</div>'
+                        str += '<li class="aui-list-view-cell" onclick="SwitchState(this)">'
+                                + '<div class="title">' + name + '</div>'
+                                + '<div class="operate">'
+                                + '<div><div onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
+                                + '<div><div onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
+                                + '<div><div onclick="AddFavour();">收藏</div></div>'
+                                + '</div>';
                     }
                 }
                 $api.html($api.dom('ul.aui-list-view'), str);
             }
         }
-
     };
+
+    function SwitchState(obj) {
+        if ($api.hasCls(obj, 'actived')) {
+            $api.removeCls(obj, 'actived');
+        } else {
+            $api.addCls(obj, 'actived');
+        }
+    }
+
+    //添加到收藏
+    function AddFavour() {
+        api.toast({msg: '暂未实现'});
+    }
 </script>
 </html>
