@@ -12,58 +12,41 @@
             outline: 0;
         }
 
-        header {
-            background-color: #f2f2f2;
-            border-bottom: 1px solid #f2f2f2;
-        }
-
-        .header {
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: flex;
-        }
-
-        .header a {
-            display: block;
-            background-size: 30px;
-            background-repeat: no-repeat;
-            background-position: center;
-            padding: 20px;
-        }
-
-        .title {
-            line-height: 40px;
-            -webkit-box-flex: 1;
-            -webkit-flex: 1;
-            flex: 1;
-            text-align: center;
-        }
-
-        .header .menu {
-            background-image: url("../image/menu.png");
-        }
-        .header .home{
-            line-height: 40px;
-            padding-right: 10px;
-        }
-        .aui-icon-home:before{
-            font-size: 22px;
-            color: #5C5F70;
+        header.aui-bar-nav {
+            /*background-color: #f2f2f2;*/
+            border-bottom: 1px solid #52a7e2;
+            background-color: #4fbcf4;
+            color: #FFFFFF;
         }
     </style>
 </head>
 <body>
-<header>
-    <div class="index header ">
-        <a class="menu" onclick="sliding()"></a>
-        <div class="title">Answer</div>
-        <div class="home" onclick="BackHome()">
-            <div class="aui-iconfont aui-icon-home"></div>
-        </div>
-    </div>
+<header class="aui-bar aui-bar-nav">
+    <a class="aui-pull-left" onclick="sliding();">
+        <span class="aui-iconfont aui-icon-sort"></span>
+    </a>
+    <div class="aui-title">Answer</div>
+    <a class="aui-pull-right" onclick="BackHome();">
+        <span class="aui-iconfont aui-icon-home"></span>
+    </a>
 </header>
 <script type="text/javascript" src="../script/api.js"></script>
 <script>
+    apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
+
+        //添加事件监听
+        api.addEventListener({
+            name: 'keyback'
+        }, function (ret, err) {
+            //api.closeWidget();//关闭应用
+            BackHome();//回到首页
+        });
+
+        //打开首页
+        ChangeWin('home.html');
+    };
+
     function sliding() {
         api.openSlidPane({
             type: 'left'
@@ -75,8 +58,7 @@
     }
     //变更窗口
     function ChangeWin(url) {
-        var $header = $api.dom("header");
-        var headerHeight = $api.offset($header).h;
+        var headerHeight = $api.offset($api.dom("header")).h;
         api.openFrame({
             name: url,
             url: url,
@@ -101,21 +83,6 @@
             url: './'+url
         });
     }
-
-    apiready = function () {
-        $api.fixIos7Bar($api.dom('header'));
-
-        //添加事件监听
-        api.addEventListener({
-            name: 'keyback'
-        }, function (ret, err) {
-            //api.closeWidget();//关闭应用
-            BackHome();//回到首页
-        });
-
-        //打开首页
-        ChangeWin('home.html');
-    };
 </script>
 </body>
 </html>
