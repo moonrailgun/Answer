@@ -18,26 +18,24 @@
     <div class="aui-title"></div>
 </header>
 <div id="result">
-    <div style="text-align: center"><img src="../../image/nodata_s01.png"></div>
+
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    //todo 以后可以做多条件查询
     apiready = function () {
         $api.fixIos7Bar($api.dom('header'));
         var pageParam = api.pageParam;
         var $title = $api.dom('header .aui-title');
         var word = pageParam.word;
         $api.text($title, '搜索结果 - ' + word);
-        var words = word.split(' ');
-        var $result = $api.dom('#result');
+        //var words = word.split(' ');
 
-        api.alert({msg: '暂时未实现搜索功能: '+ word});
-        //GetResult(words);
+        GetResult(word.toString());
     };
 
-    //todo
-    function GetResult(words){
+    function GetResult(word) {
         api.showProgress({
             style: 'default',
             animationType: 'fade',
@@ -48,9 +46,10 @@
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
                 var queryId = ret.qid;
-                query.justFields({
+                query.whereLike({
                     qid: queryId,
-                    value:['id']
+                    column: 'name',
+                    value: word
                 });
                 var model = api.require('model');
                 model.findAll({
@@ -58,12 +57,28 @@
                     qid: queryId
                 }, function (ret, err) {
                     api.hideProgress();
+                    var $result = $api.dom('#result');
+                    if (ret) {
+                        if (ret.length <= 0) {
+                            $api.html($result, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
+                        } else {
+                            var str = '';
+                            for (var i = 0; i < ret.length; i++) {
+                                var item = ret[i];
+                                if (item.file) {
+                                    var id = item.id;
+                                    var name = item.name;
+                                    var url = item.file.url;
 
-//                    if (ret) {
-//                        alert(JSON.stringify(ret));
-//                    }else if (err) {
-//                        alert(JSON.stringify(err));
-//                    }
+                                    str += '<div style="background: #ddd"><div>' + id + '</div><div>' + name + '</div><div>' + url + '</div></div>';
+                                }
+                            }
+                            $api.html($result, str);
+                        }
+                    } else if (err) {
+                        api.alert({msg: '出现错误: ' + err.msg});
+                        $api.html($result, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
+                    }
                 });
             }
         });
