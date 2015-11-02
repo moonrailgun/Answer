@@ -64,6 +64,7 @@
 </head>
 <body>
 <div id="main">
+    <div style="text-align: center"><img src="../../image/loading.gif"></div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
@@ -193,6 +194,7 @@
     }
     //生成留言
     function GenerateMessage() {
+        $api.html($api.dom('#main'), '');
         for (var i = 0; i < msgList.length; i++) {
             if(typeof msgList[i] == 'object'){
                 AddMessage(msgList[i]);//添加一条数据
