@@ -6,8 +6,8 @@
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
         .liActive {
             background-color: rgba(0, 0, 0, 0.3);
@@ -45,7 +45,7 @@
     </ul>
 </div>
 </body>
-<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
         UpdateCacheSize();//更新缓存大小
@@ -55,7 +55,7 @@
     function BindPhone(){
         api.openWin({
             name: 'bindPhone',
-            url: './bindPhone.html',
+            url: '../settings/bindPhone.html',
             slidBackEnabled: false
         });
     }
@@ -127,8 +127,8 @@
     //意见反馈
     function Feedback(){
         api.openWin({
-            name: 'writeMessage',
-            url: './writeMessage.html'
+            name: 'writeMessage.html',
+            url: '../message/writeMessage.html'
         });
     }
     //关于作品

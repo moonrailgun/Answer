@@ -6,8 +6,8 @@
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
         footer {
             width: 100%;
@@ -43,7 +43,7 @@
     </div>
 </footer>
 </body>
-<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
         var $header = $api.dom('header');
@@ -54,7 +54,7 @@
         //内容框架
         api.openFrame({
             name: 'messageBoard',
-            url: './messageBoard.html',
+            url: '../message/messageBoard.html',
             rect: {
                 x: 0,
                 y: headerHeight,
@@ -71,8 +71,8 @@
     //打开留言窗口
     function OpenWriteWin(){
         api.openWin({
-            name: 'writeMessage',
-            url: './writeMessage.html'
+            name: 'writeMessage.html',
+            url: '../message/writeMessage.html'
         });
     }
 

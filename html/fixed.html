@@ -139,7 +139,7 @@
         <li tapmode="liActive" onclick="OpenWin('rank.html')">
             <div><i class="aui-iconfont aui-icon-rank"></i><a>排名</a></div>
         </li>
-        <li tapmode="liActive" onclick="OpenNewWin('messageBoardFrame.html')">
+        <li tapmode="liActive" onclick="OpenMessageBoard();">
             <div><i class="aui-iconfont aui-icon-message"></i><a>留言</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenWin('document.html')">
@@ -188,16 +188,17 @@
             script: $script
         });
     }
-    //打开新窗口
-    function OpenNewWin(url) {
+
+    function OpenMessageBoard(){
         api.closeSlidPane();
 
-        var $script = "OpenWin('" + url + "');";
+        var $script = "OpenWin('messageBoardFrame.html');";
         api.execScript({
             name: "slide",
             script: $script
         });
     }
+
     //更新头像与昵称
     function UpdateAvatar() {
         var userInfo = $api.getStorage('userInfo');

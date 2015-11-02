@@ -6,9 +6,9 @@
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
         #main {
             padding: 0;
@@ -49,7 +49,7 @@
 <div id="main">
 </div>
 </body>
-<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     var rightNum = 0;//正确答案数
     var currentNum = 1;//当前题目编号
@@ -62,7 +62,7 @@
         var html = '';
         //循环添加题目
         if (testQuestion.length <= 0) {
-            html = '<img src="../image/nodata_s01.png" />';
+            html = '<img src="../../image/nodata_s01.png" />';
             $api.html($api.dom('#main'), html);
         } else {
             for (var i = 0; i < testQuestion.length; i++) {

@@ -61,7 +61,7 @@
         var headerHeight = $api.offset($api.dom("header")).h;
         api.openFrame({
             name: url,
-            url: url,
+            url: './index/'+url,
             rect: {
                 x: 0,
                 y: headerHeight,
@@ -77,11 +77,11 @@
     //打开新窗口
     function OpenWin(url){
         //打开首页
-        ChangeWin('home.html');
         api.openWin({
-            name: url,
-            url: './'+url
+            name : url,
+            url : './index/' + url
         });
+        ChangeWin('home.html');
     }
 </script>
 </body>

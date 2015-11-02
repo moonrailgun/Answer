@@ -6,8 +6,8 @@
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
         body {
             min-height: 100%;
@@ -66,7 +66,7 @@
 <div id="main">
 </div>
 </body>
-<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
         //配置下拉刷新
@@ -100,7 +100,7 @@
     //添加一条留言
     function AddMessage(msg) {
         var message = '',
-                img = '../image/default_head.jpg';
+                img = '../../image/default_head.jpg';
         $main = $api.dom('#main');
         if (msg.img) {
             img = msg.img;
