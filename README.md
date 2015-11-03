@@ -56,6 +56,13 @@
 
 # 数据库架构 #
 ## 数据库 ##
+- _user 用户
+	- username 用户名
+	- password (隐藏) 用户密码
+	- accessTokens 用户登陆凭证
+	- nickname 用户昵称(显示用)
+	- avatar (文件) 用户头像，大小100*100
+	- favorite (关联Favorite) 用户收藏
 - QuestionBank 题库
 	- title 题目标题
 	- pic 题目图片
