@@ -27,6 +27,7 @@
 
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     apiready = function () {
         var $header = $api.dom('header');
@@ -62,21 +63,6 @@
             }
         });
     };
-
-    function OpenScanner() {
-        var scanner = api.require('FNScanner');
-        scanner.openScanner({
-            autorotation: true,
-            saveToAlbum: false
-        }, function (ret) {
-            if (ret && (ret.eventType == 'success')) {
-                alert(JSON.stringify(ret.content));
-            }
-            else if (ret && ret.eventType == 'fail') {
-                api.alert('扫码失败。请重试');
-            }
-        });
-    }
 
     function CloseWin() {
         api.closeFrame({

@@ -15,6 +15,22 @@ function GetRandomValColor() {
     return GetRandomValFromArray(randomColorCls);
 }
 
+//打开二维码扫码
+function OpenScanner() {
+    var scanner = api.require('FNScanner');
+    scanner.openScanner({
+        autorotation: true,
+        saveToAlbum: false
+    }, function (ret) {
+        if (ret && (ret.eventType == 'success')) {
+            alert(JSON.stringify(ret.content));
+        }
+        else if (ret && ret.eventType == 'fail') {
+            api.alert('扫码失败。请重试');
+        }
+    });
+}
+
 //下载到缓存并打开文档
 function OpenDocumentFile(url, name) {
     var temp = name.split('.');

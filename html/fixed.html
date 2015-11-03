@@ -139,8 +139,8 @@
         <li tapmode="liActive" onclick="OpenWin('rank.html')">
             <div><i class="aui-iconfont aui-icon-rank"></i><a>排名</a></div>
         </li>
-        <li tapmode="liActive" onclick="OpenMessageBoard();">
-            <div><i class="aui-iconfont aui-icon-message"></i><a>留言</a></div>
+        <li tapmode="liActive" onclick="OpenScanner();">
+            <div><i class="aui-iconfont aui-icon-scan"></i><a>扫码</a></div>
         </li>
         <li tapmode="liActive" onclick="OpenWin('document.html')">
             <div><i class="aui-iconfont aui-icon-file"></i><a>资料</a></div>
@@ -160,6 +160,7 @@
 </nav>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/mrg.js"></script>
 <script>
     apiready = function () {
         //动态适配UI
@@ -183,16 +184,6 @@
         api.closeSlidPane();
 
         var $script = "ChangeWin('" + url + "');";
-        api.execScript({
-            name: "slide",
-            script: $script
-        });
-    }
-
-    function OpenMessageBoard(){
-        api.closeSlidPane();
-
-        var $script = "OpenWin('messageBoardFrame.html');";
         api.execScript({
             name: "slide",
             script: $script

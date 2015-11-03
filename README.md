@@ -1,7 +1,6 @@
 # Answer #
 
 ## todo-list ##
-- 章节练习UI
 - 收藏资料
 - 上传资料
 - 最新上传
@@ -83,10 +82,12 @@
 	- content 留言内容*
 	- userId (关联_user) 留言ID*
 - Favorite 题目收藏
-	- questionId (关联QuestionBank) 收藏的题目ID*
 	- userId (关联_user) 该用户ID*
+	- questions 存放相应的数据ID数组(来自QuestionBank)
+	- documents 存放相应的数据ID数组(来自Document)
 - Document 资料类
 	- file 上传的文件*
+	- name 资料名（用于搜索和显示）*
 	- uploadId 上传人ID
 - DocumenType 资料分类
 	- typeName 资料类型名*
