@@ -19,9 +19,18 @@
         章节选择
     </div>
 </header>
-<div id="main"></div>
+<div id="main">
+    <ul class="aui-grid-nine">
+        <li class="aui-col-xs-4 aui-text-center">
+            <span class="aui-iconfont aui-icon-edit aui-text-primary"></span>
+
+            <p>函数与极限</p>
+        </li>
+    </ul>
+</div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     apiready = function () {
         var pageParam = api.pageParam;
@@ -29,10 +38,13 @@
         $api.fixIos7Bar($api.dom('header'));//标题
         //生成页
         var $main = $api.dom('#main');
-        var str = '';
+        var str = '<ul class="aui-grid-nine">';
         for (var i = 0; i < allChapterList.length; i++) {
-            str += '<div><a onclick="GenerateChapterTestPaper(\'' + allChapterList[i].id + '\',\'' + allChapterList[i].cname +'\')">' + allChapterList[i].cname + '</a></div>';
+            str += '<li class="aui-col-xs-4 aui-text-center" onclick="GenerateChapterTestPaper(\'' + allChapterList[i].id + '\',\'' + allChapterList[i].cname + '\')">'
+                    + '<span class="aui-iconfont aui-icon-edit aui-text-'+ GetRandomValColor() +'"></span>'
+                    + '<p>' + allChapterList[i].cname + '</p></li>';
         }
+        str += '</ul>';
         $api.html($main, str);
     };
 
