@@ -8,6 +8,7 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/mrg.css"/>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-primary">
@@ -22,6 +23,7 @@
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     //todo 以后可以做多条件查询
     apiready = function () {
@@ -57,24 +59,24 @@
                     qid: queryId
                 }, function (ret, err) {
                     api.hideProgress();
-                    var $result = $api.dom('#result');
                     if (ret) {
-                        if (ret.length <= 0) {
-                            $api.html($result, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
-                        } else {
-                            var str = '';
-                            for (var i = 0; i < ret.length; i++) {
-                                var item = ret[i];
-                                if (item.file) {
-                                    var id = item.id;
-                                    var name = item.name;
-                                    var url = item.file.url;
-
-                                    str += '<div style="background: #ddd"><div>' + id + '</div><div>' + name + '</div><div>' + url + '</div></div>';
-                                }
+                        var dat = [];
+                        for (var i = 0; i < ret.length; i++) {
+                            var item = ret[i];
+                            if (item.file) {
+                                var id = item.id;
+                                var name = item.name;
+                                var url = item.file.url;
+                                var uploadId = item.uploadId;
+                                dat.push({
+                                    id:id,
+                                    name:name,
+                                    url:url,
+                                    uploadId:uploadId
+                                });
                             }
-                            $api.html($result, str);
                         }
+                        GenerateDocumentList($api.dom('#result'),dat);
                     } else if (err) {
                         api.alert({msg: '出现错误: ' + err.msg});
                         $api.html($result, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');

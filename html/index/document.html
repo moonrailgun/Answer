@@ -155,27 +155,6 @@
         });
     };
 
-    //打开下载管理页面
-    function ShowDownloadManager() {
-        var manager = api.require('downloadManager');
-        manager.openManagerView({
-            title: '下载管理'
-        }, function (ret) {
-            var id = ret.id;
-            var mimeType = ret.mimeType;
-            var savePath = ret.savePath;
-            manager.openDownloadedFile({
-                id: id
-            }, function (ret, err) {
-                if (ret.status) {
-
-                } else {
-                    var msg = ret.msg;
-                }
-            });
-        });
-    }
-
     //打开资料库
     function ShowDocumentBank() {
         api.openWin({
@@ -309,6 +288,18 @@
                         word: text
                     }
                 });
+            }
+        });
+    }
+
+    //打开文档类型内容页
+    function OpenDocumentContent(id, name) {
+        api.openWin({
+            name: 'documentTypeContent',
+            url: './document/documentTypeContent.html',
+            pageParam: {
+                id: id,
+                name: name
             }
         });
     }

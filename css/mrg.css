@@ -2,3 +2,29 @@
     font-family: 'specialNum';
     src: url('20th Centenary Faux.ttf') format('truetype');
 }
+
+li.documentList .title {
+    color: #676767;
+}
+
+li.documentList .operate {
+    display: none;
+    padding: 0 10px;
+    padding-top: 6px;
+}
+
+li.documentList.actived .operate {
+    display: -webkit-box;
+}
+
+li.documentList.actived .operate > div {
+    -webkit-box-flex: 1;
+    text-align: center;
+    padding: 0 4px;
+    color: #FFFFFF;
+}
+
+li.documentList.actived .operate > div > div {
+    background-color: #41b5e4;
+    border-radius: 4px;
+}

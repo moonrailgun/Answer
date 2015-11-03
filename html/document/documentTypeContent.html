@@ -8,6 +8,7 @@
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/mrg.css"/>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-primary">
@@ -44,15 +45,20 @@
             column: 'documents'
         }, function (ret, err) {
             if (ret) {
-                var str = '';
+                var dat = [];
                 for (var i = 0; i < ret.length; i++) {
                     var file = ret[i].file;
                     var uploadId = ret[i].uploadId;
                     if (file) {
-                        str += '<a onclick=\'OpenDocumentFile("' + file.url + '","' + file.name + '")\'>' + file.name + '</a>'
+                        dat.push({
+                            id: file.id,
+                            name: file.name,
+                            url: file.url,
+                            uploadId:uploadId
+                        });
                     }
                 }
-                $api.html($api.dom('#documentList'), str);
+                GenerateDocumentList($api.dom('#documentList'), dat);
             }
         });
     };

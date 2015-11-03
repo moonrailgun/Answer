@@ -5,36 +5,10 @@
     <meta name="viewport"
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>Hello APP</title>
+    <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
-    <style>
-        li .title {
-            color: #676767;
-        }
-
-        li .operate {
-            display: none;
-            padding: 0 10px;
-            padding-top: 6px;
-        }
-
-        li.actived .operate {
-            display: -webkit-box;
-        }
-
-        li.actived .operate > div {
-            -webkit-box-flex: 1;
-            text-align: center;
-            padding: 0 4px;
-            color: #FFFFFF;
-        }
-
-        li.actived .operate > div > div {
-            background-color: #41b5e4;
-            border-radius: 4px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../../css/mrg.css"/>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-primary">
@@ -44,10 +18,8 @@
 
     <div class="aui-title">资料库</div>
 </header>
-<div class="aui-content">
-    <ul id="list" class="aui-list-view">
+<div id="list" class="aui-content">
 
-    </ul>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
@@ -58,38 +30,21 @@
 
         if (api.pageParam) {
             var documentFileList = api.pageParam.documentList;
+            var dat = [];
             if (documentFileList.length > 0) {
-                var str = '';
                 for (var i = 0; i < documentFileList.length; i++) {
                     if (documentFileList[i].file) {
-                        var url = documentFileList[i].file.url;
-                        var name = documentFileList[i].file.name;
-                        var uploadId = documentFileList[i].uploadId;
-                        str += '<li class="aui-list-view-cell" onclick="SwitchState(this)">'
-                                + '<div class="title">' + name + '</div>'
-                                + '<div class="operate">'
-                                + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
-                                + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
-                                + '<div><div class="aui-iconfont aui-icon-favor" onclick="AddFavour();">收藏</div></div>'
-                                + '</div>';
+                        dat.push({
+                            id: documentFileList[i].file.id,
+                            name: documentFileList[i].file.name,
+                            url: documentFileList[i].file.url,
+                            uploadId: documentFileList[i].uploadId
+                        });
                     }
                 }
-                $api.html($api.dom('#list'), str);
             }
+            GenerateDocumentList($api.dom('#list'), dat);
         }
     };
-
-    function SwitchState(obj) {
-        if ($api.hasCls(obj, 'actived')) {
-            $api.removeCls(obj, 'actived');
-        } else {
-            $api.addCls(obj, 'actived');
-        }
-    }
-
-    //添加到收藏
-    function AddFavour() {
-        api.toast({msg: '暂未实现'});
-    }
 </script>
 </html>

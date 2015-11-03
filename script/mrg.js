@@ -87,22 +87,7 @@ function EnqueueFile(url, name) {
     }
 
     var manager = api.require('downloadManager');
-    manager.openManagerView({
-        title: '下载管理'
-    },function(ret){
-        var id = ret.id;
-        var mimeType = ret.mimeType;
-        var savePath = ret.savePath;
-        manager.openDownloadedFile({
-            id: id
-        },function(ret,err){
-            if (ret.status) {
-
-            } else {
-                var msg = ret.msg;
-            }
-        });
-    });
+    ShowDownloadManager();//打开下载管理页面
     manager.enqueue({
         url: url,
         savePath: 'fs://Document/' + name,
@@ -113,5 +98,68 @@ function EnqueueFile(url, name) {
         if (ret.id) {
             api.toast({msg: '下载完毕'});
         }
+    });
+}
+//添加到收藏
+function AddFavour(id) {
+    api.toast({msg: '暂未实现'});
+}
+//切换列表
+function SwitchDocListState(obj) {
+    if ($api.hasCls(obj, 'actived')) {
+        $api.removeCls(obj, 'actived');
+    } else {
+        $api.addCls(obj, 'actived');
+    }
+}
+
+//生成文档列表
+//dat 为列表数据数组，需要有成员name,url
+function GenerateDocumentList($parent, dat) {
+    if (arguments.length >= 2 && typeof dat == 'object') {
+        if (dat.length == 0) {
+            $api.html($parent, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
+        }
+        else {
+            var str = '<ul class="aui-list-view">';
+            for (var i = 0; i < dat.length; i++) {
+                if (dat[i]) {
+                    var id = dat[i].id;
+                    var url = dat[i].url;
+                    var name = dat[i].name;
+                    var uploadId = dat[i].uploadId;
+                    str += '<li class="aui-list-view-cell documentList" onclick="SwitchDocListState(this)">'
+                        + '<div class="title">' + name + '</div>'
+                        + '<div class="operate">'
+                        + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
+                        + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
+                        + '<div><div class="aui-iconfont aui-icon-favor" onclick=\'AddFavour("'+id+'");\'>收藏</div></div>'
+                        + '</div>';
+                }
+            }
+            str += '</ul>';
+            $api.html($parent, str);
+        }
+    }
+}
+
+//打开下载管理页面
+function ShowDownloadManager() {
+    var manager = api.require('downloadManager');
+    manager.openManagerView({
+        title: '下载管理'
+    }, function (ret) {
+        var id = ret.id;
+        var mimeType = ret.mimeType;
+        var savePath = ret.savePath;
+        manager.openDownloadedFile({
+            id: id
+        }, function (ret, err) {
+            if (ret.status) {
+
+            } else {
+                var msg = ret.msg;
+            }
+        });
     });
 }
