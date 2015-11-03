@@ -11,10 +11,12 @@
             /*background-color: #dfdede !important;*/
             background: -webkit-linear-gradient(top, #4fbcf4, #32cabe);
         }
-        nav{
+
+        nav {
             height: 100%;
             position: relative;
         }
+
         i.aui-iconfont {
             font-size: 24px;
             color: #ffffff;
@@ -59,7 +61,8 @@
             border: 8px solid #88caec;
             border-radius: 400px;
         }
-        ul.mainCell{
+
+        ul.mainCell {
             width: 100%;
             padding: 0 4px;
         }
@@ -76,23 +79,27 @@
             -webkit-box-align: center;
             text-align: center;
         }
-        ul.mainCell li:nth-child(1),ul.mainCell li:nth-child(4),ul.mainCell li:nth-child(7){
-            border-left:0;
+
+        ul.mainCell li:nth-child(1), ul.mainCell li:nth-child(4), ul.mainCell li:nth-child(7) {
+            border-left: 0;
         }
-        ul.mainCell li:nth-child(3),ul.mainCell li:nth-child(6),ul.mainCell li:nth-child(9){
-            border-right:0;
+
+        ul.mainCell li:nth-child(3), ul.mainCell li:nth-child(6), ul.mainCell li:nth-child(9) {
+            border-right: 0;
         }
-        ul.mainCell li div{
+
+        ul.mainCell li div {
             display: -webkit-box;
             -webkit-box-orient: vertical;
             margin: 0 auto;
         }
+
         ul.mainCell li div a {
             display: block;
             color: #FFFFFF;
         }
 
-        ul.bottomCell{
+        ul.bottomCell {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -100,20 +107,24 @@
             height: auto;
             padding-bottom: 6px;
         }
-        ul.bottomCell li{
+
+        ul.bottomCell li {
             width: 50%;
             height: 40px;
             float: left;
             display: -webkit-box;
             -webkit-box-align: center;
         }
-        ul.bottomCell li:first-child{
+
+        ul.bottomCell li:first-child {
             border-right: 1px solid rgba(0, 0, 0, 0.1);
         }
-        ul.bottomCell li div{
+
+        ul.bottomCell li div {
             margin: 0 auto;
         }
-        ul.bottomCell li div a{
+
+        ul.bottomCell li div a {
             color: #FFFFFF;
         }
 
@@ -174,7 +185,7 @@
         var imgWidth = navWidth * 0.5;
         $api.css($imgContainer, 'height:' + imgWidth + 'px;width:' + imgWidth + 'px;margin-left:-' + imgWidth * 0.5 + 'px;margin-top:-' + imgWidth * 0.7 + 'px;');
         var $listItem = $api.domAll('ul li');
-        for(var i=0;i<$listItem.length;i++){
+        for (var i = 0; i < $listItem.length; i++) {
             $api.css($listItem[i], 'height:' + $api.cssVal($listItem, 'width'));
         }
     };
@@ -222,6 +233,6 @@
         }
     }
 
-    UpdateAvatar();
+    UpdateAvatar();//一开始就更新一次头像
 </script>
 </html>

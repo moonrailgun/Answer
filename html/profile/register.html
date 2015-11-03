@@ -97,6 +97,7 @@
             api.alert({msg: '(╯‵□′)╯︵┻━┻两次密码不一样啊混蛋'});
         } else {
             var user = api.require('user');
+            //尝试注册
             user.register({
                 username: $username,
                 password: $password
@@ -106,6 +107,7 @@
                     api.alert({msg: '注册失败，可能是您的用户名已被占用'});
                 } else {
                     var user = api.require('user');
+                    //尝试登陆
                     user.login({
                         username: $username,
                         password: $password
@@ -116,20 +118,36 @@
                         } else {
                             var userId = ret.userId;
                             var model = api.require('model');
-                            model.updateById({
-                                class: 'user',
-                                id: userId,
+                            //创建该用户的对应收藏页
+                            model.insert({
+                                class: 'Favorite',
                                 value: {
-                                    nickname: $nickname
+                                    userId: userId
                                 }
                             }, function (ret, err) {
                                 if (!ret) {
                                     api.hideProgress();
                                     api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
                                 } else {
-                                    api.hideProgress();
-                                    api.alert({msg: "o(*≧▽≦)ツ\n恭喜！注册成功"});
-                                    Back();
+                                    var favoriteId = ret.id;
+                                    //创建用户信息
+                                    model.updateById({
+                                        class: 'user',
+                                        id: userId,
+                                        value: {
+                                            nickname: $nickname,
+                                            favorite: favoriteId
+                                        }
+                                    }, function (ret, err) {
+                                        if (!ret) {
+                                            api.hideProgress();
+                                            api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
+                                        } else {
+                                            api.hideProgress();
+                                            api.alert({msg: "o(*≧▽≦)ツ\n恭喜！注册成功"});
+                                            Back();
+                                        }
+                                    });
                                 }
                             });
                         }

@@ -82,7 +82,7 @@
 	- content 留言内容*
 	- userId (关联_user) 留言ID*
 - Favorite 题目收藏
-	- userId (关联_user) 该用户ID*
+	- userId 该用户ID,用于查询*
 	- questions 存放相应的数据ID数组(来自QuestionBank)
 	- documents 存放相应的数据ID数组(来自Document)
 - Document 资料类

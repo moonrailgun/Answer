@@ -105,30 +105,53 @@
             if (ret) {
                 var token = ret.id;
                 var model = api.require('model');
+                //获取用户信息
                 model.findById({
                     class: 'user',
                     id: ret.userId
                 }, function (ret, err) {
                     if (ret) {
-                        //设置内容
-                        $api.setStorage('userInfo', {
-                            token: token,
-                            userId: ret.id,
-                            username: ret.username,
-                            nickname: ret.nickname,
-                            avatar: ret.avatar
+                        var id = ret.id;
+                        var username = ret.username;
+                        var nickname = ret.nickname;
+                        var avatar = ret.avatar;
+                        var favoriteId = ret.favorite;
+                        //获取收藏信息
+                        model.findById({
+                            class : 'Favorite',
+                            id : favoriteId
+                        },function(ret ,err){
+                            if (!ret) {
+                                api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
+                            } else {
+                                //设置内容
+                                var userInfo = {
+                                    token: token,
+                                    userId: id,
+                                    username: username,
+                                    nickname: nickname,
+                                    avatar: avatar,
+                                    favorite: {
+                                        questions : ret.questions,
+                                        documents : ret.documents
+                                    }
+                                };
+                                $api.setStorage('userInfo',userInfo );//存入本地
+                                api.alert({msg: '登陆成功，回到首页'});
+                                //更新头像
+                                api.execScript({
+                                    name: "fixed",
+                                    script: "UpdateAvatar()"
+                                });
+                                //页面跳转
+                                api.execScript({
+                                    name: "slide",
+                                    script: "ChangeWin('home.html')"
+                                });
+                            }
                         });
-                        api.alert({msg: '登陆成功，回到首页'});
-                        //更新头像
-                        api.execScript({
-                            name: "fixed",
-                            script: "UpdateAvatar()"
-                        });
-                        //页面跳转
-                        api.execScript({
-                            name: "slide",
-                            script: "ChangeWin('home.html')"
-                        });
+                    }else{
+                        api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
                     }
                 });
             }
