@@ -220,3 +220,61 @@ function ShowDownloadManager() {
         });
     });
 }
+
+//获取经济数据,如果没有则创建,回调参数为经济对象
+function GetEconomy(func) {
+    var score = 0;
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
+        var model = api.require('model');
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                query.justFields({
+                    qid: queryId,
+                    value: ['userId', 'score']
+                });
+                model.findAll({
+                    class: "Economy",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        if (ret.length == 0) {
+                            //创建数据
+                            model.insert({
+                                class: 'Economy',
+                                value: {
+                                    userId: userId
+                                }
+                            }, function (ret, err) {
+                                if (ret) {
+                                    var dat = {
+                                        userId: userId,
+                                        score: 0
+                                    };
+                                    func(dat)
+                                } else {
+                                    api.toast({msg: '错误，无法获取分数数据'});
+                                }
+                            });
+                        } else {
+                            var dat = ret[0];
+                            func(dat);
+                        }
+                    } else {
+                        api.toast({msg: '错误，无法获取分数数据'});
+                    }
+                });
+            }
+        });
+    } else {
+        api.toast({msg: '错误，无法获取分数数据'});
+    }
+}

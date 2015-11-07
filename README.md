@@ -102,3 +102,6 @@
 - Rank 排行榜
 	- userId (关联_user) 该用户ID*
 	- score 该用户积分
+- Economy 经济库
+	- userId 用户ID
+	- score 用户积分

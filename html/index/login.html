@@ -110,7 +110,9 @@
                     class: 'user',
                     id: ret.userId
                 }, function (ret, err) {
-                    if (ret) {
+                    if (!ret) {
+                        api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
+                    } else {
                         var id = ret.id;
                         var username = ret.username;
                         var nickname = ret.nickname;
@@ -132,7 +134,7 @@
                                     nickname: nickname,
                                     avatar: avatar,
                                     favorite: {
-                                        id : favoriteId,
+                                        id: favoriteId,
                                         questions: ret.questions,
                                         documents: ret.documents
                                     }
@@ -151,8 +153,6 @@
                                 });
                             }
                         });
-                    } else {
-                        api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
                     }
                 });
             }
