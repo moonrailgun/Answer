@@ -118,9 +118,9 @@
                         var favoriteId = ret.favorite;
                         //获取收藏信息
                         model.findById({
-                            class : 'Favorite',
-                            id : favoriteId
-                        },function(ret ,err){
+                            class: 'Favorite',
+                            id: favoriteId
+                        }, function (ret, err) {
                             if (!ret) {
                                 api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
                             } else {
@@ -132,11 +132,12 @@
                                     nickname: nickname,
                                     avatar: avatar,
                                     favorite: {
-                                        questions : ret.questions,
-                                        documents : ret.documents
+                                        id : favoriteId,
+                                        questions: ret.questions,
+                                        documents: ret.documents
                                     }
                                 };
-                                $api.setStorage('userInfo',userInfo );//存入本地
+                                $api.setStorage('userInfo', userInfo);//存入本地
                                 api.alert({msg: '登陆成功，回到首页'});
                                 //更新头像
                                 api.execScript({
@@ -150,7 +151,7 @@
                                 });
                             }
                         });
-                    }else{
+                    } else {
                         api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
                     }
                 });

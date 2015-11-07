@@ -117,8 +117,49 @@ function EnqueueFile(url, name) {
     });
 }
 //添加到收藏
-function AddFavour(id) {
-    api.toast({msg: '暂未实现'});
+function AddFavour(id, type) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo.favorite) {
+        var favorite = userInfo.favorite;
+        if (type == 'document' || type == 'question') {
+            var documents = favorite.documents,
+                questions = favorite.questions;
+            if (type == 'document') {
+                if (documents.indexOf(id) < 0) {
+                    documents.push(id);
+                } else {
+                    api.toast({msg: '已收藏该项目'});
+                    return;
+                }
+            }
+            else if (type == 'question') {
+                if (questions.indexOf(id) < 0) {
+                    questions.push(id);
+                } else {
+                    api.toast({msg: '已收藏该项目'});
+                    return;
+                }
+            }
+            var model = api.require('model');
+            model.updateById({
+                class: 'Favorite',
+                id: favorite.id,
+                value: {
+                    questions: questions,
+                    documents: documents
+                }
+            }, function (ret, err) {
+                if (!ret) {
+                    api.alert({msg: '出错' + JSON.stringify(err)});
+                } else {
+                    $api.setStorage('userInfo', userInfo);//将结果保存到本地
+                    api.toast({msg: '成功添加到收藏夹'});
+                }
+            });
+        } else {
+            api.toast({msg: '添加收藏失败,未知的收藏类型'});
+        }
+    }
 }
 //切换列表
 function SwitchDocListState(obj) {
@@ -149,7 +190,7 @@ function GenerateDocumentList($parent, dat) {
                         + '<div class="operate">'
                         + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
                         + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
-                        + '<div><div class="aui-iconfont aui-icon-favor" onclick=\'AddFavour("'+id+'");\'>收藏</div></div>'
+                        + '<div><div class="aui-iconfont aui-icon-favor" onclick=\'AddFavour("' + id + '", "document");\'>收藏</div></div>'
                         + '</div>';
                 }
             }
