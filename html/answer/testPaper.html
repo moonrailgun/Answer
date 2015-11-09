@@ -117,22 +117,36 @@
         SwitchToCurrentQuestionContent();//切换到上一题
     }
 
-    //todo 交卷批卷
     function SubmitQuestion() {
         var res = [];
-        var score = 0;
+        //收集结果
         for (var i = 0; i < rightList.length; i++) {
-            if (rightList[i] == answerList[i]) {
-                score++;
-            }
-
-            var ret = {
+            var tmp = {
+                questionsId: testQuestion[i].id,
                 right: rightList[i],
                 select: answerList[i]
             };
-            res.push(ret);
+            res.push(tmp);
         }
-        alert("得分:" + score + "\n总分:" + rightList.length + "\n结果:\n" + JSON.stringify(res));
+
+        var errorQuestionsList = [];
+        var score = 0;
+        //处理结果
+        for(i = 0;i< res.length;i++){
+            var dat = res[i];
+            if (dat.right == dat.select) {
+                //获取得分
+                score++;
+            } else{
+                //获取错题列表
+                errorQuestionsList.push(dat.questionsId);
+            }
+        }
+
+        alert("得分:" + score + "\n总分:" + res.length + "\n结果:\n" + JSON.stringify(res));
+
+        api.toast({msg: '已将 ' + errorQuestionsList.length + ' 道错题加入错题本'});
+        //todo 错题的逻辑处理
     }
 
     //切换到当前题号的问题
