@@ -251,7 +251,8 @@ function GetEconomy(func) {
                             model.insert({
                                 class: 'Economy',
                                 value: {
-                                    userId: userId
+                                    userId: userId,
+                                    score: 0
                                 }
                             }, function (ret, err) {
                                 if (ret) {
