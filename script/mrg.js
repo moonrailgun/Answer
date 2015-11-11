@@ -202,7 +202,7 @@ function GetFavorite(func) {
                             var questions = dat.questions;
                             var documents = dat.documents;
                             var favorite = {
-                                id : id,
+                                id: id,
                                 questions: questions,
                                 documents: documents
                             };
@@ -221,9 +221,9 @@ function GetFavorite(func) {
 }
 
 //添加到收藏
-function AddFavour(id, type) {
+function AddFavour(id, type, obj) {
     var favorite = $api.getStorage('favorite');
-    if(!favorite){
+    if (!favorite) {
         GetFavorite(AddFavour(id, type));
         return;
     }
@@ -247,6 +247,13 @@ function AddFavour(id, type) {
             }
         }
 
+        //更新本地图标
+        if (obj) {
+            $api.removeCls(obj, 'aui-icon-favor');
+            $api.addCls(obj, 'aui-icon-favorfill');
+            $api.text(obj, '取消收藏')
+        }
+
         //更新数据到远程数据库
         var model = api.require('model');
         model.updateById({
@@ -268,6 +275,10 @@ function AddFavour(id, type) {
         api.toast({msg: '添加收藏失败,未知的收藏类型'});
     }
 }
+//取消收藏
+function RemoveFavour(id, type, obj) {
+    NoFunction();
+}
 
 //切换列表
 function SwitchDocListState(obj) {
@@ -281,6 +292,13 @@ function SwitchDocListState(obj) {
 //生成文档列表
 //dat 为列表数据数组，需要有成员name,url
 function GenerateDocumentList($parent, dat) {
+    var favorite = $api.getStorage('favorite');
+    var docFavorite = [];
+    if (favorite) {
+        docFavorite = favorite.documents;
+    }
+
+
     if (arguments.length >= 2 && typeof dat == 'object') {
         if (dat.length == 0) {
             $api.html($parent, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
@@ -293,12 +311,17 @@ function GenerateDocumentList($parent, dat) {
                     var url = dat[i].url;
                     var name = dat[i].name;
                     var uploadId = dat[i].uploadId;
+                    var favoriteStr = '<div><div class="aui-iconfont aui-icon-favor" onclick=\'AddFavour("' + id + '", "document", this);\'>收藏</div></div>';
+                    if (docFavorite.length > 0 && docFavorite.indexOf(id) >= 0) {
+                        favoriteStr = '<div><div class="aui-iconfont aui-icon-favorfill" onclick=\'RemoveFavour("' + id + '", "document", this);\'>取消收藏</div></div>';
+                    }
+
                     str += '<li class="aui-list-view-cell documentList" onclick="SwitchDocListState(this)">'
                         + '<div class="title">' + name + '</div>'
                         + '<div class="operate">'
                         + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
                         + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
-                        + '<div><div class="aui-iconfont aui-icon-favor" onclick=\'AddFavour("' + id + '", "document");\'>收藏</div></div>'
+                        + favoriteStr
                         + '</div>';
                 }
             }
