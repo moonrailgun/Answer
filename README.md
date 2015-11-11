@@ -54,6 +54,23 @@
 - fileBrower
 - downloadManager
 
+# 本地数据存储结构 #
+## localStorage ##
+- userInfo
+	- token
+	- userId
+	- username
+	- nickname
+	- avatar
+		- id
+		- url
+		- name
+		- ...
+- favorite
+	- id
+	- questions
+	- documents
+
 # 数据库架构 #
 ## 数据库 ##
 - _user 用户

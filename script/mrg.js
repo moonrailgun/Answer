@@ -116,111 +116,6 @@ function EnqueueFile(url, name) {
         }
     });
 }
-//添加到收藏
-function AddFavour(id, type) {
-    var userInfo = $api.getStorage('userInfo');
-    if (userInfo.favorite) {
-        var favorite = userInfo.favorite;
-        if (type == 'document' || type == 'question') {
-            var documents = favorite.documents,
-                questions = favorite.questions;
-            if (type == 'document') {
-                if (documents.indexOf(id) < 0) {
-                    documents.push(id);
-                } else {
-                    api.toast({msg: '已收藏该项目'});
-                    return;
-                }
-            }
-            else if (type == 'question') {
-                if (questions.indexOf(id) < 0) {
-                    questions.push(id);
-                } else {
-                    api.toast({msg: '已收藏该项目'});
-                    return;
-                }
-            }
-            var model = api.require('model');
-            model.updateById({
-                class: 'Favorite',
-                id: favorite.id,
-                value: {
-                    questions: questions,
-                    documents: documents
-                }
-            }, function (ret, err) {
-                if (!ret) {
-                    api.alert({msg: '出错' + JSON.stringify(err)});
-                } else {
-                    $api.setStorage('userInfo', userInfo);//将结果保存到本地
-                    api.toast({msg: '成功添加到收藏夹'});
-                }
-            });
-        } else {
-            api.toast({msg: '添加收藏失败,未知的收藏类型'});
-        }
-    }
-}
-//切换列表
-function SwitchDocListState(obj) {
-    if ($api.hasCls(obj, 'actived')) {
-        $api.removeCls(obj, 'actived');
-    } else {
-        $api.addCls(obj, 'actived');
-    }
-}
-
-//生成文档列表
-//dat 为列表数据数组，需要有成员name,url
-function GenerateDocumentList($parent, dat) {
-    if (arguments.length >= 2 && typeof dat == 'object') {
-        if (dat.length == 0) {
-            $api.html($parent, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
-        }
-        else {
-            var str = '<ul class="aui-list-view">';
-            for (var i = 0; i < dat.length; i++) {
-                if (dat[i]) {
-                    var id = dat[i].id;
-                    var url = dat[i].url;
-                    var name = dat[i].name;
-                    var uploadId = dat[i].uploadId;
-                    str += '<li class="aui-list-view-cell documentList" onclick="SwitchDocListState(this)">'
-                        + '<div class="title">' + name + '</div>'
-                        + '<div class="operate">'
-                        + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
-                        + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
-                        + '<div><div class="aui-iconfont aui-icon-favor" onclick=\'AddFavour("' + id + '", "document");\'>收藏</div></div>'
-                        + '</div>';
-                }
-            }
-            str += '</ul>';
-            $api.html($parent, str);
-        }
-    }
-}
-
-//打开下载管理页面
-function ShowDownloadManager() {
-    var manager = api.require('downloadManager');
-    manager.openManagerView({
-        title: '下载管理'
-    }, function (ret) {
-        var id = ret.id;
-        var mimeType = ret.mimeType;
-        var savePath = ret.savePath;
-        manager.openDownloadedFile({
-            id: id
-        }, function (ret, err) {
-            if (ret.status) {
-
-            } else {
-                var msg = ret.msg;
-            }
-        });
-    });
-}
-
 //获取经济数据,如果没有则创建,回调参数为经济对象
 function GetEconomy(func) {
     var score = 0;
@@ -303,14 +198,16 @@ function GetFavorite(func) {
                     if (ret) {
                         var dat = ret[0];
                         if (dat) {
+                            var id = dat.id;
                             var questions = dat.questions;
                             var documents = dat.documents;
                             var favorite = {
+                                id : id,
                                 questions: questions,
                                 documents: documents
                             };
 
-                            $api.setStorage('Favorite', favorite);
+                            $api.setStorage('favorite', favorite);
 
                             if (func && typeof func == 'function') {
                                 func(favorite);
@@ -321,6 +218,115 @@ function GetFavorite(func) {
             }
         });
     }
+}
+
+//添加到收藏
+function AddFavour(id, type) {
+    var favorite = $api.getStorage('favorite');
+    if(!favorite){
+        GetFavorite(AddFavour(id, type));
+        return;
+    }
+    if (type == 'document' || type == 'question') {
+        var documents = favorite.documents,
+            questions = favorite.questions;
+        if (type == 'document') {
+            if (documents.indexOf(id) < 0) {
+                documents.push(id);
+            } else {
+                api.toast({msg: '已收藏该项目'});
+                return;
+            }
+        }
+        else if (type == 'question') {
+            if (questions.indexOf(id) < 0) {
+                questions.push(id);
+            } else {
+                api.toast({msg: '已收藏该项目'});
+                return;
+            }
+        }
+
+        //更新数据到远程数据库
+        var model = api.require('model');
+        model.updateById({
+            class: 'Favorite',
+            id: favorite.id,
+            value: {
+                questions: questions,
+                documents: documents
+            }
+        }, function (ret, err) {
+            if (!ret) {
+                api.alert({msg: '出错' + JSON.stringify(err)});
+            } else {
+                $api.setStorage('favorite', favorite);//将结果保存到本地
+                api.toast({msg: '成功添加到收藏夹'});
+            }
+        });
+    } else {
+        api.toast({msg: '添加收藏失败,未知的收藏类型'});
+    }
+}
+
+//切换列表
+function SwitchDocListState(obj) {
+    if ($api.hasCls(obj, 'actived')) {
+        $api.removeCls(obj, 'actived');
+    } else {
+        $api.addCls(obj, 'actived');
+    }
+}
+
+//生成文档列表
+//dat 为列表数据数组，需要有成员name,url
+function GenerateDocumentList($parent, dat) {
+    if (arguments.length >= 2 && typeof dat == 'object') {
+        if (dat.length == 0) {
+            $api.html($parent, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
+        }
+        else {
+            var str = '<ul class="aui-list-view">';
+            for (var i = 0; i < dat.length; i++) {
+                if (dat[i]) {
+                    var id = dat[i].id;
+                    var url = dat[i].url;
+                    var name = dat[i].name;
+                    var uploadId = dat[i].uploadId;
+                    str += '<li class="aui-list-view-cell documentList" onclick="SwitchDocListState(this)">'
+                        + '<div class="title">' + name + '</div>'
+                        + '<div class="operate">'
+                        + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
+                        + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
+                        + '<div><div class="aui-iconfont aui-icon-favor" onclick=\'AddFavour("' + id + '", "document");\'>收藏</div></div>'
+                        + '</div>';
+                }
+            }
+            str += '</ul>';
+            $api.html($parent, str);
+        }
+    }
+}
+
+//打开下载管理页面
+function ShowDownloadManager() {
+    var manager = api.require('downloadManager');
+    manager.openManagerView({
+        title: '下载管理'
+    }, function (ret) {
+        var id = ret.id;
+        var mimeType = ret.mimeType;
+        var savePath = ret.savePath;
+        manager.openDownloadedFile({
+            id: id
+        }, function (ret, err) {
+            if (ret.status) {
+
+            } else {
+                var msg = ret.msg;
+            }
+        });
+    });
 }
 
 //没有该功能
