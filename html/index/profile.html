@@ -9,10 +9,11 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
-        body{
+        body {
             min-height: 100%;
             height: auto;
         }
+
         #userInfo {
             display: -webkit-box;
         }
@@ -37,15 +38,17 @@
         .liActive {
             background-color: #919191;
         }
-        .aui-btn-block{
+
+        .aui-btn-block {
             border-radius: 0;
         }
 
-        .infoBlock{
+        .infoBlock {
             width: 100%;
             display: -webkit-box;
         }
-        .infoBlock .infoBlockCell{
+
+        .infoBlock .infoBlockCell {
             width: 50%;
             display: -webkit-box;
             -webkit-box-orient: vertical;
@@ -54,7 +57,8 @@
             line-height: 22px;
             color: #6d6d72;
         }
-        .infoBlock .infoBlockCell .infoBlockCellNum{
+
+        .infoBlock .infoBlockCell .infoBlockCellNum {
             line-height: 42px;
             color: #fa6359;
             font-size: 32px;
@@ -64,7 +68,7 @@
 <body>
 <div class="aui-content">
     <ul class="aui-list-view">
-        <li id="userInfo" class="aui-list-view-cell aui-img"  onclick="OpenInfoWin()">
+        <li id="userInfo" class="aui-list-view-cell aui-img" onclick="OpenInfoWin()">
             <div id="userHead"><img class="aui-img-object" src="../../image/default_head.jpg"></div>
             <div id="userMain" class="aui-img-body">
                 <div id="nickname">游客</div>
@@ -85,33 +89,32 @@
     </ul>
     <ul class="aui-list-view">
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">我的红包</a>
+            <a class="aui-arrow-right" onclick="NoFunction();">我的红包</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">我的好友</a>
+            <a class="aui-arrow-right" onclick="NoFunction();">我的好友</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">
+            <a id="favorite" class="aui-arrow-right" onclick="NoFunction();">
                 我的收藏
-                <span class="aui-badge aui-badge-danger">12</span>
             </a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">我的下载</a>
+            <a class="aui-arrow-right" onclick="ShowDownloadManager();">我的下载</a>
         </li>
     </ul>
     <ul class="aui-list-view">
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">资料库</a>
+            <a class="aui-arrow-right" onclick="NoFunction();">资料库</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">学习圈</a>
+            <a class="aui-arrow-right" onclick="NoFunction();">学习圈</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">错题集</a>
+            <a class="aui-arrow-right" onclick="NoFunction();">错题集</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right">计划</a>
+            <a class="aui-arrow-right" onclick="NoFunction();">计划</a>
         </li>
     </ul>
     <button class="aui-btn aui-btn-danger aui-btn-block" onclick="Logout()">退出登录</button>
@@ -122,13 +125,22 @@
 <script type="text/javascript">
     apiready = function () {
         UpdateUserInfo();
-        GetEconomy(function(dat){
+        GetEconomy(function (dat) {
             var score = dat.score;
-            if(score != undefined && score != null){
+            if (score != undefined && score != null) {
                 $api.html($api.dom('#score .infoBlockCellNum'), score);
-            }else{
+            } else {
                 api.toast({msg: '获取积分失败'});
             }
+        });
+
+        GetFavorite(function (favorite) {
+            var num = favorite.questions.length + favorite.documents.length;
+            var str = '我的收藏';
+            if (num > 0) {
+                str += '<span class="aui-badge aui-badge-danger">' + num + '</span>';
+            }
+            $api.html($api.dom('#favorite'), str);
         });
     };
 
@@ -153,25 +165,25 @@
                 $api.html($nickname, '游客');
             }
             //更新用户名
-            if(userInfo.username){
+            if (userInfo.username) {
                 $api.html($username, userInfo.username);
             }
-            else{
+            else {
                 $api.html($username, '');
             }
         }
     }
 
     //打开信息窗口
-    function OpenInfoWin(){
+    function OpenInfoWin() {
         api.openWin({
-            name:'userInfo',
-            url:'../profile/userInfo.html'
+            name: 'userInfo',
+            url: '../profile/userInfo.html'
         })
     }
 
     //切换到排行榜页面
-    function SwitchToRank(){
+    function SwitchToRank() {
         var $script = "ChangeWin('rank.html');";
         api.execScript({
             name: "slide",
@@ -180,10 +192,10 @@
     }
 
     //登出
-    function Logout(){
+    function Logout() {
         var user = api.require('user');
-        user.logout(function(ret, err){
-            if(ret){
+        user.logout(function (ret, err) {
+            if (ret) {
                 $api.rmStorage('userInfo');
                 //更新侧滑页
                 api.execScript({
@@ -196,8 +208,8 @@
                     name: "slide",
                     script: $script
                 });
-            }else{
-                api.alert({msg:'登出失败'})
+            } else {
+                api.alert({msg: '登出失败'})
             }
         });
     }

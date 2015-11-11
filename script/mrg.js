@@ -279,3 +279,57 @@ function GetEconomy(func) {
         api.toast({msg: '错误，无法获取分数数据'});
     }
 }
+
+//获取收藏数据
+function GetFavorite(func) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
+
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "Favorite",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        var dat = ret[0];
+                        if (dat) {
+                            var questions = dat.questions;
+                            var documents = dat.documents;
+                            var favorite = {
+                                questions: questions,
+                                documents: documents
+                            };
+
+                            $api.setStorage('Favorite', favorite);
+
+                            if (func && typeof func == 'function') {
+                                func(favorite);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+}
+
+//没有该功能
+function NoFunction(messgae) {
+    var str = '';
+    if (messgae) {
+        str += messgae;
+    } else {
+        str += '抱歉该功能暂时还没有开放';
+    }
+    api.toast({msg: str});
+}
