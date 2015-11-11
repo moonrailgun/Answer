@@ -10,15 +10,17 @@
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/mrg.css"/>
     <style>
-        body{
+        body {
             min-height: 100%;
             height: auto;
         }
-        .rank{
+
+        .rank {
             margin-bottom: 50px;
             padding: 0 10px;
         }
-        .rankHeader{
+
+        .rankHeader {
             background-color: #acacac;
             display: -webkit-box;
             text-align: center;
@@ -26,6 +28,7 @@
             line-height: 32px;
             font-size: 18px;
         }
+
         .rankCell {
             display: -webkit-box;
             width: 100%;
@@ -54,7 +57,7 @@
         .rankCell .userInfo .username {
             -webkit-box-flex: 1;
             font-size: 24px;
-            font-family: 'Microsoft YaHei',sans-serif;
+            font-family: 'Microsoft YaHei', sans-serif;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -64,9 +67,11 @@
             font-size: 18px;
             font-family: specialNum, sans-serif;
         }
-        .rankCell.first,.rankCell.second,.rankCell.third{
+
+        .rankCell.first, .rankCell.second, .rankCell.third {
             padding: 10px 10px;
         }
+
         .rankCell.first .rankNum {
             background: url("../../image/firstMedal.png");
         }
@@ -78,7 +83,8 @@
         .rankCell.third .rankNum {
             background: url("../../image/thirdMedal.png");
         }
-        .myRank{
+
+        .myRank {
             position: fixed;
             left: 0;
             bottom: 0;
@@ -87,13 +93,15 @@
             width: 100%;
             display: -webkit-box;
         }
-        .myRank div{
+
+        .myRank div {
             padding: 10px;
             text-align: center;
             -webkit-box-flex: 1;
             vertical-align: middle;
         }
-        .myRank div span{
+
+        .myRank div span {
             color: #e74c3c;
             font-size: 24px;
             font-family: specialNum, sans-serif;
@@ -107,42 +115,8 @@
     <div style="-webkit-box-flex: 1;">昵称</div>
     <div style="width: 50px;text-align: left;">积分</div>
 </div>
-<div class="rank">
-    <div class="rankCell first">
-        <div class="rankNum">1</div>
-        <div class="userInfo">
-            <div class="username">AqnaLotus</div>
-            <div class="userscore">100</div>
-        </div>
-    </div>
-    <div class="rankCell second">
-        <div class="rankNum">2</div>
-        <div class="userInfo">
-            <div class="username">AqnaLotus</div>
-            <div class="userscore">100</div>
-        </div>
-    </div>
-    <div class="rankCell third">
-        <div class="rankNum">3</div>
-        <div class="userInfo">
-            <div class="username">AqnaLotus</div>
-            <div class="userscore">100</div>
-        </div>
-    </div>
-    <div class="rankCell">
-        <div class="rankNum">4</div>
-        <div class="userInfo">
-            <div class="username">AqnaLotus</div>
-            <div class="userscore">100</div>
-        </div>
-    </div>
-    <div class="rankCell">
-        <div class="rankNum">5</div>
-        <div class="userInfo">
-            <div class="username">AqnaLotus</div>
-            <div class="userscore">100</div>
-        </div>
-    </div>
+<div id="rank" class="rank">
+    <div style="text-align: center"><img src="../../image/loading.gif"></div>
 </div>
 <div class="myRank">
     <div class="myRankNum">我的排名：<span>1000</span></div>
@@ -152,6 +126,60 @@
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        GetTop20();
     };
+
+    //获取前20排名
+    function GetTop20() {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.limit({
+                    qid: queryId,
+                    value: 20
+                });
+                query.desc({
+                    qid: queryId,
+                    column: 'score'
+                });
+                query.include({
+                    qid: queryId,
+                    column: 'userId'
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "Rank",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        var str = '';
+                        for (var i = 0; i < ret.length; i++) {
+                            var dat = ret[i];
+                            if (dat.userId) {
+                                var score = dat.score;
+                                var username = dat.userId.username;
+                                var rank = i + 1;
+                                var temp = '';
+                                if (rank == 1) {
+                                    temp += ' first';
+                                }
+                                else if (rank == 2) {
+                                    temp += ' second';
+                                }
+                                else if (rank == 3) {
+                                    temp += ' third';
+                                }
+                                str += '<div class="rankCell' + temp + '"><div class="rankNum">' + rank + '</div>'
+                                        + '<div class="userInfo"><div class="username">' + username + '</div>'
+                                        + '<div class="userscore">' + score + '</div></div></div>';
+                            }
+                        }
+                        $api.html($api.dom('#rank'), str);
+                    }
+                });
+            }
+        });
+    }
 </script>
 </html>
