@@ -68,13 +68,14 @@
 <body>
 <div class="aui-content">
     <ul class="aui-list-view">
-        <li id="userInfo" class="aui-list-view-cell aui-img" onclick="OpenInfoWin()">
-            <div id="userHead"><img class="aui-img-object" src="../../image/default_head.jpg"></div>
-            <div id="userMain" class="aui-img-body">
+        <li id="userInfo" class="aui-list-view-cell aui-img">
+            <div id="userHead" onclick="ChangePic();"><img class="aui-img-object" src="../../image/default_head.jpg">
+            </div>
+            <div id="userMain" class="aui-img-body" onclick="OpenInfoWin()">
                 <div id="nickname">游客</div>
                 <div id="username">游客</div>
             </div>
-            <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right"></div>
+            <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right" onclick="OpenInfoWin()"></div>
         </li>
         <li class="infoBlock">
             <div id="score" tapmode="liActive" class="infoBlockCell" style="border-right: 1px solid #c8c7cc;">
@@ -143,6 +144,76 @@
             $api.html($api.dom('#favorite'), str);
         });
     };
+
+    function ChangePic() {
+        var userInfo = $api.getStorage('userInfo');
+        if (userInfo) {
+            var userId = userInfo.userId;
+            api.actionSheet({
+                title: '从哪里更新头像',
+                cancelTitle: '取消',
+                buttons: ['相册']
+            }, function (ret, err) {
+                if (ret.buttonIndex == 1) {
+
+                    //打开图片
+                    api.getPicture({
+                        encodingType: 'jpg',
+                        mediaValue: 'pic',
+                        destinationType: 'url',
+                        allowEdit: true,
+                        quality: '50',
+                        targetWidth: 100,
+                        targetHeight: 100,
+                        saveToPhotoAlbum: false
+                    }, function (ret, err) {
+                        if (ret) {
+                            var url = ret.data;
+                            var cachePath = api.cacheDir;
+                            var path = url.split(cachePath)[1];
+
+                            var model = api.require('model');
+                            model.uploadFile({
+                                data: {
+                                    file: {
+                                        name: userId + '.jpg',
+                                        url: 'cache://' + path
+                                    }
+                                },
+                                report: false
+                            }, function (ret, err) {
+                                var id = ret.id;
+                                var name = ret.name;
+                                var url = ret.url;
+                                var avatar = {
+                                    url: url,
+                                    name: name,
+                                    id: id
+                                };
+                                //更新远程数据
+                                model.updateById({
+                                    class: 'user',
+                                    id: userId,
+                                    value: {avatar: avatar}
+                                }, function (ret, err) {
+                                    if (ret) {
+                                        alert(JSON.stringify(ret));
+                                    }
+                                });
+                                //更新头像
+                                $api.attr($api.dom('#userHead img'), 'src', url);
+                                //更新本地数据
+                                userInfo.avatar = avatar;
+                                $api.setStorage('userInfo', userInfo);
+                            });
+                        } else {
+                            api.alert({msg: '出错:' + err.msg});
+                        }
+                    });
+                }
+            });
+        }
+    }
 
     function UpdateUserInfo() {
         var userInfo = $api.getStorage('userInfo');
