@@ -95,7 +95,7 @@
             <a class="aui-arrow-right" onclick="NoFunction();">我的好友</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a id="favorite" class="aui-arrow-right" onclick="NoFunction();">
+            <a id="favorite" class="aui-arrow-right" onclick="OpenFavoriteWin();">
                 我的收藏
             </a>
         </li>
@@ -179,6 +179,14 @@
         api.openWin({
             name: 'userInfo',
             url: '../profile/userInfo.html'
+        })
+    }
+
+    //打开收藏窗口
+    function OpenFavoriteWin() {
+        api.openWin({
+            name: 'favoriteList',
+            url: '../favorite/favoriteList.html'
         })
     }
 
