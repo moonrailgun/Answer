@@ -224,7 +224,7 @@ function GetFavorite(func) {
 function AddFavour(id, type, obj) {
     var favorite = $api.getStorage('favorite');
     if (!favorite) {
-        GetFavorite(AddFavour(id, type));
+        GetFavorite(AddFavour(id, type,obj));
         return;
     }
     if (type == 'document' || type == 'question') {
@@ -277,7 +277,64 @@ function AddFavour(id, type, obj) {
 }
 //取消收藏
 function RemoveFavour(id, type, obj) {
-    NoFunction();
+    var favorite = $api.getStorage('favorite');
+    if (!favorite) {
+        GetFavorite(RemoveFavour(id, type, obj));
+        return;
+    }
+
+    if (type == 'document' || type == 'question') {
+        var documents = favorite.documents,
+            questions = favorite.questions;
+
+        var index = -1;
+        if (type == 'document') {
+            index = index = documents.indexOf(id);
+            if (index >= 0) {
+                documents.splice(index, 1);//删除该索引的元素
+                documents.push(id);
+            } else {
+                api.toast({msg: '已删除该项目'});
+                return;
+            }
+        }
+        else if (type == 'question') {
+            index = questions.indexOf(id);
+            if (index >= 0) {
+                questions.splice(index, 1);//删除该索引的元素
+            } else {
+                api.toast({msg: '已删除该项目'});
+                return;
+            }
+        }
+
+        //更新本地图标
+        if (obj) {
+            $api.removeCls(obj, 'aui-icon-favorfill');
+            $api.addCls(obj, 'aui-icon-favor');
+            $api.text(obj, '收藏')
+        }
+
+        //更新数据到远程数据库
+        var model = api.require('model');
+        model.updateById({
+            class: 'Favorite',
+            id: favorite.id,
+            value: {
+                questions: questions,
+                documents: documents
+            }
+        }, function (ret, err) {
+            if (!ret) {
+                api.alert({msg: '出错' + JSON.stringify(err)});
+            } else {
+                $api.setStorage('favorite', favorite);//将结果保存到本地
+                api.toast({msg: '成功添加到收藏夹'});
+            }
+        });
+    }else{
+        api.toast({msg: '取消收藏失败,未知的收藏类型'});
+    }
 }
 
 //切换列表
@@ -297,7 +354,6 @@ function GenerateDocumentList($parent, dat) {
     if (favorite) {
         docFavorite = favorite.documents;
     }
-
 
     if (arguments.length >= 2 && typeof dat == 'object') {
         if (dat.length == 0) {
