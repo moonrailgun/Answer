@@ -32,7 +32,6 @@
     apiready = function () {
         var $header = $api.dom('header');
         $api.fixIos7Bar($header);
-
         var userInfo = $api.getStorage('userInfo');
         var scanner = api.require('FNScanner');
         scanner.encodeImg({
@@ -50,13 +49,16 @@
                 var winWidth = api.winWidth;
                 api.openFrame({
                     name: 'qrcode',
-                    url: ret.imgPath,
+                    bgColor: ret.imgPath,
                     rect: {
                         x: winWidth / 2 - 100,
                         y: 140,
                         w: 200,
                         h: 200
                     },
+                    bounces:false,
+                    scrollToTop:false,
+                    scaleEnabled: false,
                     vScrollBarEnabled: false,
                     hScrollBarEnabled: false
                 });
