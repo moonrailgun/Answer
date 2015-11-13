@@ -150,12 +150,11 @@
         if (userInfo) {
             var userId = userInfo.userId;
             api.actionSheet({
-                title: '从哪里更新头像',
+                title: '从哪里更新头像?',
                 cancelTitle: '取消',
                 buttons: ['相册']
             }, function (ret, err) {
                 if (ret.buttonIndex == 1) {
-
                     //打开图片
                     api.getPicture({
                         encodingType: 'jpg',
@@ -172,6 +171,12 @@
                             var cachePath = api.cacheDir;
                             var path = url.split(cachePath)[1];
 
+                            api.showProgress({
+                                style: 'default',
+                                animationType: 'fade',
+                                title: '努力上传中...',
+                                text: '先喝杯茶...'
+                            });
                             var model = api.require('model');
                             model.uploadFile({
                                 data: {
@@ -182,29 +187,50 @@
                                 },
                                 report: false
                             }, function (ret, err) {
-                                var id = ret.id;
-                                var name = ret.name;
-                                var url = ret.url;
-                                var avatar = {
-                                    url: url,
-                                    name: name,
-                                    id: id
-                                };
-                                //更新远程数据
-                                model.updateById({
-                                    class: 'user',
-                                    id: userId,
-                                    value: {avatar: avatar}
-                                }, function (ret, err) {
-                                    if (ret) {
-                                        alert(JSON.stringify(ret));
-                                    }
-                                });
-                                //更新头像
-                                $api.attr($api.dom('#userHead img'), 'src', url);
-                                //更新本地数据
-                                userInfo.avatar = avatar;
-                                $api.setStorage('userInfo', userInfo);
+                                if(ret){
+                                    var id = ret.id;
+                                    var name = ret.name;
+                                    var url = ret.url;
+                                    var avatar = {
+                                        url: url,
+                                        name: name,
+                                        id: id
+                                    };
+                                    //获取原始数据
+                                    model.findById({
+                                        class: 'user',
+                                        id: userId
+                                    },function(ret, err){
+                                        api.hideProgress();
+                                        if(ret){
+                                            var oldAvatar = ret.avatar;
+                                            if(oldAvatar){
+                                                //原来有头像，删除原来的头像
+                                                var oldAvatarId = oldAvatar.id;
+                                                model.deleteById({
+                                                    class : 'file',
+                                                    id : oldAvatarId
+                                                });
+                                            }
+
+                                            //更新远程数据
+                                            model.updateById({
+                                                class: 'user',
+                                                id: userId,
+                                                value: {avatar: avatar}
+                                            });
+                                            //更新头像
+                                            $api.attr($api.dom('#userHead img'), 'src', url);
+                                            //更新本地数据
+                                            userInfo.avatar = avatar;
+                                            $api.setStorage('userInfo', userInfo);
+                                        }
+                                    });
+                                }else{
+                                    api.hideProgress();
+                                    api.alert({msg:'出错:' + JSON.stringify(err)});
+                                }
+
                             });
                         } else {
                             api.alert({msg: '出错:' + err.msg});
