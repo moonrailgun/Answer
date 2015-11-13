@@ -224,7 +224,7 @@ function GetFavorite(func) {
 function AddFavour(id, type, obj) {
     var favorite = $api.getStorage('favorite');
     if (!favorite) {
-        GetFavorite(AddFavour(id, type,obj));
+        GetFavorite(AddFavour(id, type, obj));
         return;
     }
     if (type == 'document' || type == 'question') {
@@ -332,7 +332,7 @@ function RemoveFavour(id, type, obj) {
                 api.toast({msg: '成功添加到收藏夹'});
             }
         });
-    }else{
+    } else {
         api.toast({msg: '取消收藏失败,未知的收藏类型'});
     }
 }
@@ -373,8 +373,8 @@ function GenerateDocumentList($parent, dat) {
                     }
 
                     str += '<li class="aui-list-view-cell documentList" onclick="SwitchDocListState(this)">'
-                        + '<div class="title">' + name + '</div>'
-                        + '<div class="operate">'
+                        + '<div class="docListTitle">' + name + '</div>'
+                        + '<div class="docListOperate">'
                         + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
                         + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
                         + favoriteStr
