@@ -187,7 +187,7 @@
                                 },
                                 report: false
                             }, function (ret, err) {
-                                if(ret){
+                                if (ret) {
                                     var id = ret.id;
                                     var name = ret.name;
                                     var url = ret.url;
@@ -200,16 +200,16 @@
                                     model.findById({
                                         class: 'user',
                                         id: userId
-                                    },function(ret, err){
+                                    }, function (ret, err) {
                                         api.hideProgress();
-                                        if(ret){
+                                        if (ret) {
                                             var oldAvatar = ret.avatar;
-                                            if(oldAvatar){
+                                            if (oldAvatar) {
                                                 //原来有头像，删除原来的头像
                                                 var oldAvatarId = oldAvatar.id;
                                                 model.deleteById({
-                                                    class : 'file',
-                                                    id : oldAvatarId
+                                                    class: 'file',
+                                                    id: oldAvatarId
                                                 });
                                             }
 
@@ -224,16 +224,21 @@
                                             //更新本地数据
                                             userInfo.avatar = avatar;
                                             $api.setStorage('userInfo', userInfo);
+                                            //更新侧边
+                                            api.execScript({
+                                                name: "fixed",
+                                                script: "UpdateAvatar();"
+                                            });
                                         }
                                     });
-                                }else{
+                                } else {
                                     api.hideProgress();
-                                    api.alert({msg:'出错:' + JSON.stringify(err)});
+                                    api.alert({msg: '出错:' + JSON.stringify(err)});
                                 }
 
                             });
-                        } else {
-                            api.alert({msg: '出错:' + err.msg});
+                        } else if (err.msg != 'user canceled') {
+                            api.alert({msg: '出错:' + JSON.stringify(err)});
                         }
                     });
                 }
