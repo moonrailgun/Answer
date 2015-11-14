@@ -100,7 +100,7 @@
                 <div id="random" tapmode="blockActive" onclick="GenerateRandomTest();">随便做做</div>
                 <div id="unit" tapmode="blockActive" onclick="GenerateUnitTest();">章节练习</div>
             </div>
-            <div id="composite" tapmode="blockActive" onclick="GenerateCompositeTest();">综合练习</div>
+            <div id="composite" tapmode="blockActive" onclick="GenerateSimulationTest();">模拟练习</div>
         </div>
     </div>
 </div>
@@ -172,7 +172,7 @@
             }
         });
     }
-    function GenerateCompositeTest() {
+    function GenerateSimulationTest() {
         //综合测试
         api.toast({
             msg: '测什么测。直接上真题吧！',
@@ -182,10 +182,9 @@
     }
     function GenerateExamTest() {
         //真题测试
-        api.toast({
-            msg: '还没做完',
-            duration: 2000,
-            location: 'bottom'
+        api.openWin({
+            name : 'yearSelectFrame',
+            url : './yearSelectFrame.html'
         });
     }
     function GenerateTest(testName, testQuestion) {
