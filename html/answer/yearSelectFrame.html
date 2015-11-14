@@ -27,6 +27,59 @@
 <script type="text/javascript">
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
+        var pageParam = api.pageParam;
+        if (!pageParam) return;
+        var questionTypeId = pageParam.questionTypeId;
+        var questionTypeName = pageParam.questionTypeName;
+        $api.html($api.dom('header div.aui-title'), questionTypeName + ' - 真题年份选择');
+        var $main = $api.dom('#main');
+
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'QuestionType',
+            id: questionTypeId,
+            column: 'authenticExam'
+        }, function (ret, err) {
+            if (ret) {
+                var str = '';
+                if(ret.length > 0){
+                    for (var i = 0; i < ret.length; i++) {
+                        var dat = ret[i];
+                        var id = dat.id;
+                        var year = dat.year;
+                        str += '<div onclick=\'SelectYear("' + id + '","' + year + '");\'><a href="#">' + year + '</a></div>';
+                    }
+                }else{
+                    str += '<div style="text-align: center;"><img src="../../image/nodata_s01.png" /></div>';
+                }
+                $api.html($main, str);
+            }
+        });
     };
+
+    function SelectYear(yearId, yearName) {
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'AuthenticExamination',
+            id: yearId,
+            column: 'examinations'
+        }, function (ret, err) {
+            if (ret) {
+                alert(JSON.stringify(ret));
+            }
+        });
+    }
+
+    function GenerateTest(testName, testQuestion) {
+        api.openWin({
+            name: 'testPaperFrame',
+            url: './testPaperFrame.html',
+            pageParam: {
+                testName: testName,
+                testQuestion: testQuestion
+            },
+            slidBackEnabled: false
+        });
+    }
 </script>
 </html>

@@ -107,7 +107,7 @@
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
-    var questionTypeId;
+    var questionTypeId, questionTypeName;
     var allTypeList = [];
     var currentTypeDocument = [];
     apiready = function () {
@@ -120,6 +120,7 @@
         SetTitle(typeName);
         GetDocumentNum(typeName);
         questionTypeId = typeId;
+        questionTypeName = typeName;
     };
     //生成试卷
     function GenerateRandomTest() {
@@ -183,8 +184,12 @@
     function GenerateExamTest() {
         //真题测试
         api.openWin({
-            name : 'yearSelectFrame',
-            url : './yearSelectFrame.html'
+            name: 'yearSelectFrame',
+            url: './yearSelectFrame.html',
+            pageParam: {
+                questionTypeId: questionTypeId,
+                questionTypeName: questionTypeName
+            }
         });
     }
     function GenerateTest(testName, testQuestion) {
@@ -223,30 +228,30 @@
         });
     }
     //根据分类名重设标题
-    function SetTitle(typeName){
+    function SetTitle(typeName) {
         var $title = $api.dom('header .aui-title');
         $api.html($title, typeName + ' - 分类选择' + '<i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>');
     }
     //获取资料数目
-    function GetDocumentNum(typeName){
+    function GetDocumentNum(typeName) {
         currentTypeDocument = [];//清空之前的数据
         var query = api.require('query');
-        query.createQuery(function(ret, err) {
+        query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
                 var queryId = ret.qid;
                 query.whereLike({
                     qid: queryId,
                     column: 'name',
-                    value : typeName
+                    value: typeName
                 });
                 var model = api.require('model');
                 model.findAll({
                     class: "DocumentType",
                     qid: queryId
-                }, function(ret, err) {
+                }, function (ret, err) {
                     if (ret) {
                         var count = 0;
-                        for(var i = 0;i<ret.length;i++){
+                        for (var i = 0; i < ret.length; i++) {
                             var id = ret[i].id;
                             var relation_m = api.require('relation');
                             relation_m.findAll({
@@ -257,12 +262,11 @@
                                 if (ret) {
                                     count += ret.length;
                                     currentTypeDocument = currentTypeDocument.concat(ret);//将资料数据合并到当前的分类资料数组里
-                                    
+
                                     var str = '';
-                                    if(count > 0)
-                                    {
-                                        str += '<i class="aui-iconfont aui-icon-file"></i>参考资料<span class="aui-badge aui-badge-danger">'+count+'</span>';
-                                    }else{
+                                    if (count > 0) {
+                                        str += '<i class="aui-iconfont aui-icon-file"></i>参考资料<span class="aui-badge aui-badge-danger">' + count + '</span>';
+                                    } else {
                                         str += '<i class="aui-iconfont aui-icon-file"></i>参考资料';
                                     }
                                     $api.html($api.dom('#document a'), str);
@@ -270,7 +274,7 @@
                             });
                         }
                     }
-                    else{
+                    else {
                         alert('出现错误:' + JSON.stringify(err));
                     }
                 });
@@ -278,12 +282,12 @@
         });
     }
     //打开资料档
-    function OpenDoucment(){
+    function OpenDoucment() {
         api.openWin({
-            name:'documentList',
-            url:'../document/documentList.html',
-            pageParam:{
-                documentList : currentTypeDocument
+            name: 'documentList',
+            url: '../document/documentList.html',
+            pageParam: {
+                documentList: currentTypeDocument
             }
         })
     }
