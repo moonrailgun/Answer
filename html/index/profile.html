@@ -112,7 +112,7 @@
             <a class="aui-arrow-right" onclick="NoFunction();">学习圈</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right" onclick="NoFunction();">错题集</a>
+            <a class="aui-arrow-right" onclick="OpenWrongSet();">错题集</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
             <a class="aui-arrow-right" onclick="NoFunction();">计划</a>
@@ -290,6 +290,14 @@
             name: 'favoriteList',
             url: '../favorite/favoriteList.html'
         })
+    }
+
+    //打开错题集
+    function OpenWrongSet(){
+        api.openWin({
+            name : 'wrongSet',
+            url : '../wrongSet/wrongSet.html'
+        });
     }
 
     //切换到排行榜页面
