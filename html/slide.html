@@ -36,16 +36,10 @@
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
 
-        //添加事件监听
-        api.addEventListener({
-            name: 'keyback'
-        }, function (ret, err) {
-            //api.closeWidget();//关闭应用
-            BackHome();//回到首页
-        });
-
         //打开首页
         ChangeWin('home.html');
+
+        ExitApp();//退出应用监听
     };
 
     function sliding() {
@@ -59,6 +53,7 @@
     }
     //变更窗口
     function ChangeWin(url) {
+        currectFrame = url;
         var headerHeight = $api.offset($api.dom("header")).h;
         api.openFrame({
             name: url,
@@ -84,6 +79,36 @@
             url : './index/' + url
         });
         ChangeWin('home.html');
+    }
+
+    //双击back退出应用事件监听
+    function ExitApp(){
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err){
+            if(currectFrame != 'home.html'){
+                BackHome();
+            }else{
+                api.toast({
+                    msg: '再按一次返回键退出应用',
+                    duration:2000,
+                    location: 'bottom'
+                });
+
+                api.addEventListener({
+                    name: 'keyback'
+                }, function(ret, err){
+                    api.closeWidget();
+                });
+
+                setTimeout(function(){
+                    api.removeEventListener({
+                        name: 'keyback'
+                    });
+                    ExitApp();
+                },3000);
+            }
+        });
     }
 </script>
 </body>
