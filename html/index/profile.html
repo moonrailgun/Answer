@@ -71,18 +71,18 @@
         <li id="userInfo" class="aui-list-view-cell aui-img">
             <div id="userHead" onclick="ChangePic();"><img class="aui-img-object" src="../../image/default_head.jpg">
             </div>
-            <div id="userMain" class="aui-img-body" onclick="OpenInfoWin()">
+            <div id="userMain" class="aui-img-body" onclick="OpenInfoWin();">
                 <div id="nickname">游客</div>
                 <div id="username">游客</div>
             </div>
-            <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right" onclick="OpenInfoWin()"></div>
+            <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right" onclick="OpenInfoWin();"></div>
         </li>
         <li class="infoBlock">
             <div id="score" tapmode="liActive" class="infoBlockCell" style="border-right: 1px solid #c8c7cc;">
                 <div class="infoBlockCellNum">0</div>
                 <div>积分</div>
             </div>
-            <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="SwitchToRank()">
+            <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="SwitchToRank();">
                 <div class="infoBlockCellNum">1</div>
                 <div>排名</div>
             </div>
@@ -293,10 +293,10 @@
     }
 
     //打开错题集
-    function OpenWrongSet(){
+    function OpenWrongSet() {
         api.openWin({
-            name : 'wrongSet',
-            url : '../wrongSet/wrongSet.html'
+            name: 'wrongSet',
+            url: '../wrongSet/wrongSet.html'
         });
     }
 

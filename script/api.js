@@ -479,7 +479,7 @@
     /*by king*/
     u.fixIos7Bar = function(el){
         if(!u.isElement(el)){
-            console.warn('$api.fixIos7Bar Function need el param, el param must be DOM Element');
+            console.warn('$api.fixStatusBar Function need el param, el param must be DOM Element');
             return;
         }
         var strDM = api.systemType;

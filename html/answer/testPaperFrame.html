@@ -73,7 +73,7 @@
     var testQuestion = [];//所有问题数组
     var currentNum = 1;//当前题目号
     apiready = function () {
-        $api.fixIos7Bar($api.dom('header'));
+        $api.fixStatusBar($api.dom('header'));
         testName = api.pageParam.testName;
         testQuestion = api.pageParam.testQuestion;
         var pageParam = api.pageParam;

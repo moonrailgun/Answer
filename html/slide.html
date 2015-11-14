@@ -32,8 +32,9 @@
 </header>
 <script type="text/javascript" src="../script/api.js"></script>
 <script>
+    var currectFrame = '';
     apiready = function () {
-        $api.fixIos7Bar($api.dom('header'));
+        $api.fixStatusBar($api.dom('header'));
 
         //添加事件监听
         api.addEventListener({

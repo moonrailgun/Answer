@@ -31,7 +31,7 @@
 <script type="text/javascript">
     apiready = function () {
         var $header = $api.dom('header');
-        $api.fixIos7Bar($header);
+        $api.fixStatusBar($header);
         var userInfo = $api.getStorage('userInfo');
         var scanner = api.require('FNScanner');
         scanner.encodeImg({

@@ -176,7 +176,7 @@
     apiready = function () {
         //动态适配UI
         var $nav = $api.dom('nav');
-        $api.fixIos7Bar($nav);
+        $api.fixStatusBar($nav);
         var navWidth = api.winWidth - 60;
         $api.css($nav, 'width:' + navWidth + 'px;');
         var $account = $api.dom('#account');

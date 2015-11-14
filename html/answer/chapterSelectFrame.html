@@ -35,7 +35,7 @@
     apiready = function () {
         var pageParam = api.pageParam;
         var allChapterList = pageParam.allChapterList;
-        $api.fixIos7Bar($api.dom('header'));//标题
+        $api.fixStatusBar($api.dom('header'));//标题
         //生成页
         var $main = $api.dom('#main');
         var str = '<ul class="aui-grid-nine">';
