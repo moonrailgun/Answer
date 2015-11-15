@@ -43,7 +43,29 @@
 
         #content {
             -webkit-box-flex: 1;
-            padding: 10px;
+            overflow: auto;
+        }
+
+        #content .examCell {
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            width: 50%;
+            height: 120px;
+            padding: 8px;
+            float: left;
+            text-align: center;
+            border-bottom: solid 2px #f4f4f4;
+            background-color: #eeeeee;
+            overflow: auto;
+        }
+
+        #content .examCell:nth-of-type(odd) {
+            border-right: solid 1px #f4f4f4;
+        }
+
+        #content .examCell:nth-of-type(even) {
+            border-left: solid 1px #f4f4f4;
         }
     </style>
 </head>
@@ -124,9 +146,24 @@
         }, function (ret, err) {
             if (ret) {
                 $api.html($content, JSON.stringify(ret));
-                //alert(JSON.stringify(ret));
+                var str = '';
+                if (ret.length > 0) {
+                    for (var i = 0; i < ret.length; i++) {
+                        var dat = ret[i];
+                        var id = dat.id;
+                        var examinationName = dat.examinationName;
+                        str += '<div class="examCell" onclick=\'SelectExam("' + id + '","' + examinationName + '")\'>' + examinationName + '</div>'
+                    }
+                } else {
+                    str += '<div style="text-align: center;"><img src="../../image/nodata_s01.png" /></div>';
+                }
+                $api.html($content, str);
             }
         });
+    }
+
+    function SelectExam(examinationId, examinationName) {
+        alert(examinationId + '||||' + examinationName);
     }
 
     function GenerateTest(testName, testQuestion) {
