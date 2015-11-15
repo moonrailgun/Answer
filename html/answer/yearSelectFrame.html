@@ -8,6 +8,44 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        body {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+        }
+
+        #main {
+            display: -webkit-box;
+            -webkit-box-flex: 1;
+        }
+
+        #nav {
+            width: 100px;
+            background-color: #a6a6a6;
+        }
+
+        #nav ul.aui-list-view {
+            background-color: #a6a6a6;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+        }
+
+        #nav ul.aui-list-view li.aui-list-view-cell {
+            padding: 8px 10px;
+        }
+
+        #nav ul.aui-list-view li.aui-list-view-cell.active {
+            background-color: #f4f4f4;
+            color: #333333;
+            font-size: 18px;
+        }
+
+        #content {
+            -webkit-box-flex: 1;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-info">
@@ -20,11 +58,14 @@
     </div>
 </header>
 <div id="main">
-
+    <div id="nav"></div>
+    <div id="content"></div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    var $content = $api.dom('#content');
+
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
         var pageParam = api.pageParam;
@@ -33,6 +74,7 @@
         var questionTypeName = pageParam.questionTypeName;
         $api.html($api.dom('header div.aui-title'), questionTypeName + ' - 真题年份选择');
         var $main = $api.dom('#main');
+        var $nav = $api.dom('#nav');
 
         var relation_m = api.require('relation');
         relation_m.findAll({
@@ -42,22 +84,38 @@
         }, function (ret, err) {
             if (ret) {
                 var str = '';
-                if(ret.length > 0){
+                if (ret.length > 0) {
+                    str += '<ul class="aui-list-view">';
                     for (var i = 0; i < ret.length; i++) {
                         var dat = ret[i];
                         var id = dat.id;
                         var year = dat.year;
-                        str += '<div onclick=\'SelectYear("' + id + '","' + year + '");\'><a href="#">' + year + '</a></div>';
+                        str += '<li class="aui-list-view-cell" onclick=\'SelectYear("' + id + '","' + year + '",this);\'>' + year + '</li>';
                     }
-                }else{
+                    str += '</ul>';
+                    $api.html($nav, str);
+
+                    //获取第一个元素并点击
+                    $api.dom('#nav li.aui-list-view-cell').click();
+                } else {
                     str += '<div style="text-align: center;"><img src="../../image/nodata_s01.png" /></div>';
+                    $api.html($main, str);
                 }
-                $api.html($main, str);
+
             }
         });
+
     };
 
-    function SelectYear(yearId, yearName) {
+    function SelectYear(yearId, yearName, obj) {
+        //UI切换
+        var $allDom = $api.domAll('#nav li.aui-list-view-cell.active');
+        for (var i = 0; i < $allDom.length; i++) {
+            $api.removeCls($allDom[i], 'active');
+        }
+        $api.addCls(obj, 'active');
+
+        //变更内容
         var relation_m = api.require('relation');
         relation_m.findAll({
             class: 'AuthenticExamination',
@@ -65,7 +123,8 @@
             column: 'examinations'
         }, function (ret, err) {
             if (ret) {
-                alert(JSON.stringify(ret));
+                $api.html($content, JSON.stringify(ret));
+                //alert(JSON.stringify(ret));
             }
         });
     }
