@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .examCell {
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            width: 33%;
+            height: 120px;
+            padding: 8px;
+            float: left;
+            text-align: center;
+            border-bottom: solid 2px #f4f4f4;
+            background-color: #eeeeee;
+            overflow: auto;
+            border-right: solid 1px #f4f4f4;
+        }
+
+        .examCell:nth-of-type(3), .examCell:nth-of-type(6), .examCell:nth-of-type(9), .examCell:nth-of-type(12), .examCell:nth-of-type(15) {
+            border-right: 0;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">
+        模拟练习卷 - 选择
+    </div>
+</header>
+<div id="main">
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var examCellList = [];
+    var examNum = 0;
+    var $main;
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+        var pageParam = api.pageParam;
+        if (!pageParam) return;
+        var questionTypeId = pageParam.questionTypeId;
+        var questionTypeName = pageParam.questionTypeName;
+        $api.html($api.dom('header div.aui-title'), questionTypeName + ' - 模拟题选择');
+        $main = $api.dom('#main');
+
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'QuestionType',
+            id: questionTypeId,
+            column: 'simulationExam'
+        }, function (ret, err) {
+            if (ret) {
+                if (ret.length > 0) {
+                    var examIdList = [];
+                    for (var i = 0; i < ret.length; i++) {
+                        var dat = ret[i];
+                        var examId = dat.examination;
+                        if (examId) {
+                            examIdList.push(examId);
+                            examNum++;
+                        }
+                    }
+
+                    for (i = 0; i < examNum; i++) {
+                        (function (index, examId) {
+                            var model = api.require('model');
+                            model.findById({
+                                class: 'Examination',
+                                id: examId
+                            }, function (ret, err) {
+                                if (ret) {
+                                    var id = ret.id;
+                                    var examinationName = ret.examinationName;
+                                    examCellList[index] = {
+                                        id: id,
+                                        examinationName: examinationName
+                                    };
+                                    UpdateExamCellList();//更新列表
+                                }
+                            });
+                        })(i, examIdList[i]);
+                    }
+                }
+                else {
+                    $api.html($main, '<div style="text-align: center;"><img src="../../image/nodata_s01.png" /></div>');
+                }
+            }
+        });
+    };
+
+    //更新元素
+    function UpdateExamCellList() {
+        var str = '';
+        for (var i = 0; i < examNum; i++) {
+            var exam = examCellList[i];
+            if (exam) {
+                str += '<div class="examCell" onclick=\'SelectExam("' + exam.id + '","' + exam.examinationName + '")\'>' + exam.examinationName + '</div>'
+            }
+        }
+        $api.html($main, str);
+    }
+
+    function SelectExam(examinationId, examinationName) {
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'Examination',
+            id: examinationId,
+            column: 'questions'
+        }, function (ret, err) {
+            if (ret) {
+                api.openWin({
+                    name: 'testPaperFrame',
+                    url: './testPaperFrame.html',
+                    pageParam: {
+                        testName: examinationName,
+                        testQuestion: ret
+                    },
+                    slidBackEnabled: false
+                });
+            }
+        });
+    }
+</script>
+</html>

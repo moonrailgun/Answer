@@ -174,11 +174,14 @@
         });
     }
     function GenerateSimulationTest() {
-        //综合测试
-        api.toast({
-            msg: '测什么测。直接上真题吧！',
-            duration: 2000,
-            location: 'bottom'
+        //模拟练习
+        api.openWin({
+            name: 'simulationSelectFrame',
+            url: './simulationSelectFrame.html',
+            pageParam: {
+                questionTypeId: questionTypeId,
+                questionTypeName: questionTypeName
+            }
         });
     }
     function GenerateExamTest() {
