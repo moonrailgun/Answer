@@ -163,7 +163,16 @@
     }
 
     function SelectExam(examinationId, examinationName) {
-        alert(examinationId + '||||' + examinationName);
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'Examination',
+            id: examinationId,
+            column: 'questions'
+        },function(ret,err){
+            if(ret){
+                GenerateTest(examinationName, ret);
+            }
+        });
     }
 
     function GenerateTest(testName, testQuestion) {
