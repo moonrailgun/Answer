@@ -8,6 +8,11 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        #main{
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-primary">
@@ -17,19 +22,21 @@
 
     <div class="aui-title">绑定手机</div>
 </header>
-<div>
-    手机名:<span id="deviceName"></span>
+<div id="main">
+    <div>
+        手机名:<span id="deviceName"></span>
+    </div>
+    <div>
+        手机型号:<span id="deviceModel"></span>
+    </div>
+    <div>
+        系统:<span id="systemType"></span>  (版本号:<span id="systemVersion"></span>)
+    </div>
+    <div style="margin-bottom: 10px;">
+        设备唯一标识码:<span id="deviceId"></span>
+    </div>
+    <button class="aui-btn aui-btn-block aui-btn-danger" onclick="api.alert({msg:'暂未开通该项服务'});">是否绑定手机到该账号？</button>
 </div>
-<div>
-    手机型号:<span id="deviceModel"></span>
-</div>
-<div>
-    系统:<span id="systemType"></span>  (版本号:<span id="systemVersion"></span>)
-</div>
-<div>
-    设备唯一标识码:<span id="deviceId"></span>
-</div>
-<button class="aui-btn aui-btn-block aui-btn-danger">是否绑定手机到该账号？</button>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">

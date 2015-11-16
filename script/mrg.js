@@ -90,6 +90,9 @@ function OpenDocumentFile(url, name) {
 }
 //添加到下载队列
 function EnqueueFile(url, name) {
+    api.toast({msg:'停止下载服务'});
+    return;
+
     var use3g = false;
     api.getPrefs({
         key: '3g'
