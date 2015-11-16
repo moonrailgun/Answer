@@ -125,10 +125,36 @@
     //生成试卷
     function GenerateRandomTest() {
         //随便做做
-        api.toast({
-            msg: '做人不要那么随便。认真点吧',
-            duration: 2000,
-            location: 'bottom'
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '先喝杯茶...'
+        });
+
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'QuestionType',
+            id: questionTypeId,
+            column: 'unclassifiedQuestions'
+        },function(ret,err){
+            if(ret){
+                if(ret.length > 0){
+                    api.openWin({
+                        name: 'testPaperFrame',
+                        url: './testPaperFrame.html',
+                        pageParam: {
+                            testName: '随便做做',
+                            testQuestion: ret
+                        },
+                        slidBackEnabled: false
+                    });
+                }else{
+                    api.toast({ msg: '没有题目'});
+                }
+            }else{
+                api.toast({ msg: '获取题目失败，请重试...'});
+            }
         });
     }
     function GenerateUnitTest() {
@@ -193,17 +219,6 @@
                 questionTypeId: questionTypeId,
                 questionTypeName: questionTypeName
             }
-        });
-    }
-    function GenerateTest(testName, testQuestion) {
-        api.openWin({
-            name: 'testPaperFrame',
-            url: './testPaperFrame.html',
-            pageParam: {
-                testName: testName,
-                testQuestion: testQuestion
-            },
-            slidBackEnabled: false
         });
     }
 
