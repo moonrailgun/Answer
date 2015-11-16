@@ -160,7 +160,7 @@
                             var dat = ret[i];
                             if (dat.userId) {
                                 var score = dat.score;
-                                var username = dat.userId.username;
+                                var nickname = dat.userId.nickname;
                                 var rank = i + 1;
                                 var temp = '';
                                 if (rank == 1) {
@@ -173,7 +173,7 @@
                                     temp += ' third';
                                 }
                                 str += '<div class="rankCell' + temp + '"><div class="rankNum">' + rank + '</div>'
-                                        + '<div class="userInfo"><div class="username">' + username + '</div>'
+                                        + '<div class="userInfo"><div class="username">' + nickname + '</div>'
                                         + '<div class="userscore">' + score + '</div></div></div>';
                             }
                         }
