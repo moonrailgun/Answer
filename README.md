@@ -73,8 +73,10 @@
 # 数据库架构 #
 ## 数据库 ##
 - _user 用户
+	- username 用户名*
+	- password (隐藏) 用户密码*
 	- accessTokens 用户登陆凭证
-	- nickname 用户昵称(显示用)
+	- nickname 用户昵称(显示用)*
 	- avatar (文件) 用户头像，大小100*100
 	- favorite (关联Favorite) 用户收藏
 - QuestionBank 题库
@@ -93,20 +95,19 @@
 	- classifyScore 该分类的得分*
 	- type (QuestionType) 该分类的索引*
 - Chapter 学科章节
+	- chapterName 章节名*
 	- questions (关联QuestionBank) 该学科下所有题目
 - Examination 套题(模拟练习)
-	- examinationName 套题名字
+	- examinationName 套题名字*
 	- questions (关联QuestionBank) 该试卷所有题目
 - AuthenticExamination 真题检测(按年份排序)
-	- year 真题年份
+	- year 真题年份*
 	- examinations (关联Examination) 该试卷所有题目
 - SimulationExamination 模拟测试
-	- title 测试名
-	- typeId 所属学科分类的ID
-	- examination (关联Examination) 指向一套试卷
+	- examination (关联Examination) 指向一套试卷*
 - MessageBoard 留言板
 	- content 留言内容*
-	- userId (关联_user) 留言ID*
+    - userId (关联_user) 留言ID*
 	- comment (关联MessageComment) 该留言评论集合
 - MessageComment 留言板评论
 	- content 留言内容*
@@ -126,5 +127,12 @@
 	- userId (关联_user) 该用户ID*
 	- score 该用户积分
 - Economy 经济库
-	- userId 用户ID
+	- userId 用户ID*
 	- score 用户积分
+- WrongSet 错题集
+	- userId (关联_user) 错题用户ID*
+	- wrongNumSum 累计错题总数*
+	- wrongSet 错题数据的JSON数组对象*
+        - id 错题ID
+        - group 所属分类(自定义默认为default)
+        - num 累计错误次数
