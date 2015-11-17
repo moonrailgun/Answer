@@ -122,7 +122,7 @@
         //收集结果
         for (var i = 0; i < rightList.length; i++) {
             var tmp = {
-                questionsId: testQuestion[i].id,
+                questionId: testQuestion[i].id,
                 right: rightList[i],
                 select: answerList[i]
             };
@@ -139,7 +139,7 @@
                 score++;
             } else{
                 //获取错题列表
-                errorQuestionsList.push(dat.questionsId);
+                errorQuestionsList.push(dat.questionId);
             }
         }
 

@@ -90,7 +90,7 @@ function OpenDocumentFile(url, name) {
 }
 //添加到下载队列
 function EnqueueFile(url, name) {
-    api.toast({msg:'停止下载服务'});
+    api.toast({msg: '停止下载服务'});
     return;
 
     var use3g = false;
@@ -178,6 +178,119 @@ function GetEconomy(func) {
     }
 }
 
+//添加题目到错题本 参数为错题id数组
+function AddItemToWrongSet(list) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId) {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "WrongSet",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        var dat = ret[0];
+                        var wrongSet = dat.wrongSet;
+                        for (var i = 0; i < list.length; i++) {
+                            var questionId = list[i];
+                            var tmp = {
+                                id: questionId,
+                                group: '默认',
+                                num: 1
+                            };
+                            for (var j = 0; j < wrongSet.length; i++) {
+                                if (questionId == wrongSet[j].id) {
+                                    tmp = {
+                                        id: wrongSet[j].id,
+                                        group: wrongSet[j].group,
+                                        num: wrongSet[j].num + 1
+                                    };
+                                    wrongSet.splice(j, 1);//删除原元素
+                                    break;
+                                }
+                            }
+                            wrongSet.push(tmp);
+                        }
+
+                        //将修改完毕的数据同步到远程
+                        model.updateById({
+                            class: 'WrongSet',
+                            id: dat.id,
+                            value: {
+                                wrongSet: wrongSet
+                            }
+                        }, function (ret, err) {
+                            if (ret) {
+                                api.toast({msg: '已将 ' + list.length + ' 道错题加入错题本'})
+                            }
+                        });
+                    } else {
+                        api.toast({msg: '添加到错题集失败...'})
+                    }
+                });
+            }
+        });
+    }
+}
+//删除错题本内的错题 参数为题目id数组
+function RemoveItemInWrongSet(list) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId) {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "WrongSet",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        var dat = ret[0];
+                        var wrongSet = dat.wrongSet;
+                        for (var i = 0; i < list.length; i++) {
+                            for (var j = 0; j < wrongSet.length; i++) {
+                                if (wrongSet[j].id == list[i]) {
+                                    wrongSet.splice(j, 1);//删除该项
+                                    break;
+                                }
+                            }
+                        }
+
+                        //将修改完毕的数据同步到远程
+                        model.updateById({
+                            class: 'WrongSet',
+                            id: dat.id,
+                            value: {
+                                wrongSet: wrongSet
+                            }
+                        }, function (ret, err) {
+                            if (!ret && err) {
+                                api.toast({msg: '删除错题失败请重试:' + err.msg})
+                            }
+                        });
+                    } else {
+                        api.toast({msg: '删除错题失败请重试...'})
+                    }
+                });
+            }
+        });
+    }
+}
+
 //获取收藏数据
 function GetFavorite(func) {
     var userInfo = $api.getStorage('userInfo');
@@ -222,7 +335,6 @@ function GetFavorite(func) {
         });
     }
 }
-
 //添加到收藏
 function AddFavour(id, type, obj) {
     var favorite = $api.getStorage('favorite');

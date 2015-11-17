@@ -57,7 +57,13 @@
                 }, function (ret, err) {
                     if (ret) {
                         var dat;
-                        if (ret.length == 0) {
+                        if (ret.length != 0) {
+                            dat = {
+                                userId: ret[0].userId,
+                                wrongSet: ret[0].wrongSet,
+                                wrongNumSum: ret[0].wrongNumSum
+                            };
+                        } else {
                             //创建错题集
                             dat = {
                                 userId: userId,
@@ -68,12 +74,6 @@
                                 class: 'WrongSet',
                                 value: dat
                             });
-                        } else {
-                            dat = {
-                                userId: ret[0].userId,
-                                wrongSet: ret[0].wrongSet,
-                                wrongNumSum: ret[0].wrongNumSum
-                            };
                         }
 
                         wrongSet = dat.wrongSet;
@@ -89,6 +89,7 @@
         });
     }
 
+    //todo
     //开始答题
     function StartAnswer() {
         if (wrongSet.length == 0) {

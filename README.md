@@ -134,5 +134,5 @@
 	- wrongNumSum 累计错题总数*
 	- wrongSet 错题数据的JSON数组对象*
         - id 错题ID
-        - group 所属分类(自定义默认为default)
+        - group 所属分类(自定义默认为【默认】)
         - num 累计错误次数
