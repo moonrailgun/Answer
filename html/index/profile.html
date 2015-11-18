@@ -112,7 +112,7 @@
             <a class="aui-arrow-right" onclick="NoFunction();">学习圈</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right" onclick="OpenWrongSet();">错题集</a>
+            <a id="wrongSet" class="aui-arrow-right" onclick="OpenWrongSet();">错题集</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
             <a class="aui-arrow-right" onclick="NoFunction();">计划</a>
@@ -143,6 +143,13 @@
             }
             $api.html($api.dom('#favorite'), str);
         });
+
+        GetItemNumInWrongSet(function (state, num) {
+            if(state && num > 0){
+                var str = '错题集' +  '<span class="aui-badge aui-badge-danger">' + num + '</span>';
+                $api.html($api.dom('#wrongSet'), str);
+            }
+        })
     };
 
     function ChangePic() {
@@ -287,8 +294,8 @@
     //打开收藏窗口
     function OpenFavoriteWin() {
         api.openWin({
-            name: 'favoriteList',
-            url: '../favorite/favoriteList.html'
+            name: 'favoriteListFrame',
+            url: '../favorite/favoriteListFrame.html'
         })
     }
 

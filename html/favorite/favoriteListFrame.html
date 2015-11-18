@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">我的收藏</div>
+</header>
+
+<div class="aui-tab">
+    <ul class="aui-tab-nav" id="favorHeader">
+        <li class="active" onclick="SwitchTab(this,0)">文档</li>
+        <li onclick="SwitchTab(this,1)">题目</li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+
+        OpenContent();
+    };
+
+    function SwitchTab(obj,index){
+        $lis = $api.domAll('#favorHeader li');
+        for(var i=0;i<$lis.length;i++){
+            $api.removeCls($lis[i], 'active');
+        }
+        $api.addCls(obj, 'active');
+
+        SwitchContent(index);
+    }
+
+    //打开内容页
+    function OpenContent(){
+        var height = $api.offset($api.dom('header')).h + $api.offset($api.dom('div.aui-tab')).h;
+        api.openFrame({
+            name: 'favoriteList',
+            url: './favoriteList.html',
+            rect:{
+                x:0,
+                y:height,
+                w:api.winWidth,
+                h:api.winHeight - height
+            },
+            bounces: true,
+            vScrollBarEnabled:true
+        });
+    }
+
+    //切换内容页内容
+    function SwitchContent(index){
+        api.execScript({
+            name: "favoriteList",
+            script: 'Change('+index+');'
+        });
+    }
+</script>
+</html>

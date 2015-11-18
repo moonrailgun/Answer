@@ -10,33 +10,41 @@
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
 </head>
 <body>
-<header class="aui-bar aui-bar-nav aui-bar-primary">
-    <a class="aui-pull-left">
-        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
-    </a>
+<div id="main">
 
-    <div class="aui-title">我的收藏</div>
-</header>
-
-<div class="aui-tab">
-    <ul class="aui-tab-nav" id="favorHeader">
-        <li class="active" onclick="SwitchTab(this)">文档</li>
-        <li onclick="SwitchTab(this)">题目</li>
-    </ul>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    var type = 0;//0 = documents, 1 = questions
     apiready = function () {
-        $api.fixStatusBar($api.dom('header'));
+        Change(0);
     };
 
-    function SwitchTab(obj){
-        $lis = $api.domAll('#favorHeader li');
-        for(var i=0;i<$lis.length;i++){
-            $api.removeCls($lis[i], 'active');
+    function Change(index){
+        type = index;
+        var $main = $api.dom('#main');
+        $api.html($main, '');
+
+        if(index == 0){
+            GetFavoriteDocuments(function (data) {
+
+            });
+        }else if(index == 1){
+            GetFavoriteQuestions(function (data) {
+
+            });
+        }else{
+            api.toast({msg: '未知的操作'});
         }
-        $api.addCls(obj, 'active');
+    }
+
+    function GetFavoriteDocuments(func){
+
+    }
+
+    function GetFavoriteQuestions(func){
+
     }
 </script>
 </html>

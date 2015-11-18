@@ -178,8 +178,61 @@ function GetEconomy(func) {
     }
 }
 
+//获取错题集资料
+function GetUserWrongData(func) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if(userId){
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "WrongSet",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        var dat;
+                        if (ret.length != 0) {
+                            dat = {
+                                userId: ret[0].userId,
+                                wrongSet: ret[0].wrongSet,
+                                wrongNumSum: ret[0].wrongNumSum
+                            };
+                            func(true,dat);
+                        } else {
+                            //创建错题集
+                            dat = {
+                                userId: userId,
+                                wrongSet: [],
+                                wrongNumSum: 0
+                            };
+                            model.insert({
+                                class: 'WrongSet',
+                                value: dat
+                            },function(ret,err){
+                                if(ret){
+                                    func(true,dat);
+                                }
+                            });
+                        }
+                    } else {
+                        func(false);
+                    }
+                });
+            }
+        });
+    }else{
+        func(false);
+    }
+}
 //添加题目到错题本 参数为错题id数组
-function AddItemToWrongSet(list) {
+function AddItemToWrongSet(list,func) {
     var userId = $api.getStorage('userInfo')['userId'];
     if (userId) {
         var query = api.require('query');
@@ -229,11 +282,13 @@ function AddItemToWrongSet(list) {
                             }
                         }, function (ret, err) {
                             if (ret) {
-                                api.toast({msg: '已将 ' + list.length + ' 道错题加入错题本'})
+                                func(true);
+                            }else{
+                                func(false);
                             }
                         });
                     } else {
-                        api.toast({msg: '添加到错题集失败...'})
+                        func(false);
                     }
                 });
             }
@@ -289,6 +344,18 @@ function RemoveItemInWrongSet(list) {
             }
         });
     }
+}
+//获取错题数量
+function GetItemNumInWrongSet(func){
+    GetUserWrongData(function (state, data) {
+        if(state){
+            var num = 0;
+            num = data['wrongSet'].length;
+            func(state,num);
+        }else{
+            func(state);
+        }
+    });
 }
 
 //获取收藏数据
