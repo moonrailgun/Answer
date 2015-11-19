@@ -55,8 +55,9 @@
     function ChangeWin(url) {
         currectFrame = url;
         var headerHeight = $api.offset($api.dom("header")).h;
+        var name = url.split('.')[0];
         api.openFrame({
-            name: url,
+            name: name,
             url: './index/'+url,
             rect: {
                 x: 0,
@@ -74,8 +75,9 @@
     //打开新窗口
     function OpenWin(url){
         //打开首页
+        var name = url.split('.')[0];
         api.openWin({
-            name : url,
+            name : name,
             url : './index/' + url
         });
         ChangeWin('home.html');
