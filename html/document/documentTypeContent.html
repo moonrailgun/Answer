@@ -47,11 +47,12 @@
             if (ret) {
                 var dat = [];
                 for (var i = 0; i < ret.length; i++) {
+                    var id = ret[i].id;
                     var file = ret[i].file;
                     var uploadId = ret[i].uploadId;
                     if (file) {
                         dat.push({
-                            id: file.id,
+                            id: id,
                             name: file.name,
                             url: file.url,
                             uploadId:uploadId

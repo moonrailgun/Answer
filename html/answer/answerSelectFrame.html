@@ -252,7 +252,6 @@
     }
     //获取资料数目
     function GetDocumentNum(typeName) {
-        currentTypeDocument = [];//清空之前的数据
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -279,7 +278,7 @@
                             }, function (ret, err) {
                                 if (ret) {
                                     count += ret.length;
-                                    currentTypeDocument = currentTypeDocument.concat(ret);//将资料数据合并到当前的分类资料数组里
+                                    currentTypeDocument = ret;//将资料数据合并到当前的分类资料数组里
 
                                     var str = '';
                                     if (count > 0) {

@@ -560,7 +560,7 @@ function GenerateDocumentList($parent, dat) {
                         + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
                         + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
                         + favoriteStr
-                        + '</div>';
+                        + '</div></li>';
                 }
             }
             str += '</ul>';

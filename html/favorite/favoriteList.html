@@ -8,13 +8,14 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/mrg.css"/>
 </head>
 <body>
 <div id="main">
-
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     var type = 0;//0 = documents, 1 = questions
     var favoriteList = {};
@@ -26,18 +27,53 @@
         });
     };
 
+    //切换列表状态
+    function SwitchListState(obj) {
+        if ($api.hasCls(obj, 'actived')) {
+            $api.removeCls(obj, 'actived');
+        } else {
+            $api.addCls(obj, 'actived');
+        }
+    }
+
+    //标签页变更，内容变更
     function Change(index) {
         type = index;
         var $main = $api.dom('#main');
-        $api.html($main, '');
-
         if (index == 0) {
             GetFavoriteDocuments(function (data) {
+                if(data){
+                    var str = '<ul class="aui-list-view">';
+                    for(var i = 0;i < data.length; i++){
+                        var dat = data[i];
+                        if(dat){
+                            var id = dat.id;
+                            var name = dat.name;
+                            var url = dat.url;
+                            var uploadId = dat.uploadId;
+                            var typeId = dat.typeId;
 
+                            str += '<li class="aui-list-view-cell documentList" onclick="SwitchListState(this)">'
+                                    + '<div class="docListTitle">' + name + '</div>'
+                                    + '<div class="docListOperate">'
+                                    + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>查看</div></div>'
+                                    + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
+                                    + '<div><div class="aui-iconfont aui-icon-favorfill" onclick=\'RemoveFavour("' + id + '", "document", this);\'>取消收藏</div></div>'
+                                    + '</div></li>';
+                        }
+                    }
+                    str += '</ul>';
+                    $api.html($main, str);
+                }
             });
         } else if (index == 1) {
             GetFavoriteQuestions(function (data) {
+                for(var i = 0;i < data.length; i++){
+                    var dat = data[i];
+                    if(dat){
 
+                    }
+                }
             });
         } else {
             api.toast({msg: '未知的操作'});
@@ -64,7 +100,7 @@
                                 var file = ret.file;
                                 var _name = ret.name;
                                 var uploadId = ret.uploadId;
-                                var documentType = ret['documentType(uz*R*id)'];
+                                var documentTypeId = ret['documentType(uz*R*id)'];
 
                                 if(_name){
                                     name = _name;
@@ -78,7 +114,7 @@
                                     name : name,
                                     url : url,
                                     uploadId : uploadId,
-                                    type : documentType
+                                    typeId : documentTypeId
                                 }
                             }
 
