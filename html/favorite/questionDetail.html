@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        body {
+            min-height: 100%;
+            height: auto;
+        }
+
+        #questionHeader, #questionSolution {
+            margin-bottom: 10px;
+            background-color: #FFFFFF;
+            padding: 0 10px;
+        }
+
+        #questionContent img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #content {
+            padding: 0 0 8px 0;
+        }
+
+        div.aui-input-row {
+            width: 100%;
+        }
+
+        div.aui-input-row span {
+            display: inline-block;
+            line-height: 42px;
+            vertical-align: middle;
+        }
+
+        #questionSolution strong {
+            color: #525252;
+            font-size: 14px;
+        }
+
+        #questionSolutionContent {
+            padding: 0 0 0 14px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">题目详情</div>
+</header>
+<div id="main">
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+        var detail = api.pageParam.detail;
+
+        var str = '<div id="questionHeader"><div id="questionContent">';
+        if (detail.picUrl) {
+            str += '<img src="' + detail.picUrl + '" />';
+        }
+        str += '<div id="content">' + detail.questionContent + '</div>'
+                + '<div class="aui-form">'
+                + RadioHtmlGenerater(1, detail.trueanswer, detail.answer1)
+                + RadioHtmlGenerater(2, detail.trueanswer, detail.answer2)
+                + RadioHtmlGenerater(3, detail.trueanswer, detail.answer3)
+                + RadioHtmlGenerater(4, detail.trueanswer, detail.answer4);
+        str += '</div></div>';
+        if (detail.solution) {
+            //解题步骤
+            str += '<div id="questionSolution"><strong>试题详解：</strong>'
+                    + '<div id="questionSolutionContent">' + detail.solution + '</div></div>';
+        }
+
+        $api.html($api.dom('#main'), str);
+    };
+
+    /**
+     * @return {string}
+     */
+    function RadioHtmlGenerater(index, trueanswer, content) {
+        var str = '<div class="aui-input-row">';
+        if (index == trueanswer) {
+            str += '<input class="aui-pull-left aui-radio aui-radio-success" onclick="return false;" type="radio" name="question" checked>';
+        } else {
+            str += '<input class="aui-pull-left aui-radio aui-radio-success" onclick="return false;" type="radio" name="question">';
+        }
+        str += '<span>' + content + '</span></div>';
+        return str;
+    }
+</script>
+</html>

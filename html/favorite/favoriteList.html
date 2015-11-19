@@ -42,11 +42,11 @@
         var $main = $api.dom('#main');
         if (index == 0) {
             GetFavoriteDocuments(function (data) {
-                if(data){
+                if (data) {
                     var str = '<ul class="aui-list-view">';
-                    for(var i = 0;i < data.length; i++){
+                    for (var i = 0; i < data.length; i++) {
                         var dat = data[i];
-                        if(dat){
+                        if (dat) {
                             var id = dat.id;
                             var name = dat.name;
                             var url = dat.url;
@@ -68,11 +68,27 @@
             });
         } else if (index == 1) {
             GetFavoriteQuestions(function (data) {
-                for(var i = 0;i < data.length; i++){
-                    var dat = data[i];
-                    if(dat){
+                if (data) {
+                    var str = '<ul class="aui-list-view">';
+                    for (var i = 0; i < data.length; i++) {
+                        var dat = data[i];
+                        if (dat) {
+                            var questionContent = dat['questionContent'];
+                            var answer1 = dat['answer1'];
+                            var answer2 = dat['answer2'];
+                            var answer3 = dat['answer3'];
+                            var answer4 = dat['answer4'];
+                            var trueanswer = dat['trueanswer'];
+                            var picUrl = dat['pic']['url'];
+                            var solution = dat['solution'];
 
+                            str += '<li class="aui-list-view-cell" onclick=\'ShowQuestionDetail("' + i + '");\'>'
+                                    + '<div class="aui-arrow-right aui-ellipsis-1">'
+                                    + questionContent
+                                    + '</div></li>';
+                        }
                     }
+                    str += '</ul>';
                 }
             });
         } else {
@@ -82,43 +98,43 @@
 
     //获取用户收藏文档信息
     function GetFavoriteDocuments(func) {
-        if(!favoriteDocuments){
+        if (!favoriteDocuments) {
             var documents = favoriteList.documents;
-            if(documents.length > 0){
+            if (documents.length > 0) {
                 var sum = documents.length;
-                for(var i = 0;i< documents.length;i++){
-                    (function(index){
+                for (var i = 0; i < documents.length; i++) {
+                    (function (index) {
                         var documentId = documents[index];
                         var model = api.require('model');
                         model.findById({
                             class: 'Document',
                             id: documentId
-                        },function(ret, err){
+                        }, function (ret, err) {
                             sum--;
-                            if(ret){
+                            if (ret) {
                                 var name;
                                 var file = ret.file;
                                 var _name = ret.name;
                                 var uploadId = ret.uploadId;
                                 var documentTypeId = ret['documentType(uz*R*id)'];
 
-                                if(_name){
+                                if (_name) {
                                     name = _name;
-                                }else{
+                                } else {
                                     name = file.name;
                                 }
                                 var url = file.url;
 
                                 documents[index] = {
                                     id: documentId,
-                                    name : name,
-                                    url : url,
-                                    uploadId : uploadId,
-                                    typeId : documentTypeId
+                                    name: name,
+                                    url: url,
+                                    uploadId: uploadId,
+                                    typeId: documentTypeId
                                 }
                             }
 
-                            if(sum <= 0){
+                            if (sum <= 0) {
                                 //全部获取完毕
                                 favoriteDocuments = documents;//缓存
                                 func(documents);
@@ -127,27 +143,27 @@
                     })(i);
                 }
             }
-        }else{
+        } else {
             func(favoriteDocuments);
         }
     }
 
     //获取用户收藏题目信息
     function GetFavoriteQuestions(func) {
-        if(!favoriteQuestions){
+        if (!favoriteQuestions) {
             var questions = favoriteList.questions;
-            if(questions.length > 0){
+            if (questions.length > 0) {
                 var sum = questions.length;
-                for(var i = 0;i< questions.length;i++){
-                    (function(index){
+                for (var i = 0; i < questions.length; i++) {
+                    (function (index) {
                         var questionId = questions[index];
                         var model = api.require('model');
                         model.findById({
                             class: 'QuestionBank',
                             id: questionId
-                        },function(ret, err){
+                        }, function (ret, err) {
                             sum--;
-                            if(ret){
+                            if (ret) {
                                 var questionContent = ret['questionContent'];
                                 var answer1 = ret['answer1'];
                                 var answer2 = ret['answer2'];
@@ -159,18 +175,18 @@
 
                                 questions[index] = {
                                     id: questionId,
-                                    questionContent : questionContent,
+                                    questionContent: questionContent,
                                     answer1: answer1,
-                                    answer2 : answer2,
-                                    answer3 : answer3,
-                                    answer4 : answer4,
-                                    trueanswer : trueanswer,
-                                    picUrl : picUrl,
-                                    solution : solution
+                                    answer2: answer2,
+                                    answer3: answer3,
+                                    answer4: answer4,
+                                    trueanswer: trueanswer,
+                                    picUrl: picUrl,
+                                    solution: solution
                                 };
                             }
 
-                            if(sum <= 0){
+                            if (sum <= 0) {
                                 //全部获取完毕
                                 favoriteQuestions = questions;//缓存
                                 func(questions);
@@ -179,7 +195,7 @@
                     })(i);
                 }
             }
-        }else{
+        } else {
             func(favoriteQuestions);
         }
     }
@@ -227,6 +243,19 @@
                 }
             });
         }
+    }
+
+    function ShowQuestionDetail(index) {
+        GetFavoriteQuestions(function (data) {
+            var detail = data[index];
+            api.openWin({
+                name: 'questionDetail',
+                url: './questionDetail.html',
+                pageParam: {
+                    detail: detail
+                }
+            })
+        });
     }
 </script>
 </html>
