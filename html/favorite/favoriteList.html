@@ -17,34 +17,180 @@
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     var type = 0;//0 = documents, 1 = questions
+    var favoriteList = {};
+    var favoriteDocuments;
+    var favoriteQuestions;
     apiready = function () {
-        Change(0);
+        GetFavoriteList(function () {
+            Change(0);
+        });
     };
 
-    function Change(index){
+    function Change(index) {
         type = index;
         var $main = $api.dom('#main');
         $api.html($main, '');
 
-        if(index == 0){
+        if (index == 0) {
             GetFavoriteDocuments(function (data) {
 
             });
-        }else if(index == 1){
+        } else if (index == 1) {
             GetFavoriteQuestions(function (data) {
 
             });
-        }else{
+        } else {
             api.toast({msg: '未知的操作'});
         }
     }
 
-    function GetFavoriteDocuments(func){
+    //获取用户收藏文档信息
+    function GetFavoriteDocuments(func) {
+        if(!favoriteDocuments){
+            var documents = favoriteList.documents;
+            if(documents.length > 0){
+                var sum = documents.length;
+                for(var i = 0;i< documents.length;i++){
+                    (function(index){
+                        var documentId = documents[index];
+                        var model = api.require('model');
+                        model.findById({
+                            class: 'Document',
+                            id: documentId
+                        },function(ret, err){
+                            sum--;
+                            if(ret){
+                                var name;
+                                var file = ret.file;
+                                var _name = ret.name;
+                                var uploadId = ret.uploadId;
+                                var documentType = ret['documentType(uz*R*id)'];
 
+                                if(_name){
+                                    name = _name;
+                                }else{
+                                    name = file.name;
+                                }
+                                var url = file.url;
+
+                                documents[index] = {
+                                    id: documentId,
+                                    name : name,
+                                    url : url,
+                                    uploadId : uploadId,
+                                    type : documentType
+                                }
+                            }
+
+                            if(sum <= 0){
+                                //全部获取完毕
+                                favoriteDocuments = documents;//缓存
+                                func(documents);
+                            }
+                        });
+                    })(i);
+                }
+            }
+        }else{
+            func(favoriteDocuments);
+        }
     }
 
-    function GetFavoriteQuestions(func){
+    //获取用户收藏题目信息
+    function GetFavoriteQuestions(func) {
+        if(!favoriteQuestions){
+            var questions = favoriteList.questions;
+            if(questions.length > 0){
+                var sum = questions.length;
+                for(var i = 0;i< questions.length;i++){
+                    (function(index){
+                        var questionId = questions[index];
+                        var model = api.require('model');
+                        model.findById({
+                            class: 'QuestionBank',
+                            id: questionId
+                        },function(ret, err){
+                            sum--;
+                            if(ret){
+                                var questionContent = ret['questionContent'];
+                                var answer1 = ret['answer1'];
+                                var answer2 = ret['answer2'];
+                                var answer3 = ret['answer3'];
+                                var answer4 = ret['answer4'];
+                                var trueanswer = ret['trueanswer'];
+                                var picUrl = ret['pic']['url'];
+                                var solution = ret['solution'];
 
+                                questions[index] = {
+                                    id: questionId,
+                                    questionContent : questionContent,
+                                    answer1: answer1,
+                                    answer2 : answer2,
+                                    answer3 : answer3,
+                                    answer4 : answer4,
+                                    trueanswer : trueanswer,
+                                    picUrl : picUrl,
+                                    solution : solution
+                                };
+                            }
+
+                            if(sum <= 0){
+                                //全部获取完毕
+                                favoriteQuestions = questions;//缓存
+                                func(questions);
+                            }
+                        });
+                    })(i);
+                }
+            }
+        }else{
+            func(favoriteQuestions);
+        }
+    }
+
+    //获取用户收藏列表
+    function GetFavoriteList(func) {
+        var userId = $api.getStorage('userInfo')['userId'];
+        if (userId) {
+            var query = api.require('query');
+            query.createQuery(function (ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    query.whereEqual({
+                        qid: queryId,
+                        column: 'userId',
+                        value: userId
+                    });
+                    var model = api.require('model');
+                    model.findAll({
+                        class: "Favorite",
+                        qid: queryId
+                    }, function (ret, err) {
+                        if (ret) {
+                            var dat = ret[0];
+                            favoriteList = {
+                                questions: dat.questions,
+                                documents: dat.documents
+                            };
+                            func();//读取成功发送回调
+                        }
+                    });
+                }
+            });
+        } else {
+            api.confirm({
+                title: '尚未登录',
+                msg: '是否现在跳转到登录界面？',
+                buttons: ['确定', '取消']
+            }, function (ret, err) {
+                if (ret.buttonIndex == 1) {
+                    api.execScript({
+                        name: "slide",
+                        script: "ChangeWin('login.html');"
+                    });
+                }
+            });
+        }
     }
 </script>
 </html>

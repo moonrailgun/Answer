@@ -85,6 +85,7 @@
 	- questionContent 题目内容*
 	- answer1.2.3.4 回答选项*
 	- trueanswer 正确答案*
+	- solution 解决方案(题目详解)
 - QuestionType 题目学科分类
 	- name 学科名*
 	- authenticExam (关联AuthenticExamination) 所有该学科下的真题试卷
