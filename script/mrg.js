@@ -490,7 +490,8 @@ function AddFavour(id, type, obj) {
         if (obj) {
             $api.removeCls(obj, 'aui-icon-favor');
             $api.addCls(obj, 'aui-icon-favorfill');
-            $api.text(obj, '取消收藏')
+            $api.text(obj, '取消收藏');
+            $api.attr(obj,'onclick','RemoveFavour("' + id + '", "'+type+'", this);')
         }
 
         //更新数据到远程数据库
@@ -531,7 +532,6 @@ function RemoveFavour(id, type, obj) {
             index = index = documents.indexOf(id);
             if (index >= 0) {
                 documents.splice(index, 1);//删除该索引的元素
-                documents.push(id);
             } else {
                 api.toast({msg: '已删除该项目'});
                 return;
@@ -551,7 +551,8 @@ function RemoveFavour(id, type, obj) {
         if (obj) {
             $api.removeCls(obj, 'aui-icon-favorfill');
             $api.addCls(obj, 'aui-icon-favor');
-            $api.text(obj, '收藏')
+            $api.text(obj, '收藏');
+            $api.attr(obj,'onclick','AddFavour("' + id + '", "'+type+'", this);')
         }
 
         //更新数据到远程数据库
@@ -568,7 +569,7 @@ function RemoveFavour(id, type, obj) {
                 api.alert({msg: '出错' + JSON.stringify(err)});
             } else {
                 $api.setStorage('favorite', favorite);//将结果保存到本地
-                api.toast({msg: '成功添加到收藏夹'});
+                api.toast({msg: '成功取消收藏'});
             }
         });
     } else {
