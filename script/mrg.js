@@ -54,15 +54,9 @@ function OpenDocumentFile(url, name) {
             }
             else if (ret.state == 1) {
                 api.hideProgress();
-                if (type == 'doc' || type == 'docx' || type == 'xls' || type == 'xlsx' || type == 'txt') {
+                if (type == 'doc' || type == 'docx' || type == 'xls' || type == 'xlsx' || type == 'txt' || type == 'pdf') {
                     var docReader = api.require('docReader');
                     docReader.open({
-                        path: 'cache://' + name
-                    });
-                }
-                else if (type == 'pdf') {
-                    var pdfReader = api.require('pdfReader');
-                    pdfReader.open({
                         path: 'cache://' + name
                     });
                 }
@@ -177,11 +171,74 @@ function GetEconomy(func) {
         api.toast({msg: '错误，无法获取分数数据'});
     }
 }
+//获取自己排名
+function GetOwnRankAndScore(func) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId) {
+        GetEconomy(function (dat) {
+            var score = parseInt(dat.score);
+            var query = api.require('query');
+            query.createQuery(function (ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    query.whereEqual({
+                        qid: queryId,
+                        column: 'userId',
+                        value: userId
+                    });
+                    var model = api.require('model');
+                    model.findAll({
+                        class: 'Rank',
+                        qid: queryId
+                    }, function (ret, err) {
+                        if (ret) {
+                            if (ret.length <= 0) {
+                                //创建该条数据到数据库
+                                model.insert({
+                                    class: 'Rank',
+                                    value: {
+                                        userId: userId,
+                                        score: score
+                                    }
+                                });
+                            }
+
+                            //查询比自己分数高的人数
+                            query.createQuery(function (ret, err) {
+                                if (ret && ret.qid) {
+                                    var countQuery = ret.qid;
+                                    query.whereGreaterThan({
+                                        qid: countQuery,
+                                        column: 'score',
+                                        value: score
+                                    });
+                                    model.count({
+                                        class: 'Rank',
+                                        qid: countQuery
+                                    }, function (ret, err) {
+                                        if (ret) {
+                                            var rank = ret.count + 1;
+                                            func(true, rank, score);//返回正确数据
+                                        } else {
+                                            func(false, err.msg);
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            func(false, err.msg);
+                        }
+                    });
+                }
+            });
+        });
+    }
+}
 
 //获取错题集资料
 function GetUserWrongData(func) {
     var userId = $api.getStorage('userInfo')['userId'];
-    if(userId){
+    if (userId) {
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -204,7 +261,7 @@ function GetUserWrongData(func) {
                                 wrongSet: ret[0].wrongSet,
                                 wrongNumSum: ret[0].wrongNumSum
                             };
-                            func(true,dat);
+                            func(true, dat);
                         } else {
                             //创建错题集
                             dat = {
@@ -215,9 +272,9 @@ function GetUserWrongData(func) {
                             model.insert({
                                 class: 'WrongSet',
                                 value: dat
-                            },function(ret,err){
-                                if(ret){
-                                    func(true,dat);
+                            }, function (ret, err) {
+                                if (ret) {
+                                    func(true, dat);
                                 }
                             });
                         }
@@ -227,12 +284,12 @@ function GetUserWrongData(func) {
                 });
             }
         });
-    }else{
+    } else {
         func(false);
     }
 }
 //添加题目到错题本 参数为错题id数组
-function AddItemToWrongSet(list,func) {
+function AddItemToWrongSet(list, func) {
     var userId = $api.getStorage('userInfo')['userId'];
     if (userId) {
         var query = api.require('query');
@@ -283,7 +340,7 @@ function AddItemToWrongSet(list,func) {
                         }, function (ret, err) {
                             if (ret) {
                                 func(true);
-                            }else{
+                            } else {
                                 func(false);
                             }
                         });
@@ -346,13 +403,13 @@ function RemoveItemInWrongSet(list) {
     }
 }
 //获取错题数量
-function GetItemNumInWrongSet(func){
+function GetItemNumInWrongSet(func) {
     GetUserWrongData(function (state, data) {
-        if(state){
+        if (state) {
             var num = 0;
             num = data['wrongSet'].length;
-            func(state,num);
-        }else{
+            func(state, num);
+        } else {
             func(state);
         }
     });

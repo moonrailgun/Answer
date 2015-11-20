@@ -127,7 +127,14 @@
 <script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     apiready = function () {
-        GetOwnRank();
+        GetOwnRankAndScore(function(state, rank, score){
+            if(state){
+                $api.text($api.dom('.myRankNum span'), rank);
+                $api.text($api.dom('.myRankScore span'), score);
+            }else{
+                api.alert({msg :'出错:' + rank.toSource()});
+            }
+        });
         GetTop20();
     };
 
@@ -181,73 +188,6 @@
                     }
                 });
             }
-        });
-    }
-
-    //获取自己排名
-    function GetOwnRank() {
-        var userInfo = $api.getStorage('userInfo');
-        if (!userInfo) {
-            return;
-        }
-        var userId = userInfo.userId;
-        GetEconomy(function (dat) {
-            var score = parseInt(dat.score);
-            var model = api.require('model');
-            var query = api.require('query');
-            query.createQuery(function (ret, err) {
-                if (ret && ret.qid) {
-                    var queryId = ret.qid;
-                    query.whereEqual({
-                        qid: queryId,
-                        column: 'userId',
-                        value: userId
-                    });
-                    model.findAll({
-                        class: 'Rank',
-                        qid: queryId
-                    }, function (ret, err) {
-                        if (ret) {
-                            if (ret.length <= 0) {
-                                //创建该条数据到数据库
-                                model.insert({
-                                    class: 'Rank',
-                                    value: {
-                                        userId: userId,
-                                        score: score
-                                    }
-                                });
-                            }
-
-                            //查询比自己分数高的人数
-                            query.createQuery(function (ret, err) {
-                                if (ret && ret.qid) {
-                                    var countQuery = ret.qid;
-                                    query.whereGreaterThan({
-                                        qid: countQuery,
-                                        column: 'score',
-                                        value: score
-                                    });
-                                    model.count({
-                                        class: 'Rank',
-                                        qid: countQuery
-                                    }, function (ret, err) {
-                                        if (ret) {
-                                            var rank = ret.count + 1;
-                                            $api.text($api.dom('.myRankNum span'), rank);
-                                            $api.text($api.dom('.myRankScore span'), score);
-                                        } else {
-                                            api.alert({msg: '错误:' + JSON.stringify(err)});
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            api.alert({msg: '错误:' + JSON.stringify(err)});
-                        }
-                    });
-                }
-            });
         });
     }
 </script>

@@ -149,7 +149,12 @@
                 var str = '错题集' +  '<span class="aui-badge aui-badge-danger">' + num + '</span>';
                 $api.html($api.dom('#wrongSet'), str);
             }
-        })
+        });
+
+        GetOwnRankAndScore(function(state, rank, score){
+            $api.text($api.dom('#rank .infoBlockCellNum'), rank);
+            $api.text($api.dom('#score .infoBlockCellNum'), score);
+        });
     };
 
     function ChangePic() {
