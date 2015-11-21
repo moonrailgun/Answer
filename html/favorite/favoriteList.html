@@ -42,8 +42,9 @@
         var $main = $api.dom('#main');
         if (index == 0) {
             GetFavoriteDocuments(function (data) {
-                if (data) {
-                    var str = '<ul class="aui-list-view">';
+                var str = '';
+                if (data.length > 0) {
+                    str = '<ul class="aui-list-view">';
                     for (var i = 0; i < data.length; i++) {
                         var dat = data[i];
                         if (dat) {
@@ -63,13 +64,16 @@
                         }
                     }
                     str += '</ul>';
-                    $api.html($main, str);
+                } else {
+                    str = '<div style="text-align: center;"><img src="../../image/nodata_s01.png" /></div>';
                 }
+                $api.html($main, str);
             });
         } else if (index == 1) {
             GetFavoriteQuestions(function (data) {
-                if (data) {
-                    var str = '<ul class="aui-list-view">';
+                var str = '';
+                if (data.length > 0) {
+                    str += '<ul class="aui-list-view">';
                     for (var i = 0; i < data.length; i++) {
                         var dat = data[i];
                         if (dat) {
@@ -89,8 +93,10 @@
                         }
                     }
                     str += '</ul>';
-                    $api.html($main, str);
+                } else {
+                    str += '<div style="text-align: center;"><img src="../../image/nodata_s01.png" /></div>';
                 }
+                $api.html($main, str);
             });
         } else {
             api.toast({msg: '未知的操作'});
@@ -195,6 +201,8 @@
                         });
                     })(i);
                 }
+            }else{
+                func(questions);
             }
         } else {
             func(favoriteQuestions);

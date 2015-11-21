@@ -83,7 +83,7 @@
                 <div>积分</div>
             </div>
             <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="SwitchToRank();">
-                <div class="infoBlockCellNum">1</div>
+                <div class="infoBlockCellNum">0</div>
                 <div>排名</div>
             </div>
         </li>
@@ -106,7 +106,7 @@
     </ul>
     <ul class="aui-list-view">
         <li tapmode="liActive" class="aui-list-view-cell">
-            <a class="aui-arrow-right" onclick="NoFunction();">资料库</a>
+            <a class="aui-arrow-right" onclick="OpenDocumentBank();">资料库</a>
         </li>
         <li tapmode="liActive" class="aui-list-view-cell">
             <a class="aui-arrow-right" onclick="NoFunction();">学习圈</a>
@@ -301,6 +301,14 @@
         api.openWin({
             name: 'favoriteListFrame',
             url: '../favorite/favoriteListFrame.html'
+        })
+    }
+
+    //打开资料库
+    function OpenDocumentBank() {
+        api.openWin({
+            name: 'documentType',
+            url: '../document/documentType.html'
         })
     }
 

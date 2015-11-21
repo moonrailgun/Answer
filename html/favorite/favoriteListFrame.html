@@ -39,7 +39,6 @@
             $api.removeCls($lis[i], 'active');
         }
         $api.addCls(obj, 'active');
-
         SwitchContent(index);
     }
 
@@ -63,7 +62,7 @@
     //切换内容页内容
     function SwitchContent(index){
         api.execScript({
-            name: "favoriteList",
+            frameName: "favoriteList",
             script: 'Change('+index+');'
         });
     }
