@@ -491,7 +491,7 @@ function AddFavour(id, type, obj) {
             $api.removeCls(obj, 'aui-icon-favor');
             $api.addCls(obj, 'aui-icon-favorfill');
             $api.text(obj, '取消收藏');
-            $api.attr(obj,'onclick','RemoveFavour("' + id + '", "'+type+'", this);')
+            $api.attr(obj, 'onclick', 'RemoveFavour("' + id + '", "' + type + '", this);')
         }
 
         //更新数据到远程数据库
@@ -552,7 +552,7 @@ function RemoveFavour(id, type, obj) {
             $api.removeCls(obj, 'aui-icon-favorfill');
             $api.addCls(obj, 'aui-icon-favor');
             $api.text(obj, '收藏');
-            $api.attr(obj,'onclick','AddFavour("' + id + '", "'+type+'", this);')
+            $api.attr(obj, 'onclick', 'AddFavour("' + id + '", "' + type + '", this);')
         }
 
         //更新数据到远程数据库
@@ -657,4 +657,82 @@ function NoFunction(messgae) {
         str += '抱歉该功能暂时还没有开放';
     }
     api.toast({msg: str});
+}
+
+//获取个人档案信息
+function GetUserProfile(func) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId) {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "UserProfile",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        if (ret.length > 0) {
+                            var dat = ret[0];
+                            func(true, dat);
+                        } else {
+                            //新建数据
+                            var params = {
+                                userId: userId,
+                                nickname: $api.getStorage('userInfo')['nickname'],
+                                sex: '男',
+                                role: '学生',
+                                college: '',
+                                major: '',
+                                intro: '这家伙很懒什么都没写'
+                            };
+                            model.insert({
+                                class: "UserProfile",
+                                value: params
+                            }, function (ret, err) {
+                                if (ret) {
+                                    func(true, ret)
+                                } else {
+                                    func(false);
+                                }
+                            });
+                        }
+                    } else {
+                        func(false);
+                    }
+                });
+            }
+        });
+    }
+}
+//修改个人档案信息
+function UpdateUserProfile(profileId, params, func) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId && profileId) {
+        var model = api.require('model');
+        model.updateById({
+            class: "UserProfile",
+            id: profileId,
+            value: {
+                nickname: params.nickname,
+                sex: params.sex,
+                role: params.role,
+                college: params.college,
+                major: params.major,
+                intro: params.intro
+            }
+        }, function (ret, err) {
+            if (ret) {
+                func(true, ret);
+            } else {
+                func(false, err);
+            }
+        })
+    }
 }

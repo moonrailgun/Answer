@@ -2,6 +2,8 @@
 
 ## todo-list ##
 - 错题集
+- 个人资料修改
+- 二维码管理
 - 积分管理
 - 我的收藏
 - 上传资料
@@ -137,3 +139,11 @@
         - id 错题ID
         - group 所属分类(自定义默认为【默认】)
         - num 累计错误次数
+- UserProfile 用户个人档案
+	- userId 用户唯一标识ID*
+	- nickname 昵称*
+	- sex 性别*
+	- role 身份（学生、老师、管理员等）
+	- college 学院名
+	- major 专业名
+	- intro 个人介绍
