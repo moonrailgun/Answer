@@ -23,10 +23,12 @@ function OpenScanner() {
         saveToAlbum: false
     }, function (ret) {
         if (ret && (ret.eventType == 'success')) {
-            alert(JSON.stringify(ret.content));
+            var content = ret.content;
+            var qr = new QRCode();
+            qr.Analysis(content);
         }
         else if (ret && ret.eventType == 'fail') {
-            api.alert('扫码失败。请重试');
+            api.alert({msg:'扫码失败。请重试'});
         }
     });
 }
