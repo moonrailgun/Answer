@@ -759,7 +759,7 @@ function GetUserPracticeRecord(func) {
                     if (ret) {
                         if (ret.length > 0) {
                             var dat = ret[0];
-                            func(true, dat);
+                            func(true, dat.haveDone);
                         } else {
                             //创建记录
                             model.insert({
@@ -769,7 +769,7 @@ function GetUserPracticeRecord(func) {
                                 }
                             }, function (ret, err) {
                                 if (ret) {
-                                    func(true, ret[0]);
+                                    func(true, ret[0].haveDone);
                                 } else {
                                     func(false);
                                 }
@@ -782,7 +782,93 @@ function GetUserPracticeRecord(func) {
                 });
             }
         });
-    }else{
+    } else {
         func(false);
+    }
+}
+//计算用户新做的题目,questions为当前做的题目的ID数组
+function GetUserNewRecord(questions, func) {
+    GetUserPracticeRecord(function (state, dat) {
+        if (state) {
+            if (dat) {
+                var num = 0;
+                var newDat = [];
+                for (var i = 0; i < dat.length; i++) {
+                    newDat.push(dat[i]);
+                }
+                for (i = 0; i < questions.length; i++) {
+                    var question = questions[i];
+                    if (newDat.indexOf(question) < 0) {
+                        //不存在
+                        newDat.push(question);
+                        num++;
+                    }
+                }
+                func(true, num, newDat);
+            } else {
+                func(false);
+            }
+        } else {
+            func(false);
+        }
+    });
+}
+//保存新做题纪录
+function SaveUserPracticeRecord(newRecord, func) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId && typeof(newRecord) == 'object') {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "PracticeRecord",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        if (ret.length > 0) {
+                            var id = ret[0].id;
+                            model.updateById({
+                                class: 'PracticeRecord',
+                                id: id,
+                                value: {
+                                    haveDone: newRecord
+                                }
+                            }, function (ret, err) {
+                                if (ret) {
+                                    func(true, ret);
+                                } else {
+                                    func(false);
+                                }
+                            });
+
+                        } else {
+                            //创建记录
+                            model.insert({
+                                class: "PracticeRecord",
+                                value: {
+                                    userId: userId,
+                                    haveDone: newRecord
+                                }
+                            }, function (ret, err) {
+                                if (ret) {
+                                    func(true, ret);
+                                } else {
+                                    func(false);
+                                }
+                            })
+                        }
+                    } else {
+                        func(false);
+                    }
+                });
+            }
+        });
     }
 }
