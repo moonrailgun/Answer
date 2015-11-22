@@ -150,11 +150,13 @@
         }
 
         //alert("得分:" + score + "\n总分:" + res.length + "\n结果:\n" + JSON.stringify(res));
+        //todo 添加积分
+
         if (errorQuestionsList.length > 0) {
             AddItemToWrongSet(errorQuestionsList,function(state){
                 api.hideProgress();
                 if(state){
-                    api.alert({msg: '已将 ' + errorQuestionsList.length + ' 道错题加入错题本'});
+                    api.toast({msg: '已将 ' + errorQuestionsList.length + ' 道错题加入错题本'});
                     CloseTest();
                 }else{
                     api.toast({msg: '网络连接失败，请重新提交试卷'});

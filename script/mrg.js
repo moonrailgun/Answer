@@ -28,7 +28,7 @@ function OpenScanner() {
             qr.Analysis(content);
         }
         else if (ret && ret.eventType == 'fail') {
-            api.alert({msg:'扫码失败。请重试'});
+            api.alert({msg: '扫码失败。请重试'});
         }
     });
 }
@@ -736,5 +736,53 @@ function UpdateUserProfile(profileId, params, func) {
                 func(false, err);
             }
         })
+    }
+}
+//获取用户做题记录
+function GetUserPracticeRecord(func) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId) {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({
+                    qid: queryId,
+                    column: 'userId',
+                    value: userId
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "PracticeRecord",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        if (ret.length > 0) {
+                            var dat = ret[0];
+                            func(true, dat);
+                        } else {
+                            //创建记录
+                            model.insert({
+                                class: "PracticeRecord",
+                                value: {
+                                    userId: userId
+                                }
+                            }, function (ret, err) {
+                                if (ret) {
+                                    func(true, ret[0]);
+                                } else {
+                                    func(false);
+                                }
+                            })
+                        }
+
+                    } else {
+                        func(false);
+                    }
+                });
+            }
+        });
+    }else{
+        func(false);
     }
 }

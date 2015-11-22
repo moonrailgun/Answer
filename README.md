@@ -1,10 +1,11 @@
 # Answer #
 
 ## todo-list ##
+- 积分管理
+- 答题详解
 - 错题集
 - 个人资料修改
 - 二维码管理
-- 积分管理
 - 我的收藏
 - 上传资料
 - 资料库分类下属页面美化
@@ -147,3 +148,6 @@
 	- college 学院名
 	- major 专业名
 	- intro 个人介绍
+- PracticeRecord 做题记录
+	- userId 用户ID*
+	- haveDone 该用户所有做过的题目的数组
