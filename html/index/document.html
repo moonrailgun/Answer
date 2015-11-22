@@ -109,7 +109,7 @@
     </ul>
 </div>
 <div id="block4">
-    <div class="aui-btn aui-btn-block aui-btn-default">我的资料</div>
+    <div class="aui-btn aui-btn-block aui-btn-default" onclick="ShowMyDocument();">我的资料</div>
 </div>
 <div id="block5">
     <div class="title">最新上传</div>
@@ -341,6 +341,18 @@
                 });
             }
         });
+    }
+
+    function ShowMyDocument(){
+        var userId = $api.getStorage('userInfo')['userId'];
+        if(userId){
+            api.openWin({
+                name: 'favoriteListFrame',
+                url: '../favorite/favoriteListFrame.html'
+            })
+        }else{
+            api.toast({msg: '抱歉您尚未登录'});
+        }
     }
 </script>
 </html>
