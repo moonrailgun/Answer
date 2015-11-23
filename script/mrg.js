@@ -347,7 +347,7 @@ function AddItemToWrongSet(list, func) {
                                 group: '默认',
                                 num: 1
                             };
-                            for (var j = 0; j < wrongSet.length; i++) {
+                            for (var j = 0; j < wrongSet.length; j++) {
                                 if (questionId == wrongSet[j].id) {
                                     tmp = {
                                         id: wrongSet[j].id,
