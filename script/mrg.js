@@ -131,10 +131,6 @@ function GetEconomy(func) {
                     column: 'userId',
                     value: userId
                 });
-                query.justFields({
-                    qid: queryId,
-                    value: ['userId', 'score']
-                });
                 model.findAll({
                     class: "Economy",
                     qid: queryId
@@ -151,26 +147,59 @@ function GetEconomy(func) {
                             }, function (ret, err) {
                                 if (ret) {
                                     var dat = {
+                                        id: ret.id,
                                         userId: userId,
                                         score: 0
                                     };
-                                    func(dat)
+                                    func(true, dat);
                                 } else {
-                                    api.toast({msg: '错误，无法获取分数数据'});
+                                    func(false);
                                 }
                             });
                         } else {
                             var dat = ret[0];
-                            func(dat);
+                            func(true, dat);
                         }
                     } else {
-                        api.toast({msg: '错误，无法获取分数数据'});
+                        func(false);
                     }
                 });
             }
         });
     } else {
         api.toast({msg: '错误，无法获取分数数据'});
+    }
+}
+//添加积分
+function AddScore(num, func) {
+    var userId = $api.getStorage('userInfo')['userId'];
+    if (userId) {
+        GetEconomy(function (state, dat) {
+            if (state) {
+                var id = dat.id;
+                var score = dat.score;
+                if (num > 0) {
+                    var model = api.require('model');
+                    model.updateById({
+                        class: 'Economy',
+                        id: id,
+                        value: {
+                            score: score + num
+                        }
+                    }, function (ret, err) {
+                        if (ret) {
+                            func(true, ret);
+                        } else {
+                            func(false);
+                        }
+                    });
+                }
+            } else {
+                func(false);
+            }
+        });
+    } else {
+        func(false);
     }
 }
 //获取自己排名
@@ -871,4 +900,28 @@ function SaveUserPracticeRecord(newRecord, func) {
             }
         });
     }
+}
+//计算应得分数并进行修改
+function GetScoreAndSaveRecord(questions, func) {
+    GetUserNewRecord(questions, function (state, addedNum, newDat) {
+        if (state) {
+            if (addedNum > 0) {
+                SaveUserPracticeRecord(newDat, function (state, dat) {
+                    if (state) {
+                        AddScore(addedNum, function (state, dat) {
+                            if (state) {
+                                func(true, addedNum, dat);
+                            } else {
+                                func(false);
+                            }
+                        });
+                    } else {
+                        func(false);
+                    }
+                })
+            }
+        } else {
+            func(false);
+        }
+    });
 }

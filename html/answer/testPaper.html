@@ -136,12 +136,14 @@
         }
 
         var errorQuestionsList = [];
+        var rightQuestionsList = [];
         var score = 0;
         //处理结果
         for (i = 0; i < res.length; i++) {
             var dat = res[i];
             if (dat.right == dat.select) {
                 //获取得分
+                rightQuestionsList.push(dat.questionId);
                 score++;
             } else {
                 //获取错题列表
@@ -149,8 +151,14 @@
             }
         }
 
-        //alert("得分:" + score + "\n总分:" + res.length + "\n结果:\n" + JSON.stringify(res));
         //todo 添加积分
+        GetScoreAndSaveRecord(rightQuestionsList,function(state,addedNum, dat){
+            if(state && addedNum > 0){
+                api.alert({msg:'本次测试获取' + addedNum + '分，请到个人资料处查看'});
+            }else{
+                api.alert({msg: '本次测试并未获取到分数'});
+            }
+        });
 
         if (errorQuestionsList.length > 0) {
             AddItemToWrongSet(errorQuestionsList,function(state){
