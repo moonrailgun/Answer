@@ -167,7 +167,7 @@ function GetEconomy(func) {
             }
         });
     } else {
-        api.toast({msg: '错误，无法获取分数数据'});
+        func(false);
     }
 }
 //添加积分
@@ -206,62 +206,76 @@ function AddScore(num, func) {
 function GetOwnRankAndScore(func) {
     var userId = $api.getStorage('userInfo')['userId'];
     if (userId) {
-        GetEconomy(function (dat) {
-            var score = parseInt(dat.score);
-            var query = api.require('query');
-            query.createQuery(function (ret, err) {
-                if (ret && ret.qid) {
-                    var queryId = ret.qid;
-                    query.whereEqual({
-                        qid: queryId,
-                        column: 'userId',
-                        value: userId
-                    });
-                    var model = api.require('model');
-                    model.findAll({
-                        class: 'Rank',
-                        qid: queryId
-                    }, function (ret, err) {
-                        if (ret) {
-                            if (ret.length <= 0) {
-                                //创建该条数据到数据库
-                                model.insert({
-                                    class: 'Rank',
-                                    value: {
-                                        userId: userId,
-                                        score: score
-                                    }
-                                });
-                            }
-
-                            //查询比自己分数高的人数
-                            query.createQuery(function (ret, err) {
-                                if (ret && ret.qid) {
-                                    var countQuery = ret.qid;
-                                    query.whereGreaterThan({
-                                        qid: countQuery,
-                                        column: 'score',
-                                        value: score
-                                    });
-                                    model.count({
+        GetEconomy(function (state, dat) {
+            if (state) {
+                var score = parseInt(dat.score);
+                var query = api.require('query');
+                query.createQuery(function (ret, err) {
+                    if (ret && ret.qid) {
+                        var queryId = ret.qid;
+                        query.whereEqual({
+                            qid: queryId,
+                            column: 'userId',
+                            value: userId
+                        });
+                        var model = api.require('model');
+                        model.findAll({
+                            class: 'Rank',
+                            qid: queryId
+                        }, function (ret, err) {
+                            if (ret) {
+                                if (ret.length <= 0) {
+                                    //创建该条数据到数据库
+                                    model.insert({
                                         class: 'Rank',
-                                        qid: countQuery
-                                    }, function (ret, err) {
-                                        if (ret) {
-                                            var rank = ret.count + 1;
-                                            func(true, rank, score);//返回正确数据
-                                        } else {
-                                            func(false, err.msg);
+                                        value: {
+                                            userId: userId,
+                                            score: score
                                         }
                                     });
                                 }
-                            });
-                        } else {
-                            func(false, err.msg);
-                        }
-                    });
-                }
-            });
+
+                                //更新数据
+                                var id = ret[0].id;
+                                model.updateById({
+                                    class: 'Rank',
+                                    id : id,
+                                    value : {
+                                        score : score
+                                    }
+                                });
+
+                                //查询比自己分数高的人数
+                                query.createQuery(function (ret, err) {
+                                    if (ret && ret.qid) {
+                                        var countQuery = ret.qid;
+                                        query.whereGreaterThan({
+                                            qid: countQuery,
+                                            column: 'score',
+                                            value: score
+                                        });
+                                        model.count({
+                                            class: 'Rank',
+                                            qid: countQuery
+                                        }, function (ret, err) {
+                                            if (ret) {
+                                                var rank = ret.count + 1;
+                                                func(true, rank, score);//返回正确数据
+                                            } else {
+                                                func(false, err.msg);
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                func(false, err.msg);
+                            }
+                        });
+                    }
+                });
+            } else {
+                func(false);
+            }
         });
     }
 }
@@ -919,6 +933,8 @@ function GetScoreAndSaveRecord(questions, func) {
                         func(false);
                     }
                 })
+            } else {
+                func(true, addedNum);
             }
         } else {
             func(false);

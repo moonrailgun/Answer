@@ -126,9 +126,9 @@
 <script type="text/javascript">
     apiready = function () {
         UpdateUserInfo();
-        GetEconomy(function (dat) {
-            var score = dat.score;
-            if (score != undefined && score != null) {
+        GetEconomy(function (state, dat) {
+            if (state) {
+                var score = dat.score;
                 $api.html($api.dom('#score .infoBlockCellNum'), score);
             } else {
                 api.toast({msg: '获取积分失败'});
@@ -145,13 +145,13 @@
         });
 
         GetItemNumInWrongSet(function (state, num) {
-            if(state && num > 0){
-                var str = '错题集' +  '<span class="aui-badge aui-badge-danger">' + num + '</span>';
+            if (state && num > 0) {
+                var str = '错题集' + '<span class="aui-badge aui-badge-danger">' + num + '</span>';
                 $api.html($api.dom('#wrongSet'), str);
             }
         });
 
-        GetOwnRankAndScore(function(state, rank, score){
+        GetOwnRankAndScore(function (state, rank, score) {
             $api.text($api.dom('#rank .infoBlockCellNum'), rank);
             $api.text($api.dom('#score .infoBlockCellNum'), score);
         });

@@ -129,25 +129,33 @@
             var res = [];
             //收集结果
             for (var i = 0; i < rightList.length; i++) {
+                var answer = 0;
+                if(answerList[i]){
+                    answer = answerList[i]
+                }
                 var tmp = {
                     questionId: testQuestion[i].id,
                     right: rightList[i],
-                    select: answerList[i]
+                    select: answer
                 };
                 res.push(tmp);
             }
 
             var errorQuestionsList = [];
             var rightQuestionsList = [];
+            var blankQuestionsList = [];
             var score = 0;
             //处理结果
             for (i = 0; i < res.length; i++) {
                 var dat = res[i];
-                if (dat.right == dat.select) {
+                if(dat.select == 0){//空题
+                    blankQuestionsList.push(dat.questionId);
+                }
+                else if (dat.right == dat.select) {//答对题
                     //获取得分
                     rightQuestionsList.push(dat.questionId);
                     score++;
-                } else {
+                } else {//答错题
                     //获取错题列表
                     errorQuestionsList.push(dat.questionId);
                 }
@@ -159,12 +167,15 @@
                     if (state && addedNum > 0) {
                         api.alert({msg: '本次测试获取' + addedNum + '分，请到个人资料处查看'});
                     } else {
-                        api.alert({msg: '本次测试并未获取到分数'});
+                        api.alert({msg: '本次测试并未获取到分数,请再接再厉!'});
                     }
-
                     saveScoreDone = true;
                     TryCloseTest();
                 });
+            }else{
+                api.alert({msg: '本次测试并未获取到分数,请再接再厉!'});
+                saveScoreDone = true;
+                TryCloseTest();
             }
 
             //添加错题
@@ -178,13 +189,14 @@
                     saveWrongSetDone = true;
                     TryCloseTest();
                 });//将错题目加入错题集
-            }else{
-                api.hideProgress();
-                api.alert('恭喜你全部正确!');
+            }else if(blankQuestionsList.length == 0 ){
+                api.alert({msg:'恭喜你全部正确!'});
+                saveWrongSetDone = true;
+                TryCloseTest();
             }
         }
         else{
-            api.alert({msg:'登陆以后才能开始交卷'});
+            api.alert({msg:'登陆以后才能开始交卷哟'});
         }
     }
 
