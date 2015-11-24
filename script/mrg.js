@@ -354,8 +354,10 @@ function AddItemToWrongSet(list, func) {
                     if (ret) {
                         var dat = ret[0];
                         var wrongSet = dat.wrongSet;
+                        var wrongNumSum = dat.wrongNumSum;
                         for (var i = 0; i < list.length; i++) {
                             var questionId = list[i];
+                            wrongNumSum ++;
                             var tmp = {
                                 id: questionId,
                                 group: '默认',
@@ -369,6 +371,7 @@ function AddItemToWrongSet(list, func) {
                                         num: wrongSet[j].num + 1
                                     };
                                     wrongSet.splice(j, 1);//删除原元素
+                                    wrongNumSum--;
                                     break;
                                 }
                             }
@@ -380,7 +383,8 @@ function AddItemToWrongSet(list, func) {
                             class: 'WrongSet',
                             id: dat.id,
                             value: {
-                                wrongSet: wrongSet
+                                wrongSet: wrongSet,
+                                wrongNumSum :wrongNumSum
                             }
                         }, function (ret, err) {
                             if (ret) {
