@@ -256,14 +256,16 @@
 
     function ShowQuestionDetail(index) {
         GetFavoriteQuestions(function (data) {
-            var detail = data[index];
-            api.openWin({
-                name: 'questionDetail',
-                url: './questionDetail.html',
-                pageParam: {
-                    detail: detail
-                }
-            })
+            if(data){
+                var detail = data[index];
+                api.openWin({
+                    name: 'questionDetail',
+                    url: './questionDetail.html',
+                    pageParam: {
+                        detail: detail
+                    }
+                })
+            }
         });
     }
 </script>

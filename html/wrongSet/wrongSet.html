@@ -23,11 +23,14 @@
     <div class="aui-title">错题集</div>
 </header>
 <div id="main">
-    <div style="text-align: center">
+    <div style="text-align: center;padding: 10px;">
         <canvas id="myChart" width="200" height="200"></canvas>
     </div>
 
     <div id="collect">
+        <div id="haveDoneSum">
+            总共通过题目：<span>正在获取...</span>
+        </div>
         <div id="wrongNumSum">
             总共积累错题：<span>正在获取...</span>
         </div>
@@ -64,7 +67,6 @@
             });
 
             //获取完成记录
-
             var query = api.require('query');
             query.createQuery(function (ret, err) {
                 if (ret && ret.qid) {
@@ -82,6 +84,7 @@
                         if (ret && ret.length > 0) {
                             var dat = ret[0];
                             haveDone = dat.haveDone;
+                            $api.text($api.dom('#haveDoneSum span'), haveDone.length);
                             TryDrawPie();
                         }
                     });
@@ -97,6 +100,13 @@
         if (wrongSet.length == 0) {
             api.toast({msg: '恭喜！没有任何题目可以难倒你！'});
         } else {
+            api.showProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '先喝杯茶...'
+            });
+            var wrongQuestionsList = [];
             for (var i = 0; i < wrongSet.length; i++) {
                 var id = wrongSet[i].id;
                 var group = wrongSet[i].group;
@@ -111,7 +121,17 @@
                     }, function (ret, err) {
                         if (ret) {
                             //获取问题数据
-                            wrongSet[index].question = ret;
+                            wrongQuestionsList[index] = ret;
+                            if(wrongQuestionsList.length >= wrongSet.length){
+                                api.hideProgress();
+                                api.openWin({
+                                    name : 'wrongSetList',
+                                    url : './wrongSetList.html',
+                                    pageParam : {
+                                        wrongQuestionsList : wrongQuestionsList
+                                    }
+                                });
+                            }
                         }
                     });
                 })(i);
@@ -141,7 +161,6 @@
                     label: "过题"
                 }
             ];
-            alert(JSON.stringify(data));
             var ctx = document.getElementById("myChart").getContext("2d");
             new Chart(ctx).Pie(data);
         }
