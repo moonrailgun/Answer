@@ -822,7 +822,6 @@ function GetUserPracticeRecord(func) {
                                 }
                             })
                         }
-
                     } else {
                         func(false);
                     }
