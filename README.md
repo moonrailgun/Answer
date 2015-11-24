@@ -152,3 +152,6 @@
 - PracticeRecord 做题记录
 	- userId 用户ID*
 	- haveDone 该用户所有做过的题目的数组
+
+# 关于开源 #
+开源协议基于[GPLv2](./LICENSE)
