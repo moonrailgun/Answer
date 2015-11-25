@@ -138,6 +138,7 @@
             id: questionTypeId,
             column: 'unclassifiedQuestions'
         },function(ret,err){
+            api.hideProgress();
             if(ret){
                 if(ret.length > 0){
                     api.openWin({

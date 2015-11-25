@@ -72,7 +72,7 @@
         if (detail.picUrl) {
             str += '<img src="' + detail.picUrl + '" />';
         }
-        str += '<div id="content">' + detail.questionContent + '</div>'
+        str += '<div id="content" class="aui-content">' + detail.questionContent + '</div>'
                 + '<div class="aui-form">'
                 + RadioHtmlGenerater(1, detail.trueanswer, detail.answer1)
                 + RadioHtmlGenerater(2, detail.trueanswer, detail.answer2)

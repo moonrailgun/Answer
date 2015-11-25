@@ -10,13 +10,6 @@
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
 </head>
 <body>
-<header class="aui-bar aui-bar-nav aui-bar-info">
-    <a class="aui-pull-left">
-        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
-    </a>
-
-    <div class="aui-title">错题列表</div>
-</header>
 <div id="list" class="aui-content">
 
 </div>
@@ -26,17 +19,23 @@
     var wrongQuestionsList = [];
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
-
-        wrongQuestionsList = api.pageParam.wrongQuestionsList;
-        var str = '';
-        str += '<ul class="aui-list-view">';
-        for (var i = 0; i < wrongQuestionsList.length; i++) {
-            str += '<li class="aui-list-view-cell" onclick="ShowQuestionDetail(' + i + ')"><div class="aui-arrow-right aui-ellipsis-1">';
-            str += wrongQuestionsList[i].questionContent;
-            str += '</div></li>';
+        var pageParam = api.pageParam;
+        if(pageParam && pageParam!= null){
+            wrongQuestionsList = pageParam.wrongQuestionsList;
+            var str = '';
+            str += '<ul class="aui-list-view">';
+            for (var i = 0; i < wrongQuestionsList.length; i++) {
+                if(wrongQuestionsList[i]){
+                    str += '<li class="aui-list-view-cell" onclick="ShowQuestionDetail(' + i + ')"><div class="aui-arrow-right aui-ellipsis-1">';
+                    str += wrongQuestionsList[i].questionContent;
+                    str += '</div></li>';
+                }
+            }
+            str += '</ul>';
+            $api.html($api.dom('#list'),str);
         }
-        str += '</ul>';
-        $api.html($api.dom('#list'),str);
+
+
     };
 
     function ShowQuestionDetail(index) {

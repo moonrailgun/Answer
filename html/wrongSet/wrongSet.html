@@ -95,7 +95,6 @@
         }
     };
 
-    //todo 开始答题
     function StartAnswer() {
         if (wrongSet.length == 0) {
             api.toast({msg: '恭喜！没有任何题目可以难倒你！'});
@@ -125,8 +124,8 @@
                             if(wrongQuestionsList.length >= wrongSet.length){
                                 api.hideProgress();
                                 api.openWin({
-                                    name : 'wrongSetList',
-                                    url : './wrongSetList.html',
+                                    name : 'wrongSetListFrame',
+                                    url : './wrongSetListFrame.html',
                                     pageParam : {
                                         wrongQuestionsList : wrongQuestionsList
                                     }
