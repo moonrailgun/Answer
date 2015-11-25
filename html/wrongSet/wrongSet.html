@@ -26,7 +26,6 @@
     <div style="text-align: center;padding: 10px;">
         <canvas id="myChart" width="200" height="200"></canvas>
     </div>
-
     <div id="collect">
         <div id="haveDoneSum">
             总共通过题目：<span>正在获取...</span>
@@ -46,7 +45,7 @@
 <script type="text/javascript" src="../../script/Chart.js"></script>
 <script type="text/javascript">
     var wrongSet;
-    var wrongNumSum;
+    var wrongNumSum = -1;
     var haveDone;
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
@@ -84,6 +83,10 @@
                         if (ret && ret.length > 0) {
                             var dat = ret[0];
                             haveDone = dat.haveDone;
+                            $api.text($api.dom('#haveDoneSum span'), haveDone.length);
+                            TryDrawPie();
+                        }else if(ret.length == 0){
+                            haveDone = [];
                             $api.text($api.dom('#haveDoneSum span'), haveDone.length);
                             TryDrawPie();
                         }
@@ -139,7 +142,7 @@
     }
 
     function TryDrawPie() {
-        if (wrongSet && wrongNumSum && haveDone) {
+        if (wrongSet && wrongNumSum >= 0 && haveDone) {
             var data = [
                 {
                     value: wrongSet.length,
@@ -148,7 +151,7 @@
                     label: "错题"
                 },
                 {
-                    value: wrongNumSum - wrongSet.length,
+                    value: wrongNumSum - wrongSet.length + 1,
                     color: "#FDB45C",
                     highlight: "#FFC870",
                     label: "已过错题"
