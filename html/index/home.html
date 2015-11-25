@@ -49,8 +49,7 @@
 <script type="text/javascript">
     apiready = function () {
         var UIScrollPicture = api.require('UIScrollPicture');
-        var paths = ['http://img4.imgtn.bdimg.com/it/u=808969546,4152021286&fm=15&gp=0.jpg', 'http://img5.imgtn.bdimg.com/it/u=884651739,3331686782&fm=15&gp=0.jpg', 'http://f.hiphotos.baidu.com/image/pic/item/4e4a20a4462309f7bdca9423710e0cf3d7cad65d.jpg', 'http://img0.imgtn.bdimg.com/it/u=3286531680,2115541636&fm=21&gp=0.jpg', 'http://img3.imgtn.bdimg.com/it/u=1649512850,2255006275&fm=21&gp=0.jpg'];
-        var captions = ['title1', 'title2', 'title3', 'title4', 'title5'];
+        var paths = ['http://img3.imgtn.bdimg.com/it/u=4245155370,3013161079&fm=21&gp=0.jpg', 'http://img1.imgtn.bdimg.com/it/u=1663804624,3376297495&fm=21&gp=0.jpg', 'http://wanzao2.b0.upaiyun.com/system/pictures/8511928/original/20140517094437.png', 'http://a0.att.hudong.com/08/71/01300000432220138864718924268.jpg', 'http://www.em-cn.com/UploadFiles/Article/2010/2/201002042124428629.jpg'];
         UIScrollPicture.open({
             rect: {
                 x: 0,
@@ -59,8 +58,7 @@
                 h: 200
             },
             data: {
-                paths: paths,
-                captions: captions
+                paths: paths
             },
             styles: {
                 caption: {
@@ -86,7 +84,7 @@
             if (ret.status) {
                 if (ret.eventType == 'click') {
                     //点击图片的操作
-                    alert(ret.index);
+                    //alert(ret.index);
                 }
             }
         });

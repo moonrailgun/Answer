@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 56px;
+            display: -webkit-box;
+            border-top: solid 1px #e7e7e7;
+        }
+
+        #history {
+            -webkit-box-flex: 1;
+            display: -webkit-box;
+        }
+
+        div.cell {
+            padding: 0 10px;
+        }
+
+        footer i.aui-iconfont {
+            font-size: 32px;
+            color: #3e3e3e;
+        }
+
+        footer i.aui-iconfont.disabled {
+            color: #8c8c8c;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left" onclick="CloseWin();"><span class="aui-iconfont aui-icon-close"></span></a>
+    <div class="aui-title" onclick="SwitchType();"></div>
+    <a class="aui-pull-right" onclick="OpenBySysBrowser();"><span class="aui-iconfont aui-icon-forward"></span></a>
+</header>
+<footer>
+    <div id="history">
+        <div class="cell" onclick="HistoryBack();"><i class="aui-iconfont aui-icon-left"></i></div>
+        <div class="cell" onclick="HistoryForward();"><i class="aui-iconfont aui-icon-right"></i></div>
+    </div>
+    <div id="refresh" onclick="Refresh();">
+        <div class="cell"><i class="aui-iconfont aui-icon-refresh"></i></div>
+    </div>
+</footer>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var url;
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+        api.setFrameAttr({
+            softInputMode: 'pan'
+        });
+        var pageParam = api.pageParam;
+        if (pageParam) {
+            var title = pageParam.title;
+            if (title) {
+                $api.text($api.dom('header .aui-title'), title);
+            }
+            url = pageParam.url;
+            if (url && url.indexOf('http') == 0) {
+                Refresh();
+            }
+
+        }
+    };
+    function Refresh(){
+        var headerHeight = $api.offset($api.dom('header')).h;
+        var footerHeight = $api.offset($api.dom('footer')).h;
+        api.openFrame({
+            name: 'website',
+            url: url,
+            rect: {
+                x: 0,
+                y: headerHeight,
+                w: api.winWidth,
+                h: api.winHeight - headerHeight - footerHeight
+            },
+            vScrollBarEnabled : true,
+            reload : true
+        })
+    }
+    //用系统浏览器打开
+    function OpenBySysBrowser(){
+        api.confirm({
+            msg: '是否用系统浏览器打开该网址？',
+            buttons: ['否', '是']
+        }, function (ret, err) {
+            if (ret.buttonIndex == 2) {
+                var platform = api.systemType;
+                if (platform == 'ios') {
+                    api.openApp({
+                        iosUrl: url
+                    });
+                } else if (platform == 'android') {
+                    api.openApp({
+                        androidPkg: 'android.intent.action.VIEW',
+                        mimeType: 'text/html',
+                        uri: url
+                    });
+                } else {
+                    api.alert({msg: '无法打开网页:' + url + ',不支持Windows系统'});
+                }
+            }
+        });
+    }
+    //后退
+    function HistoryBack() {
+        var js = 'api.historyBack();';
+        api.execScript({
+            frameName: 'website',
+            script: js
+        });
+    }
+    //前进
+    function HistoryForward(){
+        var js = 'api.historyForward();';
+        api.execScript({
+            frameName: 'website',
+            script: js
+        });
+    }
+    //关闭
+    function CloseWin() {
+        api.closeFrame({name:'website'});
+        api.closeWin();
+    }
+</script>
+</html>

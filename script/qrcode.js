@@ -27,31 +27,13 @@ var QRCode = function () {
         //暂未实现
     };
 
-    var OpenWebsite = function (url, isDirect) {
-        //api.openWin({
-        //    name: 'website',
-        //    url : url
-        //});
-        api.confirm({
-            msg: '检测到一个来自外部的网络连接地址,是否打开该网址？',
-            buttons: ['否', '是']
-        }, function (ret, err) {
-            if (ret.buttonIndex == 2) {
-                var platform = api.systemType;
-                if (platform == 'ios') {
-                    api.openApp({
-                        iosUrl: url
-                    });
-                } else if (platform == 'android') {
-                    api.openApp({
-                        androidPkg: 'android.intent.action.VIEW',
-                        mimeType: 'text/html',
-                        uri: url
-                    });
-                } else {
-                    api.alert({msg: '无法打开网页:' + url + ',不支持Windows系统'});
-                }
+    var OpenWebsite = function (url) {
+        api.openWin({
+            name : 'website',
+            url : 'widget://html/browser/browser.html',
+            pageParam : {
+                url : url
             }
-        });
+        })
     }
 };
