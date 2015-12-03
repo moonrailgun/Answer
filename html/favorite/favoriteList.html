@@ -201,7 +201,7 @@
                         });
                     })(i);
                 }
-            }else{
+            } else {
                 func(questions);
             }
         } else {
@@ -211,8 +211,9 @@
 
     //获取用户收藏列表
     function GetFavoriteList(func) {
-        var userId = $api.getStorage('userInfo')['userId'];
-        if (userId) {
+        var userInfo = $api.getStorage('userInfo');
+        if (userInfo) {
+            var userId = userInfo.userId;
             var query = api.require('query');
             query.createQuery(function (ret, err) {
                 if (ret && ret.qid) {
@@ -256,7 +257,7 @@
 
     function ShowQuestionDetail(index) {
         GetFavoriteQuestions(function (data) {
-            if(data){
+            if (data) {
                 var detail = data[index];
                 api.openWin({
                     name: 'questionDetail',

@@ -344,8 +344,9 @@
     }
 
     function ShowMyDocument(){
-        var userId = $api.getStorage('userInfo')['userId'];
-        if(userId){
+        var userInfo = $api.getStorage('userInfo');
+        if(userInfo){
+            //var userId = userInfo.userId;
             api.openWin({
                 name: 'favoriteListFrame',
                 url: '../favorite/favoriteListFrame.html'

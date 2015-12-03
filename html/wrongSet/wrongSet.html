@@ -49,9 +49,10 @@
     var haveDone;
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
-        var userId = $api.getStorage('userInfo')['userId'];
-        if (userId) {
+        var userInfo = $api.getStorage('userInfo');
+        if (userInfo) {
             //获取错题记录
+            var userId = userInfo.userId;
             GetUserWrongData(function (state, data) {
                 if (state) {
                     wrongSet = data.wrongSet;
@@ -151,7 +152,7 @@
                     label: "错题"
                 },
                 {
-                    value: wrongNumSum - wrongSet.length + 1,
+                    value: wrongNumSum - wrongSet.length,
                     color: "#FDB45C",
                     highlight: "#FFC870",
                     label: "已过错题"

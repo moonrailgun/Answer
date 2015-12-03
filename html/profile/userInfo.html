@@ -36,7 +36,10 @@
         $api.fixStatusBar($header);
 
         var qr = new QRCode();
-        var content = qr.GenerateCode('user', $api.getStorage('userInfo')['userId']);
+        var userInfo = $api.getStorage('userInfo');
+        if(userInfo){
+            var content = qr.GenerateCode('user', userInfo.userId);
+        }
 
         var scanner = api.require('FNScanner');
         scanner.encodeImg({

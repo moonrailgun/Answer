@@ -118,8 +118,9 @@
     }
 
     function SubmitQuestion() {
-        var userId = $api.getStorage('userInfo')['userId'];
-        if(userId){
+        var userInfo = $api.getStorage('userInfo');
+        if (userInfo) {
+            var userId = userInfo.userId;
             api.showProgress({
                 style: 'default',
                 animationType: 'fade',
@@ -130,7 +131,7 @@
             //收集结果
             for (var i = 0; i < rightList.length; i++) {
                 var answer = 0;
-                if(answerList[i]){
+                if (answerList[i]) {
                     answer = answerList[i]
                 }
                 var tmp = {
@@ -148,7 +149,7 @@
             //处理结果
             for (i = 0; i < res.length; i++) {
                 var dat = res[i];
-                if(dat.select == 0){//空题
+                if (dat.select == 0) {//空题
                     blankQuestionsList.push(dat.questionId);
                 }
                 else if (dat.right == dat.select) {//答对题
@@ -162,41 +163,41 @@
             }
 
             //结算积分
-            if(rightQuestionsList.length > 0) {
+            if (rightQuestionsList.length > 0) {
                 GetScoreAndSaveRecord(rightQuestionsList, function (state, addedNum, dat) {
                     if (state && addedNum > 0) {
                         api.alert({msg: '本次测试获取' + addedNum + '分，请到个人资料处查看'});
                     } else {
-                        api.alert({msg: '本次测试并未获取到分数,请再接再厉!'});
+                        api.alert({msg: '本次测试获得了0点积分,请再接再厉!'});
                     }
                     saveScoreDone = true;
                     TryCloseTest();
                 });
-            }else{
-                api.alert({msg: '本次测试并未获取到分数,请再接再厉!'});
+            } else {
+                api.alert({msg: '本次测试没有答对题目,请再接再厉!'});
                 saveScoreDone = true;
                 TryCloseTest();
             }
 
             //添加错题
             if (errorQuestionsList.length > 0) {
-                AddItemToWrongSet(errorQuestionsList,function(state){
-                    if(state){
+                AddItemToWrongSet(errorQuestionsList, function (state) {
+                    if (state) {
                         api.toast({msg: '已将 ' + errorQuestionsList.length + ' 道错题加入错题本'});
-                    }else{
+                    } else {
                         api.toast({msg: '添加错题集失败。请检查您的网络'});
                     }
                     saveWrongSetDone = true;
                     TryCloseTest();
                 });//将错题目加入错题集
-            }else if(blankQuestionsList.length == 0 ){
-                api.alert({msg:'恭喜你全部正确!'});
+            } else if (blankQuestionsList.length == 0) {
+                api.alert({msg: '恭喜你全部正确!'});
                 saveWrongSetDone = true;
                 TryCloseTest();
             }
         }
-        else{
-            api.alert({msg:'登陆以后才能开始交卷哟'});
+        else {
+            api.alert({msg: '登陆以后才能开始交卷哟'});
         }
     }
 
@@ -212,8 +213,8 @@
     //尝试关闭测试窗口
     var saveScoreDone = false;
     var saveWrongSetDone = false;
-    function TryCloseTest(){
-        if(saveScoreDone && saveWrongSetDone){
+    function TryCloseTest() {
+        if (saveScoreDone && saveWrongSetDone) {
             api.hideProgress();
             saveScoreDone = saveWrongSetDone = false;
             CloseTest();
@@ -221,7 +222,7 @@
     }
 
     //向上级请求关闭界面
-    function CloseTest(){
+    function CloseTest() {
         api.execScript({
             name: "testPaperFrame",
             script: "CloseWin();"

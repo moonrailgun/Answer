@@ -172,8 +172,9 @@ function GetEconomy(func) {
 }
 //添加积分
 function AddScore(num, func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
         GetEconomy(function (state, dat) {
             if (state) {
                 var id = dat.id;
@@ -204,8 +205,9 @@ function AddScore(num, func) {
 }
 //获取自己排名
 function GetOwnRankAndScore(func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
         GetEconomy(function (state, dat) {
             if (state) {
                 var score = parseInt(dat.score);
@@ -282,8 +284,9 @@ function GetOwnRankAndScore(func) {
 
 //获取错题集资料
 function GetUserWrongData(func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -335,8 +338,9 @@ function GetUserWrongData(func) {
 }
 //添加题目到错题本 参数为错题id数组
 function AddItemToWrongSet(list, func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -403,8 +407,9 @@ function AddItemToWrongSet(list, func) {
 }
 //删除错题本内的错题 参数为题目id数组
 function RemoveItemInWrongSet(list) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -710,8 +715,9 @@ function NoFunction(messgae) {
 
 //获取个人档案信息
 function GetUserProfile(func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -762,8 +768,9 @@ function GetUserProfile(func) {
 }
 //修改个人档案信息
 function UpdateUserProfile(profileId, params, func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId && profileId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo && profileId) {
+        var userId = userInfo.userId;
         var model = api.require('model');
         model.updateById({
             class: "UserProfile",
@@ -787,8 +794,9 @@ function UpdateUserProfile(profileId, params, func) {
 }
 //获取用户做题记录
 function GetUserPracticeRecord(func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId) {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo) {
+        var userId = userInfo.userId;
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -861,8 +869,9 @@ function GetUserNewRecord(questions, func) {
 }
 //保存新做题纪录
 function SaveUserPracticeRecord(newRecord, func) {
-    var userId = $api.getStorage('userInfo')['userId'];
-    if (userId && typeof(newRecord) == 'object') {
+    var userInfo = $api.getStorage('userInfo');
+    if (userInfo && typeof(newRecord) == 'object') {
+        var userId = userInfo.userId;
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
