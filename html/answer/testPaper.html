@@ -162,19 +162,22 @@
                 }
             }
 
+            submitPaperResultStr += '答对:' + rightQuestionsList.length + '\n'
+                    + '答错:' + errorQuestionsList.length + '\n'
+                    + '得分:' + score + '\n';
             //结算积分
             if (rightQuestionsList.length > 0) {
                 GetScoreAndSaveRecord(rightQuestionsList, function (state, addedNum, dat) {
-                    if (state && addedNum > 0) {
-                        api.alert({msg: '本次测试获取' + addedNum + '分，请到个人资料处查看'});
+                    if (state) {
+                        submitPaperResultStr += '获取分数:' + addedNum + '\n';
                     } else {
-                        api.alert({msg: '本次测试获得了0点积分,请再接再厉!'});
+                        submitPaperResultStr += '获取分数:0\n';
                     }
                     saveScoreDone = true;
                     TryCloseTest();
                 });
             } else {
-                api.alert({msg: '本次测试没有答对题目,请再接再厉!'});
+                submitPaperResultStr += '获取分数:0\n';
                 saveScoreDone = true;
                 TryCloseTest();
             }
@@ -183,21 +186,21 @@
             if (errorQuestionsList.length > 0) {
                 AddItemToWrongSet(errorQuestionsList, function (state) {
                     if (state) {
-                        api.toast({msg: '已将 ' + errorQuestionsList.length + ' 道错题加入错题本'});
+                        submitPaperResultStr += '已将 ' + errorQuestionsList.length + ' 道错题加入错题本\n';
                     } else {
-                        api.toast({msg: '添加错题集失败。请检查您的网络'});
+                        submitPaperResultStr += '添加错题集失败。请检查您的网络\n';
                     }
                     saveWrongSetDone = true;
                     TryCloseTest();
                 });//将错题目加入错题集
             } else if (blankQuestionsList.length == 0) {
-                api.alert({msg: '恭喜你全部正确!'});
+                submitPaperResultStr += '恭喜你全部正确!\n';
                 saveWrongSetDone = true;
                 TryCloseTest();
             }
         }
         else {
-            api.alert({msg: '登陆以后才能开始交卷哟'});
+            api.alert({msg: '登陆以后才能开始交卷哟\n'});
         }
     }
 
@@ -213,9 +216,11 @@
     //尝试关闭测试窗口
     var saveScoreDone = false;
     var saveWrongSetDone = false;
+    var submitPaperResultStr = '';
     function TryCloseTest() {
         if (saveScoreDone && saveWrongSetDone) {
             api.hideProgress();
+            api.alert({title:'阅卷完毕',msg:submitPaperResultStr + '请到个人中心查看结果'});
             saveScoreDone = saveWrongSetDone = false;
             CloseTest();
         }
