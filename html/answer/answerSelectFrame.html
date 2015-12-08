@@ -12,56 +12,15 @@
         #selectContainer {
             width: 100%;
             height: auto;
-            padding: 10px;
+            padding: 0 10px 10px 10px;
             display: -webkit-box;
-            text-align: center;
+        }
+        div.select-container-cell{
+            width: 49%;
         }
 
-        #hot {
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            border: solid 1px #c8c8c8;
-        }
-
-        #normal {
-            height: 80px;
-            line-height: 40px;
-            -webkit-box-flex: 1;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            border-top: solid 1px #c8c8c8;
-            border-right: solid 1px #c8c8c8;
-            border-bottom: solid 1px #c8c8c8;
-        }
-
-        #normalTop {
-            height: 50%;
-            width: 100%;
-            display: -webkit-box;
-            border-bottom: solid 1px #c8c8c8;
-        }
-
-        #exam {
-            width: 100%;
-            height: 100%;
-        }
-
-        #random {
-            width: 50%;
-            height: 100%;
-            border-right: solid 1px #c8c8c8;
-        }
-
-        #unit {
-            width: 50%;
-            height: 100%;
-        }
-
-        #composite {
-            width: 100%;
-            height: 50%;
-            margin-bottom: 4px;
+        #exam{
+            margin-right:  2%;
         }
 
         .blockActive {
@@ -92,20 +51,16 @@
         </ul>
     </div>
     <div id="selectContainer">
-        <div id="hot">
-            <div id="exam" tapmode="blockActive" onclick="GenerateExamTest();">真题检测</div>
-        </div>
-        <div id="normal">
-            <div id="normalTop">
-                <div id="random" tapmode="blockActive" onclick="GenerateRandomTest();">随便做做</div>
-                <div id="unit" tapmode="blockActive" onclick="GenerateUnitTest();">章节练习</div>
-            </div>
-            <div id="composite" tapmode="blockActive" onclick="GenerateSimulationTest();">模拟练习</div>
-        </div>
+        <div id="exam" class="select-container-cell aui-btn aui-btn-block aui-btn-danger" onclick="GenerateExamTest();">真题检测</div>
+        <div id="composite" class="select-container-cell aui-btn aui-btn-block aui-btn-info" onclick="GenerateSimulationTest();">模拟练习</div>
+    </div>
+    <div id="unitList">
+
     </div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     var questionTypeId, questionTypeName;
     var allTypeList = [];
@@ -122,7 +77,69 @@
         questionTypeId = typeId;
         questionTypeName = typeName;
     };
+    //todo 处理单元数过长的响应
+    function GetUnitList(){
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'QuestionType',
+            id: questionTypeId,
+            column: 'chapter'
+        }, function (ret, err) {
+            api.hideProgress();
+            if (ret) {
+                var allChapterList = [];
+                for (var i = 0; i < ret.length; i++) {
+                    var dat = {
+                        id: ret[i].id,
+                        cname: ret[i].chapterName
+                    };
+                    allChapterList.push(dat);
+                }
+
+
+            } else {
+                api.toast({
+                    msg: '获取章节失败，请重试...',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+    function GenerateUnitList(allChapterList){
+        var $unitList = $api.dom('#unitList');
+        var str = '<ul class="aui-grid-nine">';
+        for (var i = 0; i < allChapterList.length; i++) {
+            str += '<li class="aui-col-xs-4 aui-text-center" onclick="GenerateChapterTestPaper(\'' + allChapterList[i].id + '\',\'' + allChapterList[i].cname + '\')">'
+                    + '<span class="aui-iconfont aui-icon-edit aui-text-'+ GetRandomValColor() +'"></span>'
+                    + '<p>' + allChapterList[i].cname + '</p></li>';
+        }
+        str += '</ul>';
+        $api.html($unitList, str);
+    }
+    function GenerateChapterTestPaper(chapterId, chapterName) {
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'Chapter',
+            id: chapterId,
+            column: 'questions'
+        }, function (ret, err) {
+            if (ret) {
+                api.openWin({
+                    name: 'testPaperFrame',
+                    url: './testPaperFrame.html',
+                    pageParam: {
+                        testName: chapterName,
+                        testQuestion: ret
+                    },
+                    slidBackEnabled: false
+                });
+            }
+        });
+    }
+
     //生成试卷
+    /*
     function GenerateRandomTest() {
         //随便做做
         api.showProgress({
@@ -157,49 +174,7 @@
                 api.toast({ msg: '获取题目失败，请重试...'});
             }
         });
-    }
-    function GenerateUnitTest() {
-        //单元测试
-        api.showProgress({
-            style: 'default',
-            animationType: 'fade',
-            title: '努力加载中...',
-            text: '先喝杯茶...'
-        });
-
-        var relation_m = api.require('relation');
-        relation_m.findAll({
-            class: 'QuestionType',
-            id: questionTypeId,
-            column: 'chapter'
-        }, function (ret, err) {
-            api.hideProgress();
-            if (ret) {
-                var allChapterList = [];
-                for (var i = 0; i < ret.length; i++) {
-                    var dat = {
-                        id: ret[i].id,
-                        cname: ret[i].chapterName
-                    };
-                    allChapterList.push(dat);
-                }
-
-                api.openWin({
-                    name: 'chapterSelectFrame',
-                    url: './chapterSelectFrame.html',
-                    pageParam: {
-                        allChapterList: allChapterList
-                    }
-                });
-            } else {
-                api.toast({
-                    msg: '获取章节失败，请重试...',
-                    duration: 2000,
-                    location: 'bottom'
-                });
-            }
-        });
-    }
+    }*/
     function GenerateSimulationTest() {
         //模拟练习
         api.openWin({
