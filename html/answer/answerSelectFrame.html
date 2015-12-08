@@ -15,12 +15,29 @@
             padding: 0 10px 10px 10px;
             display: -webkit-box;
         }
-        div.select-container-cell{
+
+        div.select-container-cell {
             width: 49%;
         }
 
-        #exam{
-            margin-right:  2%;
+        #exam {
+            margin-right: 2%;
+        }
+
+        #unitList {
+            padding: 0 10px;
+        }
+
+        #unitList .title {
+            text-align: center;
+            background-color: #4fbcf4;
+            color: #FFFFFF;
+            font-size: 22px;
+            border-left: 1px solid #eee;
+            border-right: 1px solid #eee;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            line-height: 38px;
         }
 
         .blockActive {
@@ -51,12 +68,14 @@
         </ul>
     </div>
     <div id="selectContainer">
-        <div id="exam" class="select-container-cell aui-btn aui-btn-block aui-btn-danger" onclick="GenerateExamTest();">真题检测</div>
-        <div id="composite" class="select-container-cell aui-btn aui-btn-block aui-btn-info" onclick="GenerateSimulationTest();">模拟练习</div>
+        <div id="exam" class="select-container-cell aui-btn aui-btn-block aui-btn-danger" onclick="GenerateExamTest();">
+            真题检测
+        </div>
+        <div id="composite" class="select-container-cell aui-btn aui-btn-block aui-btn-warning"
+             onclick="GenerateSimulationTest();">模拟练习
+        </div>
     </div>
-    <div id="unitList">
-
-    </div>
+    <div id="unitList"></div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
@@ -78,7 +97,7 @@
         questionTypeName = typeName;
     };
     //todo 处理单元数过长的响应
-    function GetUnitList(){
+    function GetUnitList() {
         var relation_m = api.require('relation');
         relation_m.findAll({
             class: 'QuestionType',
@@ -106,15 +125,19 @@
             }
         });
     }
-    function GenerateUnitList(allChapterList){
+    function GenerateUnitList(allChapterList) {
         var $unitList = $api.dom('#unitList');
-        var str = '<ul class="aui-grid-nine">';
-        for (var i = 0; i < allChapterList.length; i++) {
-            str += '<li class="aui-col-xs-4 aui-text-center" onclick="GenerateChapterTestPaper(\'' + allChapterList[i].id + '\',\'' + allChapterList[i].cname + '\')">'
-                    + '<span class="aui-iconfont aui-icon-edit aui-text-'+ GetRandomValColor() +'"></span>'
-                    + '<p>' + allChapterList[i].cname + '</p></li>';
+        var str = '';
+        if (allChapterList.length > 0) {
+            str += '<div class="title">12313</div>'
+                    + '<div class="content"><ul class="aui-grid-nine">';
+            for (var i = 0; i < allChapterList.length; i++) {
+                str += '<li class="aui-col-xs-4 aui-text-center" onclick="GenerateChapterTestPaper(\'' + allChapterList[i].id + '\',\'' + allChapterList[i].cname + '\')">'
+                        + '<span class="aui-iconfont aui-icon-edit aui-text-' + GetRandomValColor() + '"></span>'
+                        + '<p>' + allChapterList[i].cname + '</p></li>';
+            }
+            str += '</ul></div>';
         }
-        str += '</ul>';
         $api.html($unitList, str);
     }
     function GenerateChapterTestPaper(chapterId, chapterName) {
@@ -140,41 +163,41 @@
 
     //生成试卷
     /*
-    function GenerateRandomTest() {
-        //随便做做
-        api.showProgress({
-            style: 'default',
-            animationType: 'fade',
-            title: '努力加载中...',
-            text: '先喝杯茶...'
-        });
+     function GenerateRandomTest() {
+     //随便做做
+     api.showProgress({
+     style: 'default',
+     animationType: 'fade',
+     title: '努力加载中...',
+     text: '先喝杯茶...'
+     });
 
-        var relation_m = api.require('relation');
-        relation_m.findAll({
-            class: 'QuestionType',
-            id: questionTypeId,
-            column: 'unclassifiedQuestions'
-        },function(ret,err){
-            api.hideProgress();
-            if(ret){
-                if(ret.length > 0){
-                    api.openWin({
-                        name: 'testPaperFrame',
-                        url: './testPaperFrame.html',
-                        pageParam: {
-                            testName: '随便做做',
-                            testQuestion: ret
-                        },
-                        slidBackEnabled: false
-                    });
-                }else{
-                    api.toast({ msg: '没有题目'});
-                }
-            }else{
-                api.toast({ msg: '获取题目失败，请重试...'});
-            }
-        });
-    }*/
+     var relation_m = api.require('relation');
+     relation_m.findAll({
+     class: 'QuestionType',
+     id: questionTypeId,
+     column: 'unclassifiedQuestions'
+     },function(ret,err){
+     api.hideProgress();
+     if(ret){
+     if(ret.length > 0){
+     api.openWin({
+     name: 'testPaperFrame',
+     url: './testPaperFrame.html',
+     pageParam: {
+     testName: '随便做做',
+     testQuestion: ret
+     },
+     slidBackEnabled: false
+     });
+     }else{
+     api.toast({ msg: '没有题目'});
+     }
+     }else{
+     api.toast({ msg: '获取题目失败，请重试...'});
+     }
+     });
+     }*/
     function GenerateSimulationTest() {
         //模拟练习
         api.openWin({
