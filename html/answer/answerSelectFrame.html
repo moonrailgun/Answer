@@ -8,43 +8,6 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
-    <style>
-        #selectContainer {
-            width: 100%;
-            height: auto;
-            padding: 0 10px 10px 10px;
-            display: -webkit-box;
-        }
-
-        div.select-container-cell {
-            width: 49%;
-        }
-
-        #exam {
-            margin-right: 2%;
-        }
-
-        #unitList {
-            padding: 0 10px;
-        }
-
-        #unitList .title {
-            text-align: center;
-            background-color: #4fbcf4;
-            color: #FFFFFF;
-            font-size: 22px;
-            border-left: 1px solid #eee;
-            border-right: 1px solid #eee;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-            line-height: 38px;
-        }
-
-        .blockActive {
-            color: #fff;
-            background-color: #666666;
-        }
-    </style>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-info">
@@ -57,26 +20,7 @@
         <i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>
     </div>
 </header>
-<div id="main">
-    <div id="document">
-        <ul class="aui-list-view">
-            <li class="aui-list-view-cell" onclick="OpenDoucment()">
-                <a class="aui-arrow-right">
-                    <i class="aui-iconfont aui-icon-file"></i>参考资料
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div id="selectContainer">
-        <div id="exam" class="select-container-cell aui-btn aui-btn-block aui-btn-danger" onclick="GenerateExamTest();">
-            真题检测
-        </div>
-        <div id="composite" class="select-container-cell aui-btn aui-btn-block aui-btn-warning"
-             onclick="GenerateSimulationTest();">模拟练习
-        </div>
-    </div>
-    <div id="unitList"></div>
-</div>
+
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/mrg.js"></script>
@@ -86,140 +30,26 @@
     var currentTypeDocument = [];
     apiready = function () {
         var pageParam = api.pageParam;
-        var typeId = pageParam.typeId;
-        var typeName = pageParam.typeName;
+        questionTypeId = pageParam.typeId;
+        questionTypeName = pageParam.typeName;
         allTypeList = pageParam.allTypeList;
-        //标题
+        SetTitle(questionTypeName);
         $api.fixStatusBar($api.dom('header'));
-        SetTitle(typeName);
-        GetDocumentNum(typeName);
-        questionTypeId = typeId;
-        questionTypeName = typeName;
+
+        var headerHeight = $api.offset($api.dom('header')).h;
+        api.openFrame({
+            name:'answerSelect',
+            url:'./answerSelect.html',
+            pageParam: pageParam,
+            rect: {
+                x : 0,
+                y:headerHeight,
+                w:api.winWidth,
+                h:api.winHeight - headerHeight
+            },
+            bounces: true
+        });
     };
-    //todo 处理单元数过长的响应
-    function GetUnitList() {
-        var relation_m = api.require('relation');
-        relation_m.findAll({
-            class: 'QuestionType',
-            id: questionTypeId,
-            column: 'chapter'
-        }, function (ret, err) {
-            api.hideProgress();
-            if (ret) {
-                var allChapterList = [];
-                for (var i = 0; i < ret.length; i++) {
-                    var dat = {
-                        id: ret[i].id,
-                        cname: ret[i].chapterName
-                    };
-                    allChapterList.push(dat);
-                }
-
-
-            } else {
-                api.toast({
-                    msg: '获取章节失败，请重试...',
-                    duration: 2000,
-                    location: 'bottom'
-                });
-            }
-        });
-    }
-    function GenerateUnitList(allChapterList) {
-        var $unitList = $api.dom('#unitList');
-        var str = '';
-        if (allChapterList.length > 0) {
-            str += '<div class="title">12313</div>'
-                    + '<div class="content"><ul class="aui-grid-nine">';
-            for (var i = 0; i < allChapterList.length; i++) {
-                str += '<li class="aui-col-xs-4 aui-text-center" onclick="GenerateChapterTestPaper(\'' + allChapterList[i].id + '\',\'' + allChapterList[i].cname + '\')">'
-                        + '<span class="aui-iconfont aui-icon-edit aui-text-' + GetRandomValColor() + '"></span>'
-                        + '<p>' + allChapterList[i].cname + '</p></li>';
-            }
-            str += '</ul></div>';
-        }
-        $api.html($unitList, str);
-    }
-    function GenerateChapterTestPaper(chapterId, chapterName) {
-        var relation_m = api.require('relation');
-        relation_m.findAll({
-            class: 'Chapter',
-            id: chapterId,
-            column: 'questions'
-        }, function (ret, err) {
-            if (ret) {
-                api.openWin({
-                    name: 'testPaperFrame',
-                    url: './testPaperFrame.html',
-                    pageParam: {
-                        testName: chapterName,
-                        testQuestion: ret
-                    },
-                    slidBackEnabled: false
-                });
-            }
-        });
-    }
-
-    //生成试卷
-    /*
-     function GenerateRandomTest() {
-     //随便做做
-     api.showProgress({
-     style: 'default',
-     animationType: 'fade',
-     title: '努力加载中...',
-     text: '先喝杯茶...'
-     });
-
-     var relation_m = api.require('relation');
-     relation_m.findAll({
-     class: 'QuestionType',
-     id: questionTypeId,
-     column: 'unclassifiedQuestions'
-     },function(ret,err){
-     api.hideProgress();
-     if(ret){
-     if(ret.length > 0){
-     api.openWin({
-     name: 'testPaperFrame',
-     url: './testPaperFrame.html',
-     pageParam: {
-     testName: '随便做做',
-     testQuestion: ret
-     },
-     slidBackEnabled: false
-     });
-     }else{
-     api.toast({ msg: '没有题目'});
-     }
-     }else{
-     api.toast({ msg: '获取题目失败，请重试...'});
-     }
-     });
-     }*/
-    function GenerateSimulationTest() {
-        //模拟练习
-        api.openWin({
-            name: 'simulationSelectFrame',
-            url: './simulationSelectFrame.html',
-            pageParam: {
-                questionTypeId: questionTypeId,
-                questionTypeName: questionTypeName
-            }
-        });
-    }
-    function GenerateExamTest() {
-        //真题测试
-        api.openWin({
-            name: 'yearSelectFrame',
-            url: './yearSelectFrame.html',
-            pageParam: {
-                questionTypeId: questionTypeId,
-                questionTypeName: questionTypeName
-            }
-        });
-    }
 
     //切换分类
     function SwitchType() {
@@ -235,9 +65,16 @@
             var index = ret.buttonIndex;
             var item = allTypeList[index - 1];
             if (index <= allTypeList.length) {
-                questionTypeId = item.id;
-                SetTitle(item.name);
-                GetDocumentNum(item.name);
+                if(questionTypeId != item.id){
+                    questionTypeId = item.id;
+                    questionTypeName = item.name;
+                    SetTitle(item.name);
+                    var js = 'SwitchContent("'+questionTypeId+'","'+questionTypeName+'");';
+                    api.execScript({
+                        frameName: 'answerSelect',
+                        script: js
+                    });
+                }
             }
             else {
                 //取消
@@ -249,66 +86,10 @@
         var $title = $api.dom('header .aui-title');
         $api.html($title, typeName + ' - 分类选择' + '<i class="aui-iconfont aui-icon-unfold" style="font-size: 14px"></i>');
     }
-    //获取资料数目
-    function GetDocumentNum(typeName) {
-        var query = api.require('query');
-        query.createQuery(function (ret, err) {
-            if (ret && ret.qid) {
-                var queryId = ret.qid;
-                query.whereLike({
-                    qid: queryId,
-                    column: 'name',
-                    value: typeName
-                });
-                var model = api.require('model');
-                model.findAll({
-                    class: "DocumentType",
-                    qid: queryId
-                }, function (ret, err) {
-                    if (ret) {
-                        var count = 0;
-                        for (var i = 0; i < ret.length; i++) {
-                            var id = ret[i].id;
-                            var relation_m = api.require('relation');
-                            relation_m.findAll({
-                                class: 'DocumentType',
-                                id: id,
-                                column: 'documents'
-                            }, function (ret, err) {
-                                if (ret) {
-                                    count += ret.length;
-                                    currentTypeDocument = ret;//将资料数据合并到当前的分类资料数组里
 
-                                    var str = '';
-                                    if (count > 0) {
-                                        str += '<i class="aui-iconfont aui-icon-file"></i>参考资料<span class="aui-badge aui-badge-danger">' + count + '</span>';
-                                    } else {
-                                        str += '<i class="aui-iconfont aui-icon-file"></i>参考资料';
-                                    }
-                                    $api.html($api.dom('#document a'), str);
-                                }
-                            });
-                        }
-                    }
-                    else {
-                        alert('出现错误:' + JSON.stringify(err));
-                    }
-                });
-            }
-        });
-    }
-    //打开资料档
-    function OpenDoucment() {
-        api.openWin({
-            name: 'documentList',
-            url: '../document/documentList.html',
-            pageParam: {
-                documentList: currentTypeDocument
-            }
-        })
-    }
 
     function CloseWin() {
+        api.closeFrame({name:'answerSelect'});
         api.closeWin();
     }
 </script>

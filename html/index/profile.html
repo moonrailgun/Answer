@@ -333,8 +333,8 @@
     function Logout() {
         var user = api.require('user');
         user.logout(function (ret, err) {
+            $api.rmStorage('userInfo');
             if (ret) {
-                $api.rmStorage('userInfo');
                 //更新侧滑页
                 api.execScript({
                     name: "fixed",
@@ -347,7 +347,7 @@
                     script: $script
                 });
             } else {
-                api.alert({msg: '登出失败'})
+                //api.alert({msg: '登出失败'});
             }
         });
     }
