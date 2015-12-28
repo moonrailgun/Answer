@@ -2,7 +2,7 @@
 
 <widget id="A6999447157608" version="0.0.1"> 
   <name>Answer</name>  
-  <description>Example For APICloud.</description>  
+  <description>Answer先生.</description>  
   <author email="developer@apicloud.com" href="http://www.apicloud.com">Developer</author>  
   <content src="index.html"/>  
   <preference name="pageBounce" value="false"/>  
@@ -25,5 +25,7 @@
   <permission name="internet"/>  
   <permission name="bootCompleted"/>  
   <permission name="hardware"/>  
+  <permission name="sms"/>  
+  <permission name="contact"/>  
   <access origin="*"/> 
 </widget>

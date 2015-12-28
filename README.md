@@ -151,6 +151,9 @@
 - PracticeRecord 做题记录
 	- userId 用户ID*
 	- haveDone 该用户所有做过的题目的数组
+- Entertaining 娱乐
+	- name 分类名
+	- questions (关联QuestionBank) 所有题目
 
 # 关于开源 #
 开源协议基于[GPLv2](./LICENSE)
