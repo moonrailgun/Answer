@@ -74,37 +74,37 @@
 <div id="block3">
     <div class="title">最热类型</div>
     <ul class="aui-grid-sixteen">
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('56335f0cfe6f9b6336d2c769','高等数学')">
             <span class="aui-iconfont aui-icon-form aui-text-danger"></span>
             <p>高数</p>
         </li>
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad206a2d7e5d20bc061af','经济学')">
             <span class="aui-iconfont aui-icon-form aui-text-warning"></span>
-            <p>大物</p>
+            <p>经济学</p>
         </li>
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('568b6c018a27c0ba29cd3ac5','英语')">
             <span class="aui-iconfont aui-icon-form aui-text-pink"></span>
             <p>英语</p>
         </li>
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad2f00156490970a861d1','马哲')">
             <span class="aui-iconfont aui-icon-form aui-text-dark"></span>
             <p>马哲</p>
         </li>
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('563f16d8eff4ef257e9c8ad7','毛概')">
             <span class="aui-iconfont aui-icon-form aui-text-danger"></span>
             <p>毛概</p>
         </li>
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad4600156490970a861fb','近代史')">
             <span class="aui-iconfont aui-icon-form aui-text-warning"></span>
             <p>近代史</p>
         </li>
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad3e42b77a0401614f781','思修')">
             <span class="aui-iconfont aui-icon-form aui-text-pink"></span>
-            <p>计算机</p>
+            <p>思修</p>
         </li>
-        <li class="aui-col-xs-3 aui-text-center">
+        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad030ba4905b705415405','会计学')">
             <span class="aui-iconfont aui-icon-form aui-text-dark"></span>
-            <p>线代</p>
+            <p>会计学</p>
         </li>
     </ul>
 </div>
@@ -152,6 +152,17 @@
         api.openWin({
             name: 'documentType',
             url: '../document/documentType.html'
+        })
+    }
+
+    function OpenDocumentTypeContent(id, name){
+        api.openWin({
+            name: 'documentType',
+            url: '../document/documentTypeContent.html',
+            pageParam: {
+                id: id,
+                name: name
+            }
         })
     }
 

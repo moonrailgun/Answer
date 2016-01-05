@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>Hello APP</title>
+    <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/mrg.css"/>
@@ -18,11 +18,12 @@
 
     <div class="aui-title"></div>
 </header>
+<!--
 <div>高等数学</div>
 <div>下载:1000</div>
 <div>收藏:1000</div>
 <div>资料</div>
-<div>评论</div>
+<div>评论</div>-->
 <div id="documentList"></div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
@@ -44,7 +45,7 @@
             id: id,
             column: 'documents'
         }, function (ret, err) {
-            if (ret) {
+            if (ret && ret.length > 0) {
                 var dat = [];
                 for (var i = 0; i < ret.length; i++) {
                     var id = ret[i].id;
@@ -55,11 +56,13 @@
                             id: id,
                             name: file.name,
                             url: file.url,
-                            uploadId:uploadId
+                            uploadId: uploadId
                         });
                     }
                 }
                 GenerateDocumentList($api.dom('#documentList'), dat);
+            } else {
+                $api.html($api.dom('#documentList'), '<img src="../../image/nodata_s01.png" />');
             }
         });
     };
