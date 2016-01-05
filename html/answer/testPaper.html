@@ -62,7 +62,7 @@
         var html = '';
         //循环添加题目
         if (testQuestion.length <= 0) {
-            html = '<img src="../../image/nodata_s01.png" />';
+            html = '<div style="text-align: center;"><img src="../../image/nodata_s01.png"></div>';
             $api.html($api.dom('#main'), html);
         } else {
             for (var i = 0; i < testQuestion.length; i++) {
