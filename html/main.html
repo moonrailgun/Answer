@@ -83,7 +83,7 @@
         }
 
         .discover {
-            background-image: url(../image/tabBar/);
+            background-image: url(../image/tabBar/Discover-48.png);
         }
 
         .message {
@@ -99,7 +99,7 @@
         }
 
         .active .discover {
-            background-image: url(../image/);
+            background-image: url(../image/tabBar/Discover-48-actived.png);
         }
 
         .active .message {
@@ -170,18 +170,17 @@
             },
             index: 0,
             frames: [{
-                name: 'summary',
-                url: 'summary.html'
+                name: 'home',
+                url: './index/home.html'
             }, {
-                name: 'map',
-                url: 'map.html'
-            }, {
-                name: 'item',
-                url: 'item.html'
+                name: 'discover',
+                url: './index/discover.html'
             }, {
                 name: 'message',
-                url: 'message.html',
-                vScrollBarEnabled: false
+                url: './index/message.html'
+            }, {
+                name: 'my',
+                url: './index/my.html'
             }]
         }, function (ret, err) {
             //回调
