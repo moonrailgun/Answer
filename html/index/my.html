@@ -1,0 +1,511 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        #loginPage {
+            padding-top: 20px;
+            width: 95%;
+            height: 100%;
+            margin: auto;
+        }
+
+        #head-img {
+            margin: 0 auto;
+            width: 100px;
+            height: 100px;
+        }
+
+        #head-img img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50px;
+        }
+
+        .login-form {
+            border: solid 1px #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #ddd;
+        }
+
+        #login {
+            text-align: center;
+        }
+
+        #login .arrow {
+            content: "";
+            margin: 6px auto 0 auto;
+            height: 0;
+            width: 0;
+            border-left: solid 10px transparent;
+            border-right: solid 10px transparent;
+            border-bottom: solid 12px #ddd;
+        }
+
+        .login-form input {
+            border: none;
+            margin: 0 0 1px 0;
+            font-size: 18px;
+            padding: 15px !important;
+            border-radius: 0;
+            height: auto;
+        }
+
+        .login-form input:last-child {
+            margin-bottom: 0;
+        }
+
+        button.aui-btn-block, a {
+            margin-top: 10px;
+        }
+    </style>
+    <style>
+        body {
+            min-height: 100%;
+            height: auto;
+        }
+
+        #userInfo {
+            display: -webkit-box;
+        }
+
+        #userMain {
+            -webkit-box-flex: 1;
+            margin-left: 10px;
+        }
+
+        #profile-username {
+            font-size: 12px;
+        }
+
+        #userLeft {
+            margin: 19px 20px 20px 0;
+            width: 24px;
+            height: 24px;
+            font-size: 20px;
+            color: #949494;
+        }
+
+        .liActive {
+            background-color: #919191;
+        }
+
+        #logout-btn.aui-btn-block {
+            border-radius: 0;
+        }
+
+        .infoBlock {
+            width: 100%;
+            display: -webkit-box;
+        }
+
+        .infoBlock .infoBlockCell {
+            width: 50%;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            text-align: center;
+            font-size: 14px;
+            line-height: 22px;
+            color: #6d6d72;
+        }
+
+        .infoBlock .infoBlockCell .infoBlockCellNum {
+            line-height: 42px;
+            color: #fa6359;
+            font-size: 32px;
+        }
+    </style>
+</head>
+<body>
+<div id="loginPage" style="display: block;">
+    <div id="head-img"><img src="../../image/default_head.jpg"/></div>
+    <div id="login">
+        <div class="arrow"></div>
+        <form class="login-form">
+            <input id="username" name="username" type="text" placeholder="用户名"/>
+            <input id="password" name="password" type="password" placeholder="密码"/>
+        </form>
+        <button class="aui-btn-block aui-btn-primary" onclick="OnLogin()">登陆</button>
+        <button class="aui-btn-block aui-btn-negative" onclick="OnRegister()">注册</button>
+        <a onclick="OnForgotPassword()" class="aui-pull-right"> 忘记密码？ </a>
+    </div>
+</div>
+<div id="profilePage" style="display: none;">
+    <div class="aui-content">
+        <ul class="aui-list-view">
+            <li id="userInfo" class="aui-list-view-cell aui-img">
+                <div id="userHead" onclick="ChangePic();"><img class="aui-img-object"
+                                                               src="../../image/default_head.jpg">
+                </div>
+                <div id="userMain" class="aui-img-body" onclick="OpenInfoWin();">
+                    <div id="profile-nickname">游客</div>
+                    <div id="profile-username">游客</div>
+                </div>
+                <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right" onclick="OpenInfoWin();"></div>
+            </li>
+            <li class="infoBlock">
+                <div id="score" tapmode="liActive" class="infoBlockCell" style="border-right: 1px solid #c8c7cc;">
+                    <div class="infoBlockCellNum">0</div>
+                    <div>积分</div>
+                </div>
+                <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="SwitchToRank();">
+                    <div class="infoBlockCellNum">0</div>
+                    <div>排名</div>
+                </div>
+            </li>
+        </ul>
+        <ul class="aui-list-view">
+            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
+            <!--<a class="aui-arrow-right" onclick="NoFunction();">我的红包</a>-->
+            <!--</li>-->
+            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
+            <!--<a class="aui-arrow-right" onclick="NoFunction();">我的好友</a>-->
+            <!--</li>-->
+            <li tapmode="liActive" class="aui-list-view-cell">
+                <a id="favorite" class="aui-arrow-right" onclick="OpenFavoriteWin();">
+                    我的收藏
+                </a>
+            </li>
+            <li tapmode="liActive" class="aui-list-view-cell">
+                <a class="aui-arrow-right" onclick="ShowDownloadManager();">我的下载</a>
+            </li>
+        </ul>
+        <ul class="aui-list-view">
+            <li tapmode="liActive" class="aui-list-view-cell">
+                <a class="aui-arrow-right" onclick="OpenDocumentBank();">资料库</a>
+            </li>
+            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
+            <!--<a class="aui-arrow-right" onclick="NoFunction();">学习圈</a>-->
+            <!--</li>-->
+            <li tapmode="liActive" class="aui-list-view-cell">
+                <a id="wrongSet" class="aui-arrow-right" onclick="OpenWrongSet();">错题集</a>
+            </li>
+            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
+            <!--<a class="aui-arrow-right" onclick="NoFunction();">计划</a>-->
+            <!--</li>-->
+        </ul>
+        <button id="logout_btn" class="aui-btn aui-btn-danger aui-btn-block" onclick="Logout()">退出登录</button>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/mrg.js"></script>
+<script type="text/javascript">
+    //登陆相关
+    function OnLogin() {
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '先喝杯茶...'
+        });
+        var $username = $api.val($api.dom('#username'));
+        var $password = $api.val($api.dom('#password'));
+        var user = api.require('user');
+        user.login({
+            username: $username,
+            password: $password
+        }, function (ret, err) {
+            api.hideProgress();
+            if (ret) {
+                var token = ret.id;
+                var model = api.require('model');
+                //获取用户信息
+                model.findById({
+                    class: 'user',
+                    id: ret.userId
+                }, function (ret, err) {
+                    if (!ret) {
+                        api.alert({msg: '_(:зゝ∠)_\n出现错误，请联系管理员' + JSON.stringify(err)});
+                    } else {
+                        var id = ret.id;
+                        var username = ret.username;
+                        var nickname = ret.nickname;
+                        var avatar = ret.avatar;
+                        //设置内容
+                        var userInfo = {
+                            token: token,
+                            userId: id,
+                            username: username,
+                            nickname: nickname,
+                            avatar: avatar
+                        };
+                        $api.setStorage('userInfo', userInfo);//存入本地
+                        //页面跳转
+                        switchPage(1);
+                    }
+                });
+            }
+            else {
+                api.alert({msg: '登陆失败，请确认您的账号密码正确'});
+            }
+        });
+    }
+
+    function OnRegister() {
+        api.openWin({
+            name: 'register',
+            url: '../profile/register.html'
+        });
+    }
+    function OnForgotPassword() {
+        api.alert({msg: "你记性真差"});
+    }
+</script>
+<script type="text/javascript">
+    //档案相关
+    function ChangePic() {
+        var userInfo = $api.getStorage('userInfo');
+        if (userInfo) {
+            var userId = userInfo.userId;
+            api.actionSheet({
+                title: '从哪里更新头像?',
+                cancelTitle: '取消',
+                buttons: ['相册']
+            }, function (ret, err) {
+                if (ret.buttonIndex == 1) {
+                    //打开图片
+                    api.getPicture({
+                        encodingType: 'jpg',
+                        mediaValue: 'pic',
+                        destinationType: 'url',
+                        allowEdit: true,
+                        quality: '50',
+                        targetWidth: 100,
+                        targetHeight: 100,
+                        saveToPhotoAlbum: false
+                    }, function (ret, err) {
+                        if (ret) {
+                            var url = ret.data;
+                            var cachePath = api.cacheDir;
+                            var path = url.split(cachePath)[1];
+
+                            api.showProgress({
+                                style: 'default',
+                                animationType: 'fade',
+                                title: '努力上传中...',
+                                text: '先喝杯茶...'
+                            });
+                            var model = api.require('model');
+                            model.uploadFile({
+                                data: {
+                                    file: {
+                                        name: userId + '.jpg',
+                                        url: 'cache://' + path
+                                    }
+                                },
+                                report: false
+                            }, function (ret, err) {
+                                if (ret) {
+                                    var id = ret.id;
+                                    var name = ret.name;
+                                    var url = ret.url;
+                                    var avatar = {
+                                        url: url,
+                                        name: name,
+                                        id: id
+                                    };
+                                    //获取原始数据
+                                    model.findById({
+                                        class: 'user',
+                                        id: userId
+                                    }, function (ret, err) {
+                                        api.hideProgress();
+                                        if (ret) {
+                                            var oldAvatar = ret.avatar;
+                                            if (oldAvatar) {
+                                                //原来有头像，删除原来的头像
+                                                var oldAvatarId = oldAvatar.id;
+                                                model.deleteById({
+                                                    class: 'file',
+                                                    id: oldAvatarId
+                                                });
+                                            }
+
+                                            //更新远程数据
+                                            model.updateById({
+                                                class: 'user',
+                                                id: userId,
+                                                value: {avatar: avatar}
+                                            });
+                                            //更新头像
+                                            $api.attr($api.dom('#userHead img'), 'src', url);
+                                            //更新本地数据
+                                            userInfo.avatar = avatar;
+                                            $api.setStorage('userInfo', userInfo);
+                                            //更新侧边
+                                            api.execScript({
+                                                name: "fixed",
+                                                script: "UpdateAvatar();"
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    api.hideProgress();
+                                    api.alert({msg: '出错:' + JSON.stringify(err)});
+                                }
+
+                            });
+                        } else if (err.msg != 'user canceled') {
+                            api.alert({msg: '出错:' + JSON.stringify(err)});
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function UpdateUserInfo() {
+        var userInfo = $api.getStorage('userInfo');
+        if (userInfo) {
+            $img = $api.dom('#userHead img');
+            $nickname = $api.dom('#profile-nickname');
+            $username = $api.dom('#profile-username');
+            //更新头像
+            if (userInfo.avatar) {
+                $api.attr($img, 'src', userInfo.avatar.url);
+            }
+            else {
+                $api.attr($img, 'src', '../../image/default_head.jpg');
+            }
+            //更新昵称
+            if (userInfo.nickname) {
+                $api.html($nickname, userInfo.nickname);
+            }
+            else {
+                $api.html($nickname, '游客');
+            }
+            //更新用户名
+            if (userInfo.username) {
+                $api.html($username, userInfo.username);
+            }
+            else {
+                $api.html($username, '');
+            }
+        }
+    }
+
+    //打开信息窗口
+    function OpenInfoWin() {
+        api.openWin({
+            name: 'userInfo',
+            url: '../profile/userInfo.html'
+        })
+    }
+
+    //打开收藏窗口
+    function OpenFavoriteWin() {
+        api.openWin({
+            name: 'favoriteListFrame',
+            url: '../favorite/favoriteListFrame.html'
+        })
+    }
+
+    //打开资料库
+    function OpenDocumentBank() {
+        api.openWin({
+            name: 'documentType',
+            url: '../document/documentType.html'
+        })
+    }
+
+    //打开错题集
+    function OpenWrongSet() {
+        api.openWin({
+            name: 'wrongSet',
+            url: '../wrongSet/wrongSet.html'
+        });
+    }
+
+    //切换到排行榜页面
+    function SwitchToRank() {
+        var $script = "ChangeWin('rank.html');";
+        api.execScript({
+            name: "slide",
+            script: $script
+        });
+    }
+
+    //登出
+    function Logout() {
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '正在努力登出中...'
+        });
+        var user = api.require('user');
+        user.logout(function (ret, err) {
+            $api.rmStorage('userInfo');
+            api.hideProgress();
+            if (ret) {
+                switchPage(0);
+            } else {
+                api.alert({msg: '登出失败'});
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    //通用
+    apiready = function () {
+        var userInfo = $api.getStorage('userInfo');
+        if (!!userInfo) {
+            switchPage(1);
+        }
+    };
+    var currentPageIndex = 0;
+    function switchPage(index) {
+        if (index == 0) {
+            //显示login页
+            $api.css($api.byId('loginPage'), 'display: block;');
+            $api.css($api.byId('profilePage'), 'display: none;');
+        } else if (index == 1) {
+            //显示profile页面
+            $api.css($api.byId('loginPage'), 'display: none;');
+            $api.css($api.byId('profilePage'), 'display: block;');
+            updateProfileData();
+        }
+        currentPageIndex = index;
+    }
+
+    function updateProfileData() {
+        UpdateUserInfo();
+        GetEconomy(function (state, dat) {
+            if (state) {
+                var score = dat.score;
+                $api.html($api.dom('#score .infoBlockCellNum'), score);
+            } else {
+                api.toast({msg: '获取积分失败'});
+            }
+        });
+
+        GetFavorite(function (favorite) {
+            var num = favorite.questions.length + favorite.documents.length;
+            var str = '我的收藏';
+            if (num > 0) {
+                str += '<span class="aui-badge aui-badge-danger">' + num + '</span>';
+            }
+            $api.html($api.dom('#favorite'), str);
+        });
+
+        GetItemNumInWrongSet(function (state, num) {
+            if (state && num > 0) {
+                var str = '错题集' + '<span class="aui-badge aui-badge-danger">' + num + '</span>';
+                $api.html($api.dom('#wrongSet'), str);
+            }
+        });
+
+        GetOwnRankAndScore(function (state, rank, score) {
+            $api.text($api.dom('#rank .infoBlockCellNum'), rank);
+            $api.text($api.dom('#score .infoBlockCellNum'), score);
+        });
+    }
+</script>
+</html>
