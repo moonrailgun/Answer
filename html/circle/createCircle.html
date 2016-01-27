@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">创建圈子</div>
+</header>
+<div id="main">
+    <h1>创建圈子申请</h1>
+    <p>创建圈子申请时间较长，请耐心等待。</p>
+    <p>申请人数较多的圈子将会被优先创建</p>
+    <form>
+        <input id="data00" type="text" class="aui-input-clear aui-input" placeholder="圈子名称">
+        <input id="data01" type="text" class="aui-input-clear aui-input" placeholder="圈子简介">
+        <input id="data02" type="text" class="aui-input-clear aui-input" placeholder="真实姓名">
+        <input id="data03" type="text" class="aui-input-clear aui-input" placeholder="手机号">
+        <input id="data04" type="text" class="aui-input-clear aui-input" placeholder="qq">
+        <!--<input id="data04" type="text" class="aui-input-clear aui-input" placeholder="电子邮箱">-->
+    </form>
+    <button id="register" class="aui-btn-block aui-btn-primary" onclick="">提交申请</button>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+    };
+</script>
+</html>
