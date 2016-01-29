@@ -154,6 +154,18 @@
 - Entertaining 娱乐
 	- name 分类名
 	- questions (关联QuestionBank) 所有题目
+- Circle 学习圈
+	- circleName 圈名
+	- circleMemberIds 圈子成员ID列表
+	- circleHeader 圈子头像
+	- circleSummary 圈子简介
+	- circleMasterId 圈主ID
+	- articles (关联CircleArticle) 圈子文章列表
+- CircleArticle 学习圈文章列表
+	- circleId 学习圈ID
+	- articleName 文章名
+	- authorId 发布者ID
+	- articleContent 文章内容
 
 # 关于开源 #
 开源协议基于[GPLv2](./LICENSE)
