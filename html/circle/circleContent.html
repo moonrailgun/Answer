@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .circleHead{
+            border-radius: 100%;
+        }
+        .circleHandleBlock{
+            display: -webkit-box;
+        }
+        .circleHandleBlock .circleHandle{
+            -webkit-box-flex: 1;
+            padding: 6px 0;
+            margin: auto 4px;
+        }
+        .topicon{
+            background-color: #0062cc;
+            float: left;
+            color: #FFFFFF;
+            padding: 0 4px;
+            font-size: 12px;
+            border-radius: 6px;
+            margin: 3px 4px 3px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="aui-content">
+    <ul class="aui-list-view">
+        <li class="aui-list-view-cell aui-img">
+            <img src="../../image/default_head.jpg" class="aui-img-object aui-pull-left circleHead">
+            <div class="aui-img-body aui-arrow-right">
+                <span>大学生自拍交友</span>
+                <p>圈主:moonrailgun</p>
+                <p>关注:999 帖子:233</p>
+            </div>
+        </li>
+        <li class="aui-list-view-cell circleHandleBlock">
+            <div class="aui-btn aui-btn-block aui-btn-danger circleHandle">
+                <strong class="aui-iconfont aui-icon-add"></strong>关注
+            </div>
+            <div class="aui-btn aui-btn-block aui-btn-warning circleHandle">
+                <strong class="aui-iconfont aui-icon-favor"></strong>精华
+            </div>
+            <div class="aui-btn aui-btn-block aui-btn-info circleHandle">
+                <strong class="aui-iconfont aui-icon-emoji"></strong>签到
+            </div>
+        </li>
+    </ul>
+    <ul class="aui-list-view topArticle">
+        <li class="aui-list-view-cell">
+            <div class="topicon">置顶</div>圈规
+        </li>
+    </ul>
+</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+    };
+</script>
+</html>
