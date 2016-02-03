@@ -32,6 +32,16 @@
     </style>
 </head>
 <body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
+
+    <div class="aui-title">圈子</div>
+    <a class="aui-pull-right">
+        <span class="aui-iconfont aui-icon-edit"></span>
+    </a>
+</header>
 <div class="aui-content">
     <ul class="aui-list-view">
         <li class="aui-list-view-cell aui-img">
@@ -65,6 +75,7 @@
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        $api.fixStatusBar($api.dom('header'));//标题
     };
 </script>
 </html>

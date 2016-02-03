@@ -79,7 +79,7 @@
                         GenerateDocumentList($api.dom('#result'),dat);
                     } else if (err) {
                         api.alert({msg: '出现错误: ' + err.msg});
-                        $api.html($result, '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
+                        $api.html($api.dom('#result'), '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
                     }
                 });
             }
