@@ -9,23 +9,27 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
-        .circleHeader{
+        .circleHeader {
             max-width: 50px !important;
             height: 50px !important;
             border-radius: 40px;
         }
-        a.hotCircleCell{
+
+        a.hotCircleCell {
             padding: 14px 8px;
         }
-        li.hotCircle{
+
+        li.hotCircle {
             width: 50%;
             float: left;
             font-size: 14px;
         }
-        li.hotCircle p{
+
+        li.hotCircle p {
             font-size: 10px;
         }
-        li.hotCircle .circleHeader{
+
+        li.hotCircle .circleHeader {
             max-width: 30px !important;
             height: 30px !important;
             margin-right: 6px !important;
@@ -35,11 +39,13 @@
 <body>
 <div class="aui-content">
     <h1>我的圈子</h1>
+
     <div>
         <ul class="aui-list-view">
             <li class="aui-list-view-cell aui-img">
                 <a class="aui-arrow-right">
                     <img class="circleHeader aui-img-object aui-pull-left" src="../../image/default_head.jpg">
+
                     <div class="aui-img-body">
                         大学生自拍交友
                         <p class="aui-ellipsis-1">大学生的自拍交友专属空间大学生的自拍交友专属空间大学生的自拍交友专属空间</p>
@@ -49,11 +55,13 @@
         </ul>
     </div>
     <h1>热门圈子</h1>
+
     <div>
         <ul class="aui-list-view">
             <li class="aui-list-view-cell aui-img hotCircle">
                 <a class="hotCircleCell">
                     <img class="circleHeader aui-img-object aui-pull-left" src="../../image/default_head.jpg">
+
                     <div class="aui-img-body">
                         大学生自拍交友
                         <p class="aui-ellipsis-1">大学生的自拍交友专属空间大学生的自拍交友专属空间大学生的自拍交友专属空间</p>
@@ -62,12 +70,64 @@
             </li>
         </ul>
     </div>
-    <div class="aui-btn aui-btn-block aui-btn-danger"><i class="aui-iconfont aui-icon-add"></i>添加圈子</div>
+    <div class="aui-btn aui-btn-block aui-btn-danger" onclick="AddCircle();"><i class="aui-iconfont aui-icon-add"></i>添加圈子
+    </div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
     };
+
+    function AddCircle() {
+        var UISearchBar = api.require('UISearchBar');
+        UISearchBar.open({
+            placeholder: '请输入搜索关键字',
+            historyCount: 10,
+            showRecordBtn: true,
+            texts: {
+                cancelText: '取消',
+                clearText: '清除搜索记录'
+            },
+            styles: {
+                navBar: {
+                    bgColor: '#FFFFFF',
+                    borderColor: '#ccc'
+                },
+                searchBox: {
+                    bgImg: '',
+                    color: '#000',
+                    height: 44
+                },
+                cancel: {
+                    bg: 'rgba(0,0,0,0)',
+                    color: '#D2691E',
+                    size: 16
+                },
+                list: {
+                    color: '#696969',
+                    bgColor: '#FFFFFF',
+                    borderColor: '#eee',
+                    size: 16
+                },
+                clear: {
+                    color: '#000000',
+                    borderColor: '#ccc',
+                    size: 16
+                }
+            }
+        }, function (ret, err) {
+            if (ret) {
+                var text = ret.text;
+                api.openWin({
+                    name: 'circleSearchResults',
+                    url: './circleSearchResults.html',
+                    pageParam: {
+                        text: text
+                    }
+                });
+            }
+        });
+    }
 </script>
 </html>

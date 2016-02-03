@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
+
+    <div class="aui-title">搜索结果 -</div>
+</header>
+<div id="result"></div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));//标题
+        var circleName = api.pageParam.text;
+        var $title = $api.dom('header .aui-title');
+        $api.text($title, '搜索结果 - ' + text);
+
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '先喝杯茶...'
+        });
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereLike({
+                    qid: queryId,
+                    column: 'circleName',
+                    value: circleName
+                });
+                var model = api.require('model');
+                model.findAll({
+                    class: "Circle",
+                    qid: queryId
+                }, function (ret, err) {
+                    api.hideProgress();
+                    if (!!ret && !(ret.length == 0) {
+                        var dat = [];
+                        if (ret.length == 1) {
+                            dat.push(ret[0]);
+                            api.openWin({
+                                name: 'circleContent',
+                                url: './circleContent.html',
+                                pageParam: {
+                                    data: dat[0]
+                                }
+                            });
+                        } else {
+                            for (var i = 0; i < ret.length; i++) {
+                                dat.push(ret[0]);
+                            }
+                            alert(JSON.stringify(dat));
+                        }
+                    } else {
+                        $api.html($api.dom('#result'), '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
+                    }
+                });
+            }
+        });
+    };
+</script>
+</html>
