@@ -9,6 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
+        html,body{
+            height: auto;
+        }
         .circleHead{
             border-radius: 100%;
         }
@@ -28,6 +31,37 @@
             font-size: 12px;
             border-radius: 6px;
             margin: 3px 4px 3px 0;
+        }
+        .article{
+            background-color: #FFFFFF;
+            display: block;
+            margin-bottom: 10px;
+            border-top: 1px solid rgba(200, 199, 204, 0.5);
+            border-bottom: 1px solid rgba(200, 199, 204, 0.5);
+            padding: 12px 15px;
+        }
+        .articleInfo{
+            display: -webkit-box;
+
+        }
+        .articleHead{
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .articleAuthor{
+            -webkit-box-flex: 1;
+            line-height: 40px;
+            color: #c47c0c;
+        }
+        .articleTime{
+            line-height: 40px;
+        }
+        .articleInteract{
+            text-align: right;
+        }
+        .articleInteract div{
+            display: inline-block;
         }
     </style>
 </head>
@@ -66,11 +100,37 @@
     </ul>
     <ul class="aui-list-view topArticle">
         <li class="aui-list-view-cell">
-            <div class="topicon">置顶</div>圈规
+            <div class="topicon">置顶</div>
+            <h2>圈规</h2>
         </li>
     </ul>
+    <div class="articleList">
+        <div class="article">
+            <div class="articleInfo">
+                <img src="../../image/default_head.jpg" class="circleHead articleHead">
+                <div class="articleAuthor aui-ellipsis-1">月下伊人</div>
+                <p class="articleTime">23分钟前</p>
+            </div>
+            <div class="articleContent">
+                <h1 class="articleTitle">交个朋友</h1>
+                <div class="articleContentSummary">
+                    处个对象
+                    <img width="100%" height="auto" src="http://img.douxie.com/upload/upload/2015/05/13/5552b5abab7a3.png">
+                </div>
+            </div>
+            <div class="articleInteract">
+                <div class="articleLike">
+                    <i class="aui-iconfont aui-icon-like aui-text-blue"></i>
+                    <span class="aui-text-default">10</span>
+                </div>
+                <div class="articleReply">
+                    <i class="aui-iconfont aui-icon-message aui-text-blue"></i>
+                    <span class="aui-text-default">20</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
