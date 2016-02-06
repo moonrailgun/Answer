@@ -97,10 +97,6 @@
             background-color: #919191;
         }
 
-        #logout-btn.aui-btn-block {
-            border-radius: 0;
-        }
-
         .infoBlock {
             width: 100%;
             display: -webkit-box;
@@ -124,7 +120,7 @@
     </style>
 </head>
 <body>
-<div id="loginPage" style="display: block;">
+<div id="loginPage"  class="aui-content" style="display: block;">
     <div id="head-img"><img src="../../image/default_head.jpg"/></div>
     <div id="login">
         <div class="arrow"></div>
@@ -137,8 +133,7 @@
         <a onclick="OnForgotPassword()" class="aui-pull-right"> 忘记密码？ </a>
     </div>
 </div>
-<div id="profilePage" style="display: none;">
-    <div class="aui-content">
+<div id="profilePage"  class="aui-content" style="display: none;">
         <ul class="aui-list-view">
             <li id="userInfo" class="aui-list-view-cell aui-img">
                 <div id="userHead" onclick="ChangePic();">
@@ -165,9 +160,12 @@
             <!--<li tapmode="liActive" class="aui-list-view-cell">-->
             <!--<a class="aui-arrow-right" onclick="NoFunction();">我的红包</a>-->
             <!--</li>-->
-            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
-            <!--<a class="aui-arrow-right" onclick="NoFunction();">我的好友</a>-->
-            <!--</li>-->
+            <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right" onclick="NoFunction();">我的好友</a>
+            </li>
+            <li tapmode="liActive" class="aui-list-view-cell">
+                <a class="aui-arrow-right" onclick="NoFunction();">我的话题</a>
+            </li>
             <li tapmode="liActive" class="aui-list-view-cell">
                 <a id="favorite" class="aui-arrow-right" onclick="OpenFavoriteWin();">
                     我的收藏
@@ -191,8 +189,11 @@
             <!--<a class="aui-arrow-right" onclick="NoFunction();">计划</a>-->
             <!--</li>-->
         </ul>
-        <button id="logout_btn" class="aui-btn aui-btn-danger aui-btn-block" onclick="Logout()">退出登录</button>
-    </div>
+        <ul class="aui-list-view">
+            <li tapmode="liActive" class="aui-list-view-cell">
+                <a class="aui-arrow-right" onclick="OpenSettings();">设置</a>
+            </li>
+        </ul>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
@@ -424,31 +425,20 @@
         });
     }
 
+    //打开设置页面
+    function OpenSettings(){
+        api.openWin({
+            name: 'settings',
+            url: '../settings/setting.html'
+        });
+    }
+
     //切换到排行榜页面
     function SwitchToRank() {
         var $script = "ChangeWin('rank.html');";
         api.execScript({
             name: "slide",
             script: $script
-        });
-    }
-
-    //登出
-    function Logout() {
-        api.showProgress({
-            style: 'default',
-            animationType: 'fade',
-            title: '正在努力登出中...'
-        });
-        var user = api.require('user');
-        user.logout(function (ret, err) {
-            $api.rmStorage('userInfo');
-            api.hideProgress();
-            if (ret) {
-                switchPage(0);
-            } else {
-                api.alert({msg: '登出失败'});
-            }
         });
     }
 </script>

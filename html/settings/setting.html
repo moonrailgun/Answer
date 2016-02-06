@@ -12,9 +12,19 @@
         .liActive {
             background-color: rgba(0, 0, 0, 0.3);
         }
+        #logout_btn.aui-btn-block {
+            border-radius: 0;
+        }
     </style>
 </head>
 <body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">设置</div>
+</header>
 <div class="aui-content">
     <ul class="aui-list-view">
         <li tapmode="liActive" class="aui-list-view-cell" data-win="list_arrow" onclick="BindPhone();">
@@ -43,11 +53,13 @@
             <div class="aui-arrow-right">关于作品</div>
         </li>
     </ul>
+    <button id="logout_btn" class="aui-btn aui-btn-danger aui-btn-block" onclick="Logout()">退出登录</button>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        $api.fixStatusBar($api.dom('header'));//标题
         UpdateCacheSize();//更新缓存大小
         GetPrefs();//设置偏好设置
     };
@@ -132,11 +144,35 @@
         });
     }
     //关于作品
-    function About(){
+    function About() {
         var $script = "OpenWin('about.html');";
         api.execScript({
             name: "slide",
             script: $script
+        });
+    }
+
+    //登出
+    function Logout() {
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '正在努力登出中...'
+        });
+        var user = api.require('user');
+        user.logout(function (ret, err) {
+            $api.rmStorage('userInfo');
+            api.hideProgress();
+            if (ret) {
+                api.execScript({
+                    name:'main',
+                    frameName: 'my',
+                    script: 'switchPage(0);'
+                });
+                api.closeWin();
+            } else {
+                api.alert({msg: '登出失败'});
+            }
         });
     }
 </script>
