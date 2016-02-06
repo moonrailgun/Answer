@@ -37,6 +37,13 @@
     </style>
 </head>
 <body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
+
+    <div class="aui-title">学习圈</div>
+</header>
 <div class="aui-content">
     <h1>我的圈子</h1>
 
@@ -77,6 +84,7 @@
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        $api.fixStatusBar($api.dom('header'));//标题
     };
 
     function AddCircle() {

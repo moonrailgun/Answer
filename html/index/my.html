@@ -150,7 +150,7 @@
                     <div class="infoBlockCellNum">0</div>
                     <div>积分</div>
                 </div>
-                <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="SwitchToRank();">
+                <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="ShowRank();">
                     <div class="infoBlockCellNum">0</div>
                     <div>排名</div>
                 </div>
@@ -179,9 +179,9 @@
             <li tapmode="liActive" class="aui-list-view-cell">
                 <a class="aui-arrow-right" onclick="OpenDocumentBank();">资料库</a>
             </li>
-            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
-            <!--<a class="aui-arrow-right" onclick="NoFunction();">学习圈</a>-->
-            <!--</li>-->
+            <li tapmode="liActive" class="aui-list-view-cell">
+                <a class="aui-arrow-right" onclick="OpenCircle();">学习圈</a>
+            </li>
             <li tapmode="liActive" class="aui-list-view-cell">
                 <a id="wrongSet" class="aui-arrow-right" onclick="OpenWrongSet();">错题集</a>
             </li>
@@ -425,6 +425,14 @@
         });
     }
 
+    //打开学习圈
+    function OpenCircle(){
+        api.openWin({
+            name: 'circle',
+            url: '../circle/circle.html'
+        })
+    }
+
     //打开设置页面
     function OpenSettings(){
         api.openWin({
@@ -434,11 +442,10 @@
     }
 
     //切换到排行榜页面
-    function SwitchToRank() {
-        var $script = "ChangeWin('rank.html');";
-        api.execScript({
-            name: "slide",
-            script: $script
+    function ShowRank() {
+        api.openWin({
+            name: 'rank',
+            url: '../profile/rank.html'
         });
     }
 </script>

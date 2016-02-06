@@ -55,66 +55,68 @@
     </style>
 </head>
 <body>
-<div id="block1">
-    <div onclick="Search();">
-        <div class="aui-btn aui-btn-block aui-btn-warning"><i class="aui-iconfont aui-icon-searchlist"></i>找资料</div>
+<div class="aui-content">
+    <div id="block1">
+        <div onclick="Search();">
+            <div class="aui-btn aui-btn-block aui-btn-warning"><i class="aui-iconfont aui-icon-searchlist"></i>找资料</div>
+        </div>
+        <div id="documentBank" onclick="ShowDocumentBank();">
+            <div class="aui-btn aui-btn-block aui-btn-primary"><i class="aui-iconfont aui-icon-list"></i>资料库</div>
+        </div>
     </div>
-    <div id="documentBank" onclick="ShowDocumentBank();">
-        <div class="aui-btn aui-btn-block aui-btn-primary"><i class="aui-iconfont aui-icon-list"></i>资料库</div>
+    <div id="block2">
+        <div>
+            <div id="upload" class="aui-btn aui-btn-block aui-btn-info" onclick="Upload()">上传资料</div>
+        </div>
+        <div>
+            <div id="download" class="aui-btn aui-btn-block aui-btn-danger" onclick="ShowDownloadManager()">下载资料</div>
+        </div>
     </div>
-</div>
-<div id="block2">
-    <div>
-        <div id="upload" class="aui-btn aui-btn-block aui-btn-info" onclick="Upload()">上传资料</div>
+    <div id="block3">
+        <div class="title">最热类型</div>
+        <ul class="aui-grid-sixteen">
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('56335f0cfe6f9b6336d2c769','高等数学')">
+                <span class="aui-iconfont aui-icon-form aui-text-danger"></span>
+                <p>高数</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad206a2d7e5d20bc061af','经济学')">
+                <span class="aui-iconfont aui-icon-form aui-text-warning"></span>
+                <p>经济学</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('568b6c018a27c0ba29cd3ac5','英语')">
+                <span class="aui-iconfont aui-icon-form aui-text-pink"></span>
+                <p>英语</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad2f00156490970a861d1','马哲')">
+                <span class="aui-iconfont aui-icon-form aui-text-dark"></span>
+                <p>马哲</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('563f16d8eff4ef257e9c8ad7','毛概')">
+                <span class="aui-iconfont aui-icon-form aui-text-danger"></span>
+                <p>毛概</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad4600156490970a861fb','近代史')">
+                <span class="aui-iconfont aui-icon-form aui-text-warning"></span>
+                <p>近代史</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad3e42b77a0401614f781','思修')">
+                <span class="aui-iconfont aui-icon-form aui-text-pink"></span>
+                <p>思修</p>
+            </li>
+            <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad030ba4905b705415405','会计学')">
+                <span class="aui-iconfont aui-icon-form aui-text-dark"></span>
+                <p>会计学</p>
+            </li>
+        </ul>
     </div>
-    <div>
-        <div id="download" class="aui-btn aui-btn-block aui-btn-danger" onclick="ShowDownloadManager()">下载资料</div>
+    <div id="block4">
+        <div class="aui-btn aui-btn-block aui-btn-default" onclick="ShowMyDocument();">我的资料</div>
     </div>
-</div>
-<div id="block3">
-    <div class="title">最热类型</div>
-    <ul class="aui-grid-sixteen">
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('56335f0cfe6f9b6336d2c769','高等数学')">
-            <span class="aui-iconfont aui-icon-form aui-text-danger"></span>
-            <p>高数</p>
-        </li>
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad206a2d7e5d20bc061af','经济学')">
-            <span class="aui-iconfont aui-icon-form aui-text-warning"></span>
-            <p>经济学</p>
-        </li>
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('568b6c018a27c0ba29cd3ac5','英语')">
-            <span class="aui-iconfont aui-icon-form aui-text-pink"></span>
-            <p>英语</p>
-        </li>
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad2f00156490970a861d1','马哲')">
-            <span class="aui-iconfont aui-icon-form aui-text-dark"></span>
-            <p>马哲</p>
-        </li>
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('563f16d8eff4ef257e9c8ad7','毛概')">
-            <span class="aui-iconfont aui-icon-form aui-text-danger"></span>
-            <p>毛概</p>
-        </li>
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad4600156490970a861fb','近代史')">
-            <span class="aui-iconfont aui-icon-form aui-text-warning"></span>
-            <p>近代史</p>
-        </li>
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad3e42b77a0401614f781','思修')">
-            <span class="aui-iconfont aui-icon-form aui-text-pink"></span>
-            <p>思修</p>
-        </li>
-        <li class="aui-col-xs-3 aui-text-center" onclick="OpenDocumentTypeContent('566ad030ba4905b705415405','会计学')">
-            <span class="aui-iconfont aui-icon-form aui-text-dark"></span>
-            <p>会计学</p>
-        </li>
-    </ul>
-</div>
-<div id="block4">
-    <div class="aui-btn aui-btn-block aui-btn-default" onclick="ShowMyDocument();">我的资料</div>
-</div>
-<div id="block5">
-    <div class="title">最新上传</div>
-    <div id="lastestDoc">
+    <div id="block5">
+        <div class="title">最新上传</div>
+        <div id="lastestDoc">
 
+        </div>
     </div>
 </div>
 </body>

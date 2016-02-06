@@ -38,14 +38,14 @@
 <body>
 <div class="aui-content">
     <div class="discover-nav">
-        <div class="discover-nav-cell">
+        <div class="discover-nav-cell" onclick="OpenCircle();">
             <div class="discover-nav-icon aui-bar-info">
                 <i class="aui-iconfont aui-icon-discover"></i>
             </div>
             <p>学习圈</p>
         </div>
         <div class="discover-nav-cell">
-            <div class="discover-nav-icon aui-bar-primary">
+            <div class="discover-nav-icon aui-bar-primary" onclick="OpenDocumentBank();">
                 <i class="aui-iconfont aui-icon-file"></i>
             </div>
             <p>资料库</p>
@@ -60,9 +60,15 @@
     <div>
         <ul class="aui-list-view">
             <li class="aui-list-view-cell">
-                <a class="aui-arrow-right">
-                    <i class="aui-iconfont aui-icon-rank" style="color: #2da1da"></i>
+                <a class="aui-arrow-right" onclick="ShowRank();">
+                    <i class="aui-iconfont aui-icon-rank" style="color: #2da1da;font-size: 20px"></i>
                     排行榜
+                </a>
+            </li>
+            <li class="aui-list-view-cell">
+                <a class="aui-arrow-right">
+                    <i class="aui-iconfont aui-icon-hot" style="color: #e74c3c;font-size: 20px"></i>
+                    活动
                 </a>
             </li>
         </ul>
@@ -73,5 +79,27 @@
 <script type="text/javascript">
     apiready = function () {
     };
+    //打开学习圈
+    function OpenCircle(){
+        api.openWin({
+            name: 'circle',
+            url: '../circle/circle.html'
+        });
+    }
+
+    function OpenDocumentBank(){
+        api.openWin({
+            name: 'document',
+            url: '../document/document.html'
+        });
+    }
+
+    //打开排行榜
+    function ShowRank(){
+        api.openWin({
+            name: 'rank',
+            url: '../profile/rank.html'
+        });
+    }
 </script>
 </html>
