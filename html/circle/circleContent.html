@@ -104,7 +104,7 @@
             <h2>圈规</h2>
         </li>
     </ul>
-    <div class="articleList">
+    <div id="articleList" class="articleList">
         <div class="article">
             <div class="articleInfo">
                 <img src="../../image/default_head.jpg" class="circleHead articleHead">
@@ -137,5 +137,31 @@
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
     };
+
+    function addArticle(article){
+        var author = article.author;
+        var headImg = article.headImg || '../../image/default_head.jpg';
+        var time = article.time;
+        var title = article.title;
+        var summmary = article.content;
+        var firstImg = article.firstImg;
+        var likeNum = article.likeNum;
+        var replyNum = article.replyNum;
+
+        var $articleList = $api.dom('#articleList');
+        var str = '';
+        str += '<div class="article"><div class="articleInfo">' +
+                '<img src="'+headImg+'" class="circleHead articleHead">' +
+                '<div class="articleAuthor aui-ellipsis-1">'+author+'</div>' +
+                '<p class="articleTime">'+time+'</p></div>' +
+                '<div class="articleContent"><h1 class="articleTitle">'+title+'</h1>' +
+                '<div class="articleContentSummary">' + summmary +
+                '<img width="100%" height="auto" src="'+firstImg+'"></div></div>' +
+                '<div class="articleInteract"><div class="articleLike"><i class="aui-iconfont aui-icon-like aui-text-blue"></i>' +
+                '<span class="aui-text-default">'+likeNum+'</span></div>' +
+                '<div class="articleReply"><i class="aui-iconfont aui-icon-message aui-text-blue"></i>' +
+                '<span class="aui-text-default">'+replyNum+'</span></div></div></div>';
+        $api.append($articleList, str);
+    }
 </script>
 </html>
