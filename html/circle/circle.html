@@ -198,7 +198,14 @@
     }
 
     function EnterCircle(circleId, circleName) {
-        alert(circleId);
+        api.openWin({
+            name: 'circleContent',
+            url: './circleContent.html',
+            pageParam:{
+                circleId : circleId,
+                circleName : circleName
+            }
+        })
     }
 </script>
 </html>

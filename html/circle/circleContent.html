@@ -136,6 +136,11 @@
 <script type="text/javascript">
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
+
+        var pageParam = api.pageParam;
+        var circleId = pageParam.circleId;
+        var circleName = pageParam.circleName;
+        //todo
     };
 
     function addArticle(article){
