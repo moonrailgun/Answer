@@ -47,45 +47,104 @@
 <div class="aui-content">
     <h1>我的圈子</h1>
 
-    <div>
-        <ul class="aui-list-view">
-            <li class="aui-list-view-cell aui-img">
-                <a class="aui-arrow-right">
-                    <img class="circleHeader aui-img-object aui-pull-left" src="../../image/default_head.jpg">
-
-                    <div class="aui-img-body">
-                        大学生自拍交友
-                        <p class="aui-ellipsis-1">大学生的自拍交友专属空间大学生的自拍交友专属空间大学生的自拍交友专属空间</p>
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <div id="myCircleList"><p>你暂时还没有加入任何圈子哦</p></div>
     <h1>热门圈子</h1>
 
-    <div>
-        <ul class="aui-list-view">
-            <li class="aui-list-view-cell aui-img hotCircle">
-                <a class="hotCircleCell">
-                    <img class="circleHeader aui-img-object aui-pull-left" src="../../image/default_head.jpg">
-
-                    <div class="aui-img-body">
-                        大学生自拍交友
-                        <p class="aui-ellipsis-1">大学生的自拍交友专属空间大学生的自拍交友专属空间大学生的自拍交友专属空间</p>
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <div id="hotCircleList"></div>
     <div class="aui-btn aui-btn-block aui-btn-danger" onclick="AddCircle();"><i class="aui-iconfont aui-icon-add"></i>添加圈子
     </div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    var circleDefaultHead = '../../image/default_head.jpg';
+
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
+
+        GetMyCircle();
+        GetHotCircle();
     };
+
+    //获取我的圈子列表
+    function GetMyCircle() {
+        var str = '<p>你暂时还没有加入任何圈子哦</p>';
+        var userInfo = $api.getStorage('userInfo');
+        if (!!userInfo) {
+            var userId = userInfo['userId'];
+            var query = api.require('query');
+            query.createQuery(function (ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    //do something
+                    query.whereContain({qid: queryId, column: 'circleMemberIds', value: userId});
+                    var model = api.require('model');
+                    model.findAll({
+                        class: 'Circle',
+                        qid: queryId
+                    }, function (ret, err) {
+                        if (ret && ret.length > 0) {
+                            str = '<ul class="aui-list-view">';
+                            for (var i = 0; i < ret.length; i++) {
+                                var item = ret[i];
+                                var circleId = item.id;
+                                var circleName = item.circleName;
+                                var circleHeader = item.circleHeader ? item.circleHeader.url : circleDefaultHead;
+                                var circleSummary = item.circleSummary || '&nbsp;';
+
+                                str += '<li class="aui-list-view-cell aui-img" onclick=\'EnterCircle("' + circleId + '","' + circleName + '")\'>' +
+                                        '<a class="aui-arrow-right">' +
+                                        '<img class="circleHeader aui-img-object aui-pull-left" src="' + circleHeader + '">' +
+                                        '<div class="aui-img-body">' + circleName +
+                                        '<p class="aui-ellipsis-1">' + circleSummary + '</p>' +
+                                        '</div></a></li>';
+                            }
+                            str += '</ul>';
+                        }
+                        $api.html($api.byId('myCircleList'), str);
+                    });
+                }
+            });
+        }
+    }
+
+    //获取热门圈子列表
+    function GetHotCircle() {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                //do something
+                query.desc({qid: queryId, column: 'updateAt'});
+                query.limit({qid: queryId, value: 6});
+                var model = api.require('model');
+                model.findAll({
+                    class: "Circle",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret && ret.length) {
+                        var str = '<ul class="aui-list-view">';
+                        for (var i = 0; i < ret.length; i++) {
+                            var item = ret[i];
+                            var circleId = item.id;
+                            var circleName = item.circleName;
+                            var circleHeader = item.circleHeader ? item.circleHeader.url : circleDefaultHead;
+                            var circleSummary = item.circleSummary || '&nbsp;';
+
+                            str += '<li class="aui-list-view-cell aui-img hotCircle" onclick=\'EnterCircle("' + circleId + '","' + circleName + '")\'>' +
+                                    '<a class="hotCircleCell">' +
+                                    '<img class="circleHeader aui-img-object aui-pull-left" src="' + circleHeader + '">' +
+                                    '<div class="aui-img-body">' + circleName +
+                                    '<p class="aui-ellipsis-1">' + circleSummary + '</p>' +
+                                    '</div></a></li>';
+                        }
+                        str += '</ul>';
+                        $api.html($api.byId('hotCircleList'), str);
+                    }
+                });
+            }
+        });
+    }
 
     function AddCircle() {
         var UISearchBar = api.require('UISearchBar');
@@ -136,6 +195,10 @@
                 });
             }
         });
+    }
+
+    function EnterCircle(circleId, circleName) {
+        alert(circleId);
     }
 </script>
 </html>
