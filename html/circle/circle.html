@@ -114,7 +114,6 @@
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
                 var queryId = ret.qid;
-                //do something
                 query.desc({qid: queryId, column: 'updatedAt'});
                 query.limit({qid: queryId, value: 6});
                 var model = api.require('model');

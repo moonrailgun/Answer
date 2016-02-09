@@ -150,7 +150,10 @@
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/utils.js"></script>
 <script type="text/javascript">
+    var defaultHeadImg = '../../image/default_head.jpg';
+    var articleList = [];
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
 
@@ -159,36 +162,52 @@
         var circleName = pageParam.circleName;
         //todo
 
-        getArticleList(circleId);
+        GetArticleList(circleId);
     };
 
-    function getArticleList(circleId) {
+    function GetArticleList(circleId) {
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
                 var queryId = ret.qid;
                 query.whereEqual({qid: queryId, column: 'circleId', value: circleId});
                 query.include({qid: queryId, column: 'authorId'});
+//                query.include({qid: queryId, column: 'articleReply'});
                 query.desc({qid: queryId, column: 'updatedAt'});
-                query.limit({qid:queryId, value:20});
+                query.limit({qid: queryId, value: 20});
                 var model = api.require('model');
                 model.findAll({
                     class: "CircleArticle",
                     qid: queryId
                 }, function (ret, err) {
                     if (ret) {
-                        //var articleList = [];
-                        for(var i = 0;i < ret.length;i++){
+                        for (var i = 0; i < ret.length; i++) {
                             var item = ret[i];
                             var article = {
                                 author: item.authorId.nickname,
-                                headImg: item.authorId.avatar ? item.authorId.avatar.url : '../../image/default_head.jpg',
-                                time : item.updatedAt,
+                                headImg: item.authorId.avatar ? item.authorId.avatar.url : defaultHeadImg,
+                                time: Utils.ParseTime(item.updatedAt),
                                 title: item.articleTitle,
-                                content: item.articleContent
+                                content: item.articleContent,
+                                replyNum: 0,
+                                likeNum: item.articleLikedUserId.length
                             };
-                            //articleList.push(article);
-                            addArticle(article);
+                            articleList.push(article);
+                            UpdateArticle();
+
+                            (function(article,id){
+                                var relation_m = api.require('relation');
+                                relation_m.count({
+                                    class: 'CircleArticle',
+                                    id: id,
+                                    column: 'articleReply'
+                                }, function (ret, err) {
+                                    if (ret) {
+                                        article.replyNum = ret.count;
+                                        UpdateArticle();
+                                    }
+                                });
+                            })(article, item.id);
                         }
                     }
                 });
@@ -196,9 +215,16 @@
         });
     }
 
-    function addArticle(article) {
+    function UpdateArticle(){
+        $api.html($api.dom('#articleList'), '');
+        for(var i = 0;i< articleList.length;i++){
+            AddArticle(articleList[i]);
+        }
+    }
+
+    function AddArticle(article) {
         var author = article.author;
-        var headImg = article.headImg || '../../image/default_head.jpg';
+        var headImg = article.headImg || defaultHeadImg;
         var time = article.time;
         var title = article.title;
         var summmary = article.content;
@@ -214,9 +240,9 @@
                 '<p class="articleTime">' + time + '</p></div>' +
                 '<div class="articleContent"><h1 class="articleTitle">' + title + '</h1>' +
                 '<div class="articleContentSummary">' + summmary +
-                (!!firstImg ? '<img width="100%" height="auto" src="' + firstImg + '"></div></div>':'') +
+                (!!firstImg ? '<img width="100%" height="auto" src="' + firstImg + '"></div></div>' : '') +
                 '<div class="articleInteract"><div class="articleLike"><i class="aui-iconfont aui-icon-like aui-text-blue"></i>' +
-                '<span class="aui-text-default">' + likeNum + '</span></div>' +
+                '<span class="aui-text-default">' + likeNum + '</span></div>&nbsp;' +
                 '<div class="articleReply"><i class="aui-iconfont aui-icon-message aui-text-blue"></i>' +
                 '<span class="aui-text-default">' + replyNum + '</span></div></div></div>';
         $api.append($articleList, str);

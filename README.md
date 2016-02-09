@@ -166,6 +166,12 @@
 	- articleName 文章名
 	- authorId 发布者ID
 	- articleContent 文章内容
+	- articleLikedUserId 喜欢该文章用户列表
+	- articleReply (关联CircleArticleReply) 学习圈文章回复列表
+- CircleArticleReply 学习圈文章回复列表
+	- replyId (关联_user) 回复者ID
+	- replyContent 回复内容
+
 
 # 关于开源 #
 开源协议基于[GPLv2](./LICENSE)
