@@ -9,21 +9,25 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
-        html,body{
+        html, body {
             height: auto;
         }
-        .circleHead{
+
+        .circleHead {
             border-radius: 100%;
         }
-        .circleHandleBlock{
+
+        .circleHandleBlock {
             display: -webkit-box;
         }
-        .circleHandleBlock .circleHandle{
+
+        .circleHandleBlock .circleHandle {
             -webkit-box-flex: 1;
             padding: 6px 0;
             margin: auto 4px;
         }
-        .topicon{
+
+        .topicon {
             background-color: #0062cc;
             float: left;
             color: #FFFFFF;
@@ -32,7 +36,8 @@
             border-radius: 6px;
             margin: 3px 4px 3px 0;
         }
-        .article{
+
+        .article {
             background-color: #FFFFFF;
             display: block;
             margin-bottom: 10px;
@@ -40,27 +45,33 @@
             border-bottom: 1px solid rgba(200, 199, 204, 0.5);
             padding: 12px 15px;
         }
-        .articleInfo{
+
+        .articleInfo {
             display: -webkit-box;
 
         }
-        .articleHead{
+
+        .articleHead {
             width: 40px;
             height: 40px;
             margin-right: 10px;
         }
-        .articleAuthor{
+
+        .articleAuthor {
             -webkit-box-flex: 1;
             line-height: 40px;
             color: #c47c0c;
         }
-        .articleTime{
+
+        .articleTime {
             line-height: 40px;
         }
-        .articleInteract{
+
+        .articleInteract {
             text-align: right;
         }
-        .articleInteract div{
+
+        .articleInteract div {
             display: inline-block;
         }
     </style>
@@ -80,9 +91,12 @@
     <ul class="aui-list-view">
         <li class="aui-list-view-cell aui-img">
             <img src="../../image/default_head.jpg" class="aui-img-object aui-pull-left circleHead">
+
             <div class="aui-img-body aui-arrow-right">
                 <span>大学生自拍交友</span>
+
                 <p>圈主:moonrailgun</p>
+
                 <p>关注:999 帖子:233</p>
             </div>
         </li>
@@ -108,14 +122,17 @@
         <div class="article">
             <div class="articleInfo">
                 <img src="../../image/default_head.jpg" class="circleHead articleHead">
+
                 <div class="articleAuthor aui-ellipsis-1">月下伊人</div>
                 <p class="articleTime">23分钟前</p>
             </div>
             <div class="articleContent">
                 <h1 class="articleTitle">交个朋友</h1>
+
                 <div class="articleContentSummary">
                     处个对象
-                    <img width="100%" height="auto" src="http://img.douxie.com/upload/upload/2015/05/13/5552b5abab7a3.png">
+                    <img width="100%" height="auto"
+                         src="http://img.douxie.com/upload/upload/2015/05/13/5552b5abab7a3.png">
                 </div>
             </div>
             <div class="articleInteract">
@@ -141,9 +158,45 @@
         var circleId = pageParam.circleId;
         var circleName = pageParam.circleName;
         //todo
+
+        getArticleList(circleId);
     };
 
-    function addArticle(article){
+    function getArticleList(circleId) {
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({qid: queryId, column: 'circleId', value: circleId});
+                query.include({qid: queryId, column: 'authorId'});
+                query.desc({qid: queryId, column: 'updatedAt'});
+                query.limit({qid:queryId, value:20});
+                var model = api.require('model');
+                model.findAll({
+                    class: "CircleArticle",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        //var articleList = [];
+                        for(var i = 0;i < ret.length;i++){
+                            var item = ret[i];
+                            var article = {
+                                author: item.authorId.nickname,
+                                headImg: item.authorId.avatar ? item.authorId.avatar.url : '../../image/default_head.jpg',
+                                time : item.updatedAt,
+                                title: item.articleTitle,
+                                content: item.articleContent
+                            };
+                            //articleList.push(article);
+                            addArticle(article);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function addArticle(article) {
         var author = article.author;
         var headImg = article.headImg || '../../image/default_head.jpg';
         var time = article.time;
@@ -156,16 +209,16 @@
         var $articleList = $api.dom('#articleList');
         var str = '';
         str += '<div class="article"><div class="articleInfo">' +
-                '<img src="'+headImg+'" class="circleHead articleHead">' +
-                '<div class="articleAuthor aui-ellipsis-1">'+author+'</div>' +
-                '<p class="articleTime">'+time+'</p></div>' +
-                '<div class="articleContent"><h1 class="articleTitle">'+title+'</h1>' +
+                '<img src="' + headImg + '" class="circleHead articleHead">' +
+                '<div class="articleAuthor aui-ellipsis-1">' + author + '</div>' +
+                '<p class="articleTime">' + time + '</p></div>' +
+                '<div class="articleContent"><h1 class="articleTitle">' + title + '</h1>' +
                 '<div class="articleContentSummary">' + summmary +
-                '<img width="100%" height="auto" src="'+firstImg+'"></div></div>' +
+                (!!firstImg ? '<img width="100%" height="auto" src="' + firstImg + '"></div></div>':'') +
                 '<div class="articleInteract"><div class="articleLike"><i class="aui-iconfont aui-icon-like aui-text-blue"></i>' +
-                '<span class="aui-text-default">'+likeNum+'</span></div>' +
+                '<span class="aui-text-default">' + likeNum + '</span></div>' +
                 '<div class="articleReply"><i class="aui-iconfont aui-icon-message aui-text-blue"></i>' +
-                '<span class="aui-text-default">'+replyNum+'</span></div></div></div>';
+                '<span class="aui-text-default">' + replyNum + '</span></div></div></div>';
         $api.append($articleList, str);
     }
 </script>
