@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .whiteBlock {
+            background-color: #FFFFFF;
+            margin-bottom: 6px;
+            padding: 12px 15px;
+        }
+
+        #articleHeader h1 {
+            color: #FC9B60;
+        }
+
+        .userInfoBar {
+            display: -webkit-box;
+        }
+
+        .userInfoBar .userInfoHead img {
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+            margin-right: 10px;
+        }
+
+        .userInfoBar .userInfoName {
+            -webkit-box-flex: 1;
+            line-height: 40px;
+            text-overflow: ellipsis;
+            color: #FC9B60;
+            font-size: 18px;
+        }
+
+        .userInfoBar .userInfoTime {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            text-align: center;
+            font-size: 14px;
+            line-height: 20px;
+            color: #8f8f94;
+        }
+
+        #articleMainContent .articleOperate{
+            display: -webkit-box;
+            padding: 10px 10% 4px;
+        }
+        #articleMainContent .articleOperate .articleOperateItem{
+            -webkit-box-flex: 1;
+            text-align: center;
+        }
+        #articleMainContent .articleOperateIcon .aui-iconfont{
+            background-color: #f3f3f3;
+            font-size: 30px;
+            padding: 8px;
+            border-radius: 100%;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">文章</div>
+</header>
+<div class="aui-content">
+    <div id="articleHeader" class="whiteBlock">
+        <h1>交朋友</h1>
+
+        <p>大学生自拍交友</p>
+    </div>
+    <div id="articleMainContent" class="whiteBlock">
+        <div class="userInfoBar">
+            <div class="userInfoHead"><img src="../../image/default_head.jpg"></div>
+            <div class="userInfoName">月下伊人</div>
+            <div class="userInfoTime">
+                <div class="floor">楼主</div>
+                <div class="time">02-05</div>
+            </div>
+        </div>
+        <div class="articleContent">
+            文章内容
+        </div>
+        <div class="articleOperate">
+            <div class="articleOperateItem">
+                <div class="articleOperateIcon">
+                    <i class="aui-iconfont aui-icon-favor" style="background-color: #9effa1;"></i>
+                </div>
+                <p>收藏</p>
+            </div>
+            <div class="articleOperateItem">
+                <div class="articleOperateIcon">
+                    <i class="aui-iconfont aui-icon-appreciate" style="background-color: #ffb769;"></i>
+                </div>
+                <p>点赞</p>
+            </div>
+            <div class="articleOperateItem">
+                <div class="articleOperateIcon">
+                    <i class="aui-iconfont aui-icon-share" style="background-color: #69d8ff;"></i>
+                </div>
+                <p>分享</p>
+            </div>
+        </div>
+    </div>
+    <div id="articleReplyList">
+
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+    };
+</script>
+</html>

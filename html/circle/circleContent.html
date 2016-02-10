@@ -172,7 +172,6 @@
                 var queryId = ret.qid;
                 query.whereEqual({qid: queryId, column: 'circleId', value: circleId});
                 query.include({qid: queryId, column: 'authorId'});
-//                query.include({qid: queryId, column: 'articleReply'});
                 query.desc({qid: queryId, column: 'updatedAt'});
                 query.limit({qid: queryId, value: 20});
                 var model = api.require('model');
