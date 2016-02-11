@@ -119,33 +119,7 @@
         </li>
     </ul>
     <div id="articleList" class="articleList">
-        <div class="article">
-            <div class="articleInfo">
-                <img src="../../image/default_head.jpg" class="circleHead articleHead">
 
-                <div class="articleAuthor aui-ellipsis-1">月下伊人</div>
-                <p class="articleTime">23分钟前</p>
-            </div>
-            <div class="articleContent">
-                <h1 class="articleTitle">交个朋友</h1>
-
-                <div class="articleContentSummary">
-                    处个对象
-                    <img width="100%" height="auto"
-                         src="http://img.douxie.com/upload/upload/2015/05/13/5552b5abab7a3.png">
-                </div>
-            </div>
-            <div class="articleInteract">
-                <div class="articleLike">
-                    <i class="aui-iconfont aui-icon-like aui-text-blue"></i>
-                    <span class="aui-text-default">10</span>
-                </div>
-                <div class="articleReply">
-                    <i class="aui-iconfont aui-icon-message aui-text-blue"></i>
-                    <span class="aui-text-default">20</span>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 </body>
@@ -235,7 +209,7 @@
 
         var $articleList = $api.dom('#articleList');
         var str = '';
-        str += '<div class="article" onclick=\"EnterArticle("'+id+'")\"><div class="articleInfo">' +
+        str += '<div class="article" onclick=\'EnterArticle("'+id+'")\'><div class="articleInfo">' +
                 '<img src="' + headImg + '" class="circleHead articleHead">' +
                 '<div class="articleAuthor aui-ellipsis-1">' + author + '</div>' +
                 '<p class="articleTime">' + time + '</p></div>' +
@@ -255,9 +229,10 @@
             url: './circleArticle.html',
             pageParam:{
                 articleId: articleId,
-                circleId: circleId
+                circleId: circleId,
+                circleName: circleName
             }
-        })
+        });
     }
 </script>
 </html>

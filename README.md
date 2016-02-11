@@ -169,7 +169,7 @@
 	- articleLikedUserId 喜欢该文章用户列表
 	- articleReply (关联CircleArticleReply) 学习圈文章回复列表
 - CircleArticleReply 学习圈文章回复列表
-	- replyId (关联_user) 回复者ID
+	- authorId (关联_user) 回复者ID
 	- replyContent 回复内容
 
 

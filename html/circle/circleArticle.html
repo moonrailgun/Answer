@@ -18,7 +18,8 @@
         #articleHeader h1 {
             color: #FC9B60;
         }
-        #statistics{
+
+        #statistics {
             font-size: 14px;
             color: #8f8f94;
         }
@@ -45,28 +46,31 @@
         .userInfoBar .userInfoTime {
             display: -webkit-box;
             -webkit-box-orient: vertical;
-            text-align: center;
+            text-align: right;
             font-size: 14px;
             line-height: 20px;
             color: #8f8f94;
         }
 
-        #articleMainContent .articleOperate{
+        #articleMainContent .articleOperate {
             display: -webkit-box;
             padding: 10px 10% 4px;
         }
-        #articleMainContent .articleOperate .articleOperateItem{
+
+        #articleMainContent .articleOperate .articleOperateItem {
             -webkit-box-flex: 1;
             text-align: center;
         }
-        #articleMainContent .articleOperateIcon .aui-iconfont{
+
+        #articleMainContent .articleOperateIcon .aui-iconfont {
             background-color: #f3f3f3;
             font-size: 30px;
             padding: 8px;
             border-radius: 100%;
             color: #FFFFFF;
         }
-        .articleContent{
+
+        .articleContent {
             padding: 0 15px;
         }
     </style>
@@ -84,29 +88,29 @@
         <div id="statistics" class="aui-pull-right">
             <div class="articleLike">
                 <i class="aui-iconfont aui-icon-like aui-text-blue"></i>
-                <span class="aui-text-default">10</span>
+                <span class="aui-text-default">&nbsp;</span>
             </div>
             <div class="articleReply">
                 <i class="aui-iconfont aui-icon-message aui-text-blue"></i>
-                <span class="aui-text-default">20</span>
+                <span class="aui-text-default">&nbsp;</span>
             </div>
         </div>
 
-        <h1>交朋友</h1>
+        <h1 class="articleTitle">&nbsp;</h1>
 
-        <p>大学生自拍交友</p>
+        <p class="circleName">&nbsp;</p>
     </div>
     <div id="articleMainContent" class="whiteBlock">
         <div class="userInfoBar">
             <div class="userInfoHead"><img src="../../image/default_head.jpg"></div>
-            <div class="userInfoName">月下伊人</div>
+            <div class="userInfoName">&nbsp;</div>
             <div class="userInfoTime">
                 <div class="floor">楼主</div>
-                <div class="time">02-05</div>
+                <div class="time">&nbsp;</div>
             </div>
         </div>
         <div class="articleContent">
-            文章内容
+
         </div>
         <div class="articleOperate">
             <div class="articleOperateItem">
@@ -130,26 +134,146 @@
         </div>
     </div>
     <div id="articleReplyList">
-        <div class="article whiteBlock">
-            <div class="userInfoBar">
-                <div class="userInfoHead"><img src="../../image/default_head.jpg"></div>
-                <div class="userInfoName">月下伊人</div>
-                <div class="userInfoTime">
-                    <div class="floor">2楼</div>
-                    <div class="time">02-05</div>
-                </div>
-            </div>
-            <div class="articleContent">
-                12345678
-            </div>
-        </div>
+
     </div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/utils.js"></script>
 <script type="text/javascript">
+    var defaultHeadImg = '../../image/default_head.jpg';
+    var articleId, circleId,circleName;
+    var replyList = [];
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
+        var pageParam = api.pageParam;
+        articleId = pageParam.articleId;
+        circleId = pageParam.circleId;
+        circleName = pageParam.circleName;
+
+        GetArticle();
+
+        /*
+        //下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            bgColor: '#ccc',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function( ret, err ){
+            GetArticle();
+            api.refreshHeaderLoadDone();
+        });*/
     };
+
+    function GetArticle() {
+        var model = api.require('model');
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({qid: queryId, column: 'id', value: articleId});
+                query.include({qid: queryId, column: 'authorId'});
+                query.include({qid: queryId, column: 'circleId'});
+                model.findAll({
+                    class: "CircleArticle",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        //文章信息
+                        var article = ret[0];
+                        var headImg = article.authorId.avatar ? article.authorId.avatar.url : defaultHeadImg;
+                        var str = '';
+                        str += '<div class="userInfoHead"><img src="' + headImg + '"></div>' +
+                                '<div class="userInfoName">'+article.authorId.nickname+'</div>' +
+                                '<div class="userInfoTime">' +
+                                '<div class="floor">楼主</div>' +
+                                '<div class="time">' + Utils.GetTimeDate(article.createdAt) + '</div></div>';
+                        $api.html($api.dom('#articleMainContent .userInfoBar'), str);
+
+                        //文章内容
+                        $api.html($api.dom('#articleMainContent .articleContent'), article.articleContent);
+
+                        //回复列表
+                        GetReplyList();
+
+                        //文章标题信息
+                        $api.text($api.dom('#articleHeader .articleTitle'), article.articleTitle);
+                        $api.html($api.dom('#articleHeader .circleName'),circleName);
+
+                        //统计信息
+                        $api.html($api.dom('#statistics .articleLike span'), article.articleLikedUserId.length);
+                    }
+                });
+            }
+        });
+    }
+
+    function GetReplyList() {
+        var relation_m = api.require('relation');
+        relation_m.findAll({
+            class: 'CircleArticle',
+            id: articleId,
+            column: 'articleReply'
+        }, function (ret, err) {
+            if (ret) {
+                replyList = [];
+                for (var i = 0; i < ret.length; i++) {
+                    var reply = {
+                        id: ret[i].id,
+                        content: ret[i].replyContent,
+                        time: ret[i].createdAt
+                    };
+                    replyList.push(reply);
+                    UpdateReplyList();
+
+                    (function (reply, authorId) {
+                        var model = api.require('model');
+                        var query = api.require('query');
+                        query.createQuery(function (ret, err) {
+                            if (ret && ret.qid) {
+                                var queryId = ret.qid;
+                                query.whereEqual({qid: queryId, column: 'id', value: authorId});
+                                query.include({qid: queryId, column: 'avatar'});
+                                model.findAll({
+                                    class: 'user',
+                                    qid: queryId
+                                }, function (ret, err) {
+                                    if (ret) {
+                                        var user = ret[0];
+                                        reply.author = {
+                                            name: user.nickname,
+                                            headUrl: user.avatar ? user.avatar.url : defaultHeadImg
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    })(reply, ret[i].authorId);
+                }
+
+                //更新回复数量
+                $api.html($api.dom('#statistics .articleReply span'), ret.length);
+            }
+        });
+    }
+    function UpdateReplyList() {
+        var $articleReplyList = $api.dom('#articleReplyList');
+        $api.html($articleReplyList, '');
+        var str = '';
+        for (var i = 0; i < replyList.length; i++) {
+            var reply = replyList[i];
+            str += '<div class="article whiteBlock"><div class="userInfoBar">' +
+                    '<div class="userInfoHead"><img src="' + (!!reply.author ? reply.author.headUrl : defaultHeadImg) + '"></div>' +
+                    '<div class="userInfoName">' + (!!reply.author ? reply.author.name : '&nbsp;') + '</div>' +
+                    '<div class="userInfoTime"><div class="floor">' + (i + 2) + '楼</div>' +
+                    '<div class="time">' + Utils.GetTimeDate(reply.time) + '</div>' +
+                    '</div></div>' +
+                    '<div class="articleContent">' + reply.content + '</div></div>';
+        }
+        $api.html($articleReplyList, str);
+    }
 </script>
 </html>

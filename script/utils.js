@@ -35,5 +35,12 @@ var Utils = {
             retStr = '刚刚';
         }
         return retStr;
+    },
+    /**
+     * @return {string}
+     */
+    GetTimeDate: function(time){
+        var date = new Date(time);
+        return (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
     }
 };
