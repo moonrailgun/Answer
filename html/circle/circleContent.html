@@ -154,13 +154,13 @@
 <script type="text/javascript">
     var defaultHeadImg = '../../image/default_head.jpg';
     var articleList = [];
+    var circleId, circleName;
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
 
         var pageParam = api.pageParam;
-        var circleId = pageParam.circleId;
-        var circleName = pageParam.circleName;
-        //todo
+        circleId = pageParam.circleId;
+        circleName = pageParam.circleName;
 
         GetArticleList(circleId);
     };
@@ -183,6 +183,7 @@
                         for (var i = 0; i < ret.length; i++) {
                             var item = ret[i];
                             var article = {
+                                id: item.id,
                                 author: item.authorId.nickname,
                                 headImg: item.authorId.avatar ? item.authorId.avatar.url : defaultHeadImg,
                                 time: Utils.ParseTime(item.updatedAt),
@@ -222,6 +223,7 @@
     }
 
     function AddArticle(article) {
+        var id = article.id;
         var author = article.author;
         var headImg = article.headImg || defaultHeadImg;
         var time = article.time;
@@ -233,7 +235,7 @@
 
         var $articleList = $api.dom('#articleList');
         var str = '';
-        str += '<div class="article"><div class="articleInfo">' +
+        str += '<div class="article" onclick=\"EnterArticle("'+id+'")\"><div class="articleInfo">' +
                 '<img src="' + headImg + '" class="circleHead articleHead">' +
                 '<div class="articleAuthor aui-ellipsis-1">' + author + '</div>' +
                 '<p class="articleTime">' + time + '</p></div>' +
@@ -245,6 +247,17 @@
                 '<div class="articleReply"><i class="aui-iconfont aui-icon-message aui-text-blue"></i>' +
                 '<span class="aui-text-default">' + replyNum + '</span></div></div></div>';
         $api.append($articleList, str);
+    }
+
+    function EnterArticle(articleId){
+        api.openWin({
+            name: 'circleArticle',
+            url: './circleArticle.html',
+            pageParam:{
+                articleId: articleId,
+                circleId: circleId
+            }
+        })
     }
 </script>
 </html>

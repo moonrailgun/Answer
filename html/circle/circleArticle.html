@@ -18,6 +18,10 @@
         #articleHeader h1 {
             color: #FC9B60;
         }
+        #statistics{
+            font-size: 14px;
+            color: #8f8f94;
+        }
 
         .userInfoBar {
             display: -webkit-box;
@@ -62,6 +66,9 @@
             border-radius: 100%;
             color: #FFFFFF;
         }
+        .articleContent{
+            padding: 0 15px;
+        }
     </style>
 </head>
 <body>
@@ -74,6 +81,17 @@
 </header>
 <div class="aui-content">
     <div id="articleHeader" class="whiteBlock">
+        <div id="statistics" class="aui-pull-right">
+            <div class="articleLike">
+                <i class="aui-iconfont aui-icon-like aui-text-blue"></i>
+                <span class="aui-text-default">10</span>
+            </div>
+            <div class="articleReply">
+                <i class="aui-iconfont aui-icon-message aui-text-blue"></i>
+                <span class="aui-text-default">20</span>
+            </div>
+        </div>
+
         <h1>交朋友</h1>
 
         <p>大学生自拍交友</p>
@@ -112,7 +130,19 @@
         </div>
     </div>
     <div id="articleReplyList">
-
+        <div class="article whiteBlock">
+            <div class="userInfoBar">
+                <div class="userInfoHead"><img src="../../image/default_head.jpg"></div>
+                <div class="userInfoName">月下伊人</div>
+                <div class="userInfoTime">
+                    <div class="floor">2楼</div>
+                    <div class="time">02-05</div>
+                </div>
+            </div>
+            <div class="articleContent">
+                12345678
+            </div>
+        </div>
     </div>
 </div>
 </body>
