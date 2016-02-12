@@ -76,13 +76,7 @@
     </style>
 </head>
 <body>
-<header class="aui-bar aui-bar-nav aui-bar-info">
-    <a class="aui-pull-left">
-        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
-    </a>
 
-    <div class="aui-title">文章</div>
-</header>
 <div class="aui-content">
     <div id="articleHeader" class="whiteBlock">
         <div id="statistics" class="aui-pull-right">
@@ -145,7 +139,6 @@
     var articleId, circleId,circleName;
     var replyList = [];
     apiready = function () {
-        $api.fixStatusBar($api.dom('header'));//标题
         var pageParam = api.pageParam;
         articleId = pageParam.articleId;
         circleId = pageParam.circleId;
@@ -153,19 +146,18 @@
 
         GetArticle();
 
-        /*
         //下拉刷新
         api.setRefreshHeaderInfo({
             visible: true,
-            bgColor: '#ccc',
-            textColor: '#fff',
+            bgColor: '#f4f4f4',
+            textColor: '#000',
             textDown: '下拉刷新...',
             textUp: '松开刷新...',
             showTime: true
         }, function( ret, err ){
             GetArticle();
             api.refreshHeaderLoadDone();
-        });*/
+        });
     };
 
     function GetArticle() {
@@ -229,6 +221,7 @@
                     replyList.push(reply);
                     UpdateReplyList();
 
+
                     (function (reply, authorId) {
                         var model = api.require('model');
                         var query = api.require('query');
@@ -236,7 +229,6 @@
                             if (ret && ret.qid) {
                                 var queryId = ret.qid;
                                 query.whereEqual({qid: queryId, column: 'id', value: authorId});
-                                query.include({qid: queryId, column: 'avatar'});
                                 model.findAll({
                                     class: 'user',
                                     qid: queryId
@@ -246,7 +238,8 @@
                                         reply.author = {
                                             name: user.nickname,
                                             headUrl: user.avatar ? user.avatar.url : defaultHeadImg
-                                        }
+                                        };
+                                        UpdateReplyList();
                                     }
                                 });
                             }

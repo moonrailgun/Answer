@@ -4,9 +4,24 @@
 
 var Utils = {
     /**
+     * 补零
      * @return {string}
      */
-    ParseTime : function(time) {
+    Supply: function (str, supplyStr, rightLength) {
+        var text = str.toString();
+        if (text.length < rightLength) {
+            var temp = '';
+            for (var i = 0; i < rightLength - text.length; i++) {
+                temp += supplyStr;
+            }
+            text = temp + text;
+        }
+        return text;
+    },
+    /**
+     * @return {string}
+     */
+    ParseTime: function (time) {
         var date = Date.parse(time);
         var now = Date.now();
         var diff = now - date;
@@ -39,8 +54,8 @@ var Utils = {
     /**
      * @return {string}
      */
-    GetTimeDate: function(time){
+    GetTimeDate: function (time) {
         var date = new Date(time);
-        return (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        return (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + this.Supply(date.getMinutes(), '0', 2) + ':' + this.Supply(date.getSeconds(), '0', 2);
     }
 };
