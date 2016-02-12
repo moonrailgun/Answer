@@ -18,26 +18,11 @@
             <p>答题</p>
         </li>
         <li class="aui-col-xs-4 aui-text-center" onclick="Mod(1)">
-            <span class="aui-iconfont aui-icon-rank aui-text-danger"></span>
-
-            <p>排名</p>
-        </li>
-        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(2)">
-            <span class="aui-iconfont aui-icon-favor aui-text-warning"></span>
-
-            <p>关于</p>
-        </li>
-        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(3)">
-            <span class="aui-iconfont aui-icon-profile aui-text-info"></span>
-
-            <p>个人</p>
-        </li>
-        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(4)">
             <span class="aui-iconfont aui-icon-file aui-text-default"></span>
 
             <p>资料</p>
         </li>
-        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(5)">
+        <li class="aui-col-xs-4 aui-text-center" onclick="Mod(2)">
             <span class="aui-iconfont aui-icon-message aui-text-pink"></span>
 
             <p>留言</p>
@@ -91,49 +76,32 @@
     };
 
     function Mod(index) {
-        var $script;
         switch (index) {
             case 0:
             {
-                $script = "ChangeWin('answer.html')";
+                api.openWin({
+                    name: 'answer',
+                    url: '../answer/answer.html'
+                });
                 break;
             }
             case 1:
             {
-                $script = "ChangeWin('rank.html')";
+                api.openWin({
+                    name: 'document',
+                    url: '../document/document.html'
+                });
                 break;
             }
             case 2:
             {
-                $script = "OpenWin('about.html')";
-                break;
-            }
-            case 3:
-            {
-                var userInfo = $api.getStorage('userInfo');
-                if (userInfo) {
-                    $script = "ChangeWin('profile.html')";
-                }
-                else {
-                    $script = "ChangeWin('login.html')";
-                }
-                break;
-            }
-            case 4:
-            {
-                $script = "ChangeWin('document.html')";
-                break;
-            }
-            case 5:
-            {
-                $script = "OpenWin('messageBoardFrame.html')";
+                api.openWin({
+                    name: 'messageBoardFrame',
+                    url: '../message/messageBoardFrame.html'
+                });
                 break;
             }
         }
-        api.execScript({
-            name: "slide",
-            script: $script
-        });
     }
 </script>
 </html>

@@ -10,15 +10,25 @@
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
 </head>
 <body>
-<h1 style="color: #15b5e9;font-size: 24px;text-align: center;">请选择学科</h1>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
 
-<div id="questionType"><div style="text-align: center"><img src="../../image/loading.gif"></div></div>
+    <div class="aui-title">答题</div>
+</header>
+<div class="aui-content">
+    <h1 style="color: #15b5e9;font-size: 24px;text-align: center;">请选择学科</h1>
+
+    <div id="questionType"><div style="text-align: center"><img src="../../image/loading.gif"></div></div>
+</div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     var allTypeList = [];
     apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {

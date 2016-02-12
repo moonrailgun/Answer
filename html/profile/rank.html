@@ -110,23 +110,33 @@
     </style>
 </head>
 <body>
-<div class="rankHeader">
-    <div style="width: 70px;text-align: right;">排名</div>
-    <div style="-webkit-box-flex: 1;">昵称</div>
-    <div style="width: 50px;text-align: left;">积分</div>
-</div>
-<div id="rank" class="rank">
-    <div style="text-align: center"><img src="../../image/loading.gif"></div>
-</div>
-<div class="myRank">
-    <div class="myRankNum">我的排名：<span></span></div>
-    <div class="myRankScore">我的积分：<span></span></div>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">排行榜</div>
+</header>
+<div class="aui-content">
+    <div class="rankHeader">
+        <div style="width: 70px;text-align: right;">排名</div>
+        <div style="-webkit-box-flex: 1;">昵称</div>
+        <div style="width: 50px;text-align: left;">积分</div>
+    </div>
+    <div id="rank" class="rank">
+        <div style="text-align: center"><img src="../../image/loading.gif"></div>
+    </div>
+    <div class="myRank">
+        <div class="myRankNum">我的排名：<span></span></div>
+        <div class="myRankScore">我的积分：<span></span></div>
+    </div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
         GetOwnRankAndScore(function(state, rank, score){
             if(state){
                 $api.text($api.dom('.myRankNum span'), rank);
