@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        #countdown .countdownItem{
+            display: -webkit-box;
+            padding: 0 10px;
+            border-bottom: 1px solid rgba(143, 143, 148, 0.27);
+        }
+        #countdown .countdownItem .eventInfo{
+            -webkit-box-flex: 1;
+        }
+        .eventInfo .eventName{
+            font-weight: 800;
+            font-size: 18px;
+        }
+        .eventInfo .eventFullTime,.eventInfo .eventSite{
+            font-size: 12px;
+            color: #8f8f94;
+        }
+        .eventInfo .aui-iconfont{
+            margin-right: 4px;
+        }
+        .eventInfo .eventFullTime .aui-iconfont{
+            color: #5eb2ff;
+        }
+        .eventInfo .eventSite .aui-iconfont{
+            color: #30b051;
+        }
+        #countdown .countdownItem .countdown{
+            line-height: 75px;
+            color: #8f8f94;
+        }
+        .countdown .countdownNum{
+            color: #e36657;
+            font-weight: 900;
+            font-size: 30px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-danger">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">倒计时</div>
+    <a class="aui-pull-right">
+        <span class="aui-iconfont aui-icon-add" onclick="api.closeWin();"></span>
+    </a>
+</header>
+<div class="aui-content">
+    <ul id="countdown">
+        <li class="countdownItem">
+            <div class="eventInfo">
+                <div class="eventName">
+                    春节
+                </div>
+                <div class="eventFullTime">
+                    <i class="aui-iconfont aui-icon-time"></i>2016年2月13日16:52:24
+                </div>
+                <div class="eventSite">
+                    <i class="aui-iconfont aui-icon-locationfill"></i>学校
+                </div>
+            </div>
+            <div class="countdown">
+                <span class="countdownNum">12</span>
+                <span class="countdownLevel">天</span>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+    };
+</script>
+</html>

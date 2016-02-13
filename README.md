@@ -72,6 +72,10 @@
 	- id
 	- questions
 	- documents
+- countdown(数组)
+	- name
+	- time
+	- site
 
 # 数据库架构 #
 ## 数据库 ##
