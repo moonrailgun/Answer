@@ -20,15 +20,6 @@
             padding: 0 10px;
         }
 
-        .rankHeader {
-            background-color: #acacac;
-            display: -webkit-box;
-            text-align: center;
-            color: #f4f4f4;
-            line-height: 32px;
-            font-size: 18px;
-        }
-
         .rankCell {
             display: -webkit-box;
             width: 100%;
@@ -83,52 +74,12 @@
         .rankCell.third .rankNum {
             background: url("../../image/thirdMedal.png");
         }
-
-        .myRank {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            background-color: #2b9ea7;
-            height: 50px;
-            width: 100%;
-            display: -webkit-box;
-        }
-
-        .myRank div {
-            padding: 10px;
-            text-align: center;
-            -webkit-box-flex: 1;
-            vertical-align: middle;
-        }
-
-        .myRank div span {
-            color: #e74c3c;
-            font-size: 24px;
-            font-family: specialNum, sans-serif;
-            vertical-align: middle;
-        }
     </style>
 </head>
 <body>
-<header class="aui-bar aui-bar-nav aui-bar-primary">
-    <a class="aui-pull-left">
-        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
-    </a>
-
-    <div class="aui-title">排行榜</div>
-</header>
 <div class="aui-content">
-    <div class="rankHeader">
-        <div style="width: 70px;text-align: right;">排名</div>
-        <div style="-webkit-box-flex: 1;">昵称</div>
-        <div style="width: 50px;text-align: left;">积分</div>
-    </div>
     <div id="rank" class="rank">
         <div style="text-align: center"><img src="../../image/loading.gif"></div>
-    </div>
-    <div class="myRank">
-        <div class="myRankNum">我的排名：<span></span></div>
-        <div class="myRankScore">我的积分：<span></span></div>
     </div>
 </div>
 </body>
@@ -136,16 +87,22 @@
 <script type="text/javascript" src="../../script/mrg.js"></script>
 <script type="text/javascript">
     apiready = function () {
-        $api.fixStatusBar($api.dom('header'));
-        GetOwnRankAndScore(function(state, rank, score){
-            if(state){
-                $api.text($api.dom('.myRankNum span'), rank);
-                $api.text($api.dom('.myRankScore span'), score);
-            }else{
-                api.alert({msg :'出错:' + rank.toSource()});
-            }
+        GetTop20();
 
+        //下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            bgColor: '#f4f4f4',
+            textColor: '#000',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function( ret, err ){
             GetTop20();
+            api.refreshHeaderLoadDone();
+            if(ret){
+                alert(JSON.stringify(ret));
+            }
         });
     };
 

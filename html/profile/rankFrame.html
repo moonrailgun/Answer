@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .rankHeader {
+            background-color: #acacac;
+            display: -webkit-box;
+            text-align: center;
+            color: #f4f4f4;
+            line-height: 32px;
+            font-size: 18px;
+        }
+        .myRank {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            background-color: #2b9ea7;
+            height: 50px;
+            width: 100%;
+            display: -webkit-box;
+        }
+
+        .myRank div {
+            padding: 10px;
+            text-align: center;
+            -webkit-box-flex: 1;
+            vertical-align: middle;
+        }
+
+        .myRank div span {
+            color: #e74c3c;
+            font-size: 24px;
+            font-family: specialNum, sans-serif;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-primary">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="CloseWin();"></span>
+    </a>
+
+    <div class="aui-title">排行榜</div>
+</header>
+<div id="rankHeader" class="rankHeader">
+    <div style="width: 70px;text-align: right;">排名</div>
+    <div style="-webkit-box-flex: 1;">昵称</div>
+    <div style="width: 50px;text-align: left;">积分</div>
+</div>
+<footer>
+    <div class="myRank">
+        <div class="myRankNum">我的排名：<span></span></div>
+        <div class="myRankScore">我的积分：<span></span></div>
+    </div>
+</footer>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/mrg.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        var $header = $api.dom('header');
+        $api.fixStatusBar($header);
+        var headerHeight = $api.offset($header).h;
+        var bannerHeight = $api.offset($api.dom('#rankHeader')).h;
+        var footerHeight = $api.offset($api.dom('footer .myRank')).h;
+        api.openFrame({
+            name: 'rank',
+            url: './rank.html',
+            rect: {
+                x: 0,
+                y: headerHeight + bannerHeight,
+                w: api.winWidth,
+                h: api.winHeight - headerHeight - bannerHeight - footerHeight
+            },
+            bounces: true,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: true,
+            hScrollBarEnabled: false
+        });
+
+        GetOwnRankAndScore(function(state, rank, score){
+            if(state){
+                $api.text($api.dom('.myRankNum span'), rank);
+                $api.text($api.dom('.myRankScore span'), score);
+            }else{
+                api.alert({msg :'出错:' + rank.toSource()});
+            }
+        });
+    };
+
+    function CloseWin(){
+        api.closeFrame({name: 'rank'});
+
+        api.closeWin();
+    }
+</script>
+</html>
