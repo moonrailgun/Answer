@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-danger">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">添加倒计时</div>
+    <a class="aui-pull-right">
+        <span class="aui-iconfont aui-icon-check" onclick=""></span>
+    </a>
+</header>
+<div class="aui-content">
+    <div class="aui-form">
+        <div class="aui-input-row">
+            <label class="aui-input-addon">标题</label>
+            <input type="text" class="aui-input aui-text-right" placeholder="标题"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">日期</span>
+            <input type="text" class="aui-input aui-text-right" placeholder="日期"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">时间</span>
+            <input type="text" class="aui-input aui-text-right" placeholder="时间"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">地点</span>
+            <input type="text" class="aui-input aui-text-right" placeholder="地点"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon" style="padding: 10px 4px;">是否提醒</span>
+            <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right">
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+    };
+</script>
+</html>
