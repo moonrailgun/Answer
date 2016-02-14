@@ -44,13 +44,13 @@
             </div>
             <p>学习圈</p>
         </div>
-        <div class="discover-nav-cell">
-            <div class="discover-nav-icon aui-bar-primary" onclick="OpenDocumentBank();">
+        <div class="discover-nav-cell" onclick="OpenDocumentBank();">
+            <div class="discover-nav-icon aui-bar-primary">
                 <i class="aui-iconfont aui-icon-file"></i>
             </div>
             <p>资料库</p>
         </div>
-        <div class="discover-nav-cell">
+        <div class="discover-nav-cell" onclick="OpenCountdown();">
             <div class="discover-nav-icon aui-bar-warning">
                 <i class="aui-iconfont aui-icon-countdown"></i>
             </div>
@@ -99,6 +99,13 @@
         api.openWin({
             name: 'rankFrame',
             url: '../profile/rankFrame.html'
+        });
+    }
+
+    function OpenCountdown(){
+        api.openWin({
+            name: 'countdown',
+            url: '../component/countdown/countdown.html'
         });
     }
 </script>

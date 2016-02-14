@@ -9,7 +9,12 @@
     <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
     <style>
-
+        div.aui-form{
+            padding: 0 6px;
+        }
+        input{
+            color: #8f8f94;
+        }
     </style>
 </head>
 <body>
@@ -27,31 +32,70 @@
     <div class="aui-form">
         <div class="aui-input-row">
             <label class="aui-input-addon">标题</label>
-            <input type="text" class="aui-input aui-text-right" placeholder="标题"/>
+            <input id="title" type="text" class="aui-input aui-text-right" placeholder="标题"/>
         </div>
         <div class="aui-input-row">
             <span class="aui-input-addon">日期</span>
-            <input type="text" class="aui-input aui-text-right" placeholder="日期"/>
+            <input id="date" type="text" readonly="readonly" class="aui-input aui-text-right" placeholder="日期" onclick="OpenDatePicker();"/>
         </div>
         <div class="aui-input-row">
             <span class="aui-input-addon">时间</span>
-            <input type="text" class="aui-input aui-text-right" placeholder="时间"/>
+            <input id="time" type="text"  readonly="readonly" class="aui-input aui-text-right" placeholder="时间" onclick="OpenTimePicker();"/>
         </div>
         <div class="aui-input-row">
             <span class="aui-input-addon">地点</span>
-            <input type="text" class="aui-input aui-text-right" placeholder="地点"/>
+            <input id="site" type="text" class="aui-input aui-text-right" placeholder="地点"/>
         </div>
-        <div class="aui-input-row">
-            <span class="aui-input-addon" style="padding: 10px 4px;">是否提醒</span>
-            <input type="checkbox" class="aui-switch aui-switch-success aui-pull-right">
-        </div>
+        <!--<div class="aui-input-row">-->
+            <!--<span class="aui-input-addon" style="padding: 10px 4px;">是否提醒</span>-->
+            <!--<input id="isRemind" type="checkbox" class="aui-switch aui-switch-success aui-pull-right"/>-->
+        <!--</div>-->
     </div>
 </div>
 </body>
 <script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/utils.js"></script>
 <script type="text/javascript">
+    var date = new Date();
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
+        UpdateTime();
     };
+
+    function UpdateTime(){
+        $api.val($api.dom('#date'),date.pattern("yyyy年MM月dd日"));
+        $api.val($api.dom('#time'),date.pattern("hh:mm"));
+    }
+
+    function OpenDatePicker() {
+        api.openPicker({
+            type: 'date',
+            date: date.pattern("yyyy-MM-dd"),
+            title: '选择日期'
+        }, function (ret, err) {
+            if (ret) {
+                var year = ret.year;
+                var month = ret.month;
+                var day = ret.day;
+
+                date.setFullYear(year,month - 1,day);
+                UpdateTime();
+            }
+        });
+    }
+    function OpenTimePicker() {
+        api.openPicker({
+            type: 'time',
+            date: date.pattern("HH:mm"),
+            title: '选择时间'
+        }, function (ret, err) {
+            if (ret) {
+                var hour = ret.hour;
+                var minute = ret.minute;
+                date.setHours(hour, minute);
+                UpdateTime();
+            }
+        });
+    }
 </script>
 </html>
