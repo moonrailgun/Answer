@@ -25,7 +25,7 @@
 
     <div class="aui-title">添加倒计时</div>
     <a class="aui-pull-right">
-        <span class="aui-iconfont aui-icon-check" onclick=""></span>
+        <span class="aui-iconfont aui-icon-check" onclick="AddCountdownEvent();"></span>
     </a>
 </header>
 <div class="aui-content">
@@ -64,7 +64,7 @@
 
     function UpdateTime(){
         $api.val($api.dom('#date'),date.pattern("yyyy年MM月dd日"));
-        $api.val($api.dom('#time'),date.pattern("hh:mm"));
+        $api.val($api.dom('#time'),date.pattern("HH:mm"));
     }
 
     function OpenDatePicker() {
@@ -92,10 +92,46 @@
             if (ret) {
                 var hour = ret.hour;
                 var minute = ret.minute;
-                date.setHours(hour, minute);
+                date.setHours(hour, minute,0,0);
                 UpdateTime();
             }
         });
+    }
+
+    function AddCountdownEvent(){
+        var title = $api.val($api.dom('#title'));
+        var time = date.getTime();
+        var site = $api.val($api.dom('#site')) || '';
+        if(!title || title == ''){
+            api.alert({msg:'标题不能为空'});
+            return;
+        }
+        var event = {
+            title:title,
+            time: time,
+            site:site
+        };
+
+        //添加事件到localStorage
+        var countdown = $api.getStorage('countdown');
+        if (!countdown) {
+            countdown = [];
+        }
+        for (var i = 0; i < countdown.length; i++) {
+            var item = countdown[i];
+            if (item.title == event.title) {
+                api.alert({msg:'已经添加过同样的事件了'});
+                return;
+            }
+        }
+        countdown.push(event);
+        $api.setStorage('countdown', countdown);
+
+        api.execScript({
+            name: 'countdown',
+            script: 'UpdateCountdownList();'
+        });
+        api.closeWin();
     }
 </script>
 </html>

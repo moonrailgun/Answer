@@ -9,36 +9,44 @@
     <link rel="stylesheet" type="text/css" href="../../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../../css/aui.css"/>
     <style>
-        #countdown .countdownItem{
+        #countdown .countdownItem {
             display: -webkit-box;
             padding: 0 10px;
             border-bottom: 1px solid rgba(143, 143, 148, 0.27);
         }
-        #countdown .countdownItem .eventInfo{
+
+        #countdown .countdownItem .eventInfo {
             -webkit-box-flex: 1;
         }
-        .eventInfo .eventName{
+
+        .eventInfo .eventName {
             font-weight: 800;
             font-size: 18px;
         }
-        .eventInfo .eventFullTime,.eventInfo .eventSite{
+
+        .eventInfo .eventFullTime, .eventInfo .eventSite {
             font-size: 12px;
             color: #8f8f94;
         }
-        .eventInfo .aui-iconfont{
+
+        .eventInfo .aui-iconfont {
             margin-right: 4px;
         }
-        .eventInfo .eventFullTime .aui-iconfont{
+
+        .eventInfo .eventFullTime .aui-iconfont {
             color: #5eb2ff;
         }
-        .eventInfo .eventSite .aui-iconfont{
+
+        .eventInfo .eventSite .aui-iconfont {
             color: #30b051;
         }
-        #countdown .countdownItem .countdown{
+
+        #countdown .countdownItem .countdown {
             line-height: 75px;
             color: #8f8f94;
         }
-        .countdown .countdownNum{
+
+        .countdown .countdownNum {
             color: #e36657;
             font-weight: 900;
             font-size: 30px;
@@ -54,35 +62,94 @@
 
     <div class="aui-title">倒计时</div>
     <a class="aui-pull-right">
-        <span class="aui-iconfont aui-icon-add" onclick=""></span>
+        <span class="aui-iconfont aui-icon-add" onclick="AddCountdown();"></span>
     </a>
 </header>
 <div class="aui-content">
     <ul id="countdown">
-        <li class="countdownItem">
-            <div class="eventInfo">
-                <div class="eventName">
-                    春节
-                </div>
-                <div class="eventFullTime">
-                    <i class="aui-iconfont aui-icon-time"></i>2016年2月13日16:52:24
-                </div>
-                <div class="eventSite">
-                    <i class="aui-iconfont aui-icon-locationfill"></i>学校
-                </div>
-            </div>
-            <div class="countdown">
-                <span class="countdownNum">12</span>
-                <span class="countdownLevel">天</span>
-            </div>
-        </li>
+
     </ul>
 </div>
 </body>
 <script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/utils.js"></script>
 <script type="text/javascript">
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
+        UpdateCountdownList();
     };
+
+    //备用方案。循环更新
+    function Loop(sec) {
+        UpdateCountdownList();
+        setTimeout(Loop, sec * 1000);
+    }
+
+    function AddCountdown() {
+        api.openWin({
+            name: 'addCountdown',
+            url: './addCountdown.html'
+        })
+    }
+
+    function UpdateCountdownList() {
+        var countdown = $api.getStorage('countdown');
+        var str = '';
+        for (var i = 0; i < countdown.length; i++) {
+            var event = countdown[i];
+            var title = event.title;
+            var time = event.time;
+            var site = event.site;
+
+            var timeStr = (new Date(time)).pattern('yyyy年MM月dd日HH:mm');
+            var countdownDay = GetCountdownNum(time);
+            var countdownNum = countdownDay ? countdownDay.num : '';
+            var countdownLevel = countdownDay ? countdownDay.level : '';
+            str += '<li class="countdownItem"><div class="eventInfo">' +
+                    '<div class="eventName">' + title + '</div>' +
+                    '<div class="eventFullTime"><i class="aui-iconfont aui-icon-time"></i>' + timeStr + '</div>' +
+                    '<div class="eventSite"><i class="aui-iconfont aui-icon-locationfill"></i>' + site + '</div></div>' +
+                    '<div class="countdown"><span class="countdownNum">' + countdownNum + '</span>' +
+                    '<span class="countdownLevel">' + countdownLevel + '</span></div></li>';
+        }
+        $api.html($api.dom('#countdown'), str);
+    }
+
+    function GetCountdownNum(time) {
+        var num = 0;
+        var level = '天';
+        var now = Date.now();
+        var diff = time - now;
+        if (diff > 0) {
+            var diffSec = parseInt(diff / 1000);//间隔秒数
+            var diffMin = parseInt(diffSec / 60);//间隔分钟
+            var diffHour = parseInt(diffMin / 60);//间隔小时
+            var diffDay = parseInt(diffHour / 24);//间隔天数
+
+            if (diffDay > 0) {
+                num = diffDay;
+                level = '天'
+            } else if (diffHour > 0) {
+                num = diffHour;
+                level = '时';
+            }
+            else if (diffMin > 0) {
+                num = diffMin;
+                level = '分';
+            }
+            else if (diffSec > 0) {
+                num = diffSec;
+                level = '秒';
+            }
+        } else {
+            level = '已结束';
+            num = '';
+        }
+
+        return {
+            level: level,
+            num: num
+        }
+    }
 </script>
 </html>
