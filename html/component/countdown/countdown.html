@@ -94,6 +94,10 @@
 
     function UpdateCountdownList() {
         var countdown = $api.getStorage('countdown');
+        countdown.sort(function(a,b){
+            //从小到大排序
+            return a.time > b.time ? 1 : -1;
+        });
         var str = '';
         for (var i = 0; i < countdown.length; i++) {
             var event = countdown[i];
