@@ -139,16 +139,15 @@
     //意见反馈
     function Feedback(){
         api.openWin({
-            name: 'writeMessage.html',
+            name: 'writeMessage',
             url: '../message/writeMessage.html'
         });
     }
     //关于作品
     function About() {
-        var $script = "OpenWin('about.html');";
-        api.execScript({
-            name: "slide",
-            script: $script
+        api.openWin({
+            name: 'about',
+            url: './about.html'
         });
     }
     //登出
