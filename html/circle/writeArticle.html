@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        input[type="text"],textarea{
+            margin-bottom: 8px;
+        }
+        .buttonList{
+            padding: 0 10px;
+        }
+        .messageButton{
+            border-radius: 100%;
+            background-color: #ffffff;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+        }
+        .messageButton .aui-iconfont{
+            font-size: 20px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">发表话题</div>
+</header>
+<div class="aui-content">
+    <form class="messageArea">
+        <div class="userInfo"></div>
+        <input type="text" id="title" placeholder="输入标题">
+        <textarea style="padding: 10px;" class="message" maxlength="100" rows="6" placeholder="说点什么吧.."></textarea>
+        <div class="buttonList">
+            <button class="messageButton"><i class="aui-iconfont aui-icon-game"></i></button>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+
+        //todo 在输入页上显示头像
+//        var userInfo = $api.getStorage('userInfo');
+//        if(userInfo != null){
+//
+//        }
+    };
+</script>
+</html>
