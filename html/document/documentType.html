@@ -8,6 +8,15 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        ul.aui-grid-sixteen li.aui-col-xs-3 {
+            border-right: 1px solid #eee;
+        }
+
+        ul.aui-grid-sixteen li.aui-col-xs-3.noborder {
+            border-right: 0;
+        }
+    </style>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-primary">
@@ -49,20 +58,21 @@
                         });
                     } else {
                         var $documentType = $api.dom('#documentType');
-                        if(ret.length > 0){
+                        if (ret.length > 0) {
                             var str = '';
                             str += '<div class="aui-content"><ul class="aui-grid-sixteen">';
                             for (var i = 0; i < ret.length; i++) {
                                 var id = ret[i].id;
                                 var name = ret[i].name;
                                 var colorStr = GetRandomValColor();//设置随机颜色
-                                str += "<li class='aui-col-xs-3 aui-text-center' onclick=\"OpenDocumentContent('" + id + "','" + name + "')\">"
+                                var border = (i + 1) % 4 == 0 ? ' noborder' : '';
+                                str += "<li class='aui-col-xs-3 aui-text-center" + border + "' onclick=\"OpenDocumentContent('" + id + "','" + name + "')\">"
                                         + "<span class='aui-iconfont aui-icon-form aui-text-" + colorStr + "'></span>"
-                                        + "<p> " + name + "</p></li>";
+                                        + "<p>" + name + "</p></li>";
                             }
                             str += '</ul></div>';
                             $api.html($documentType, str);
-                        }else{
+                        } else {
                             $api.html($documentType, '<div style="text-align: center;"><img src="../../image/nodata_s01.png"></div>');
                         }
                     }
