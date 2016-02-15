@@ -71,6 +71,12 @@
                     活动
                 </a>
             </li>
+            <li class="aui-list-view-cell">
+                <a class="aui-arrow-right" onclick="OpenEntertaining();">
+                    <i class="aui-iconfont aui-icon-game" style="color: #82e070;font-size: 20px"></i>
+                    娱乐
+                </a>
+            </li>
         </ul>
     </div>
 </div>
@@ -106,6 +112,13 @@
         api.openWin({
             name: 'countdown',
             url: '../component/countdown/countdown.html'
+        });
+    }
+
+    function OpenEntertaining(){
+        api.openWin({
+            name: 'entertaining',
+            url: '../answer/entertaining.html'
         });
     }
 </script>

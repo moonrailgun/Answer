@@ -10,52 +10,62 @@
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
 </head>
 <body>
-<ul class="aui-grid-sixteen">
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680963c8be488ce7c45062a','养生');">
-        <span class="aui-iconfont aui-icon-pay aui-text-primary"></span>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
 
-        <p>养生</p>
-    </li>
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('568096433883245e08339ef7','美食');">
-        <span class="aui-iconfont aui-icon-send aui-text-danger"></span>
+    <div class="aui-title">娱乐</div>
+</header>
+<div class="aui-content">
+    <ul class="aui-grid-sixteen">
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680963c8be488ce7c45062a','养生');">
+            <span class="aui-iconfont aui-icon-pay aui-text-primary"></span>
 
-        <p>美食</p>
-    </li>
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('56809648ce8f4d40072fb041','历史');">
-        <span class="aui-iconfont aui-icon-shop aui-text-warning"></span>
+            <p>养生</p>
+        </li>
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('568096433883245e08339ef7','美食');">
+            <span class="aui-iconfont aui-icon-send aui-text-danger"></span>
 
-        <p>历史</p>
-    </li>
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680964fc5baa3f060b21d1d','生活常识');">
-        <span class="aui-iconfont aui-icon-ticket aui-text-pink"></span>
+            <p>美食</p>
+        </li>
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('56809648ce8f4d40072fb041','历史');">
+            <span class="aui-iconfont aui-icon-shop aui-text-warning"></span>
 
-        <p>生活常识</p>
-    </li>
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('56809659fffdeac51b9e38af','电影');">
-        <span class="aui-iconfont aui-icon-cascades aui-text-dark"></span>
+            <p>历史</p>
+        </li>
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680964fc5baa3f060b21d1d','生活常识');">
+            <span class="aui-iconfont aui-icon-ticket aui-text-pink"></span>
 
-        <p>电影</p>
-    </li>
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680965ec5baa3f060b21d20','音乐');">
-        <span class="aui-iconfont aui-icon-discover aui-text-info"></span>
+            <p>生活常识</p>
+        </li>
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('56809659fffdeac51b9e38af','电影');">
+            <span class="aui-iconfont aui-icon-cascades aui-text-dark"></span>
 
-        <p>音乐</p>
-    </li>
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('56809664ae6565f705895e22','科技');">
-        <span class="aui-iconfont aui-icon-scan aui-text-blue"></span>
+            <p>电影</p>
+        </li>
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680965ec5baa3f060b21d20','音乐');">
+            <span class="aui-iconfont aui-icon-discover aui-text-info"></span>
 
-        <p>科技</p>
-    </li>
-    <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680966af618646b3bceaac5','挑战');">
-        <span class="aui-iconfont aui-icon-settings aui-text-danger"></span>
+            <p>音乐</p>
+        </li>
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('56809664ae6565f705895e22','科技');">
+            <span class="aui-iconfont aui-icon-scan aui-text-blue"></span>
 
-        <p>挑战</p>
-    </li>
-</ul>
+            <p>科技</p>
+        </li>
+        <li class="aui-col-xs-3 aui-text-center" onclick="GenerateEntertainingTest('5680966af618646b3bceaac5','挑战');">
+            <span class="aui-iconfont aui-icon-settings aui-text-danger"></span>
+
+            <p>挑战</p>
+        </li>
+    </ul>
+</div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
     };
 
     function GenerateEntertainingTest(typeId, typeName) {
