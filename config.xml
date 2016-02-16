@@ -27,5 +27,8 @@
   <permission name="hardware"/>  
   <permission name="sms"/>  
   <permission name="contact"/>  
-  <access origin="*"/> 
+  <access origin="*"/>
+  <feature name="rongCloud2">
+    <param name="appKey" value="z3v5yqkbvtci0" />
+  </feature>
 </widget>
