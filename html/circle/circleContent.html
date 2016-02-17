@@ -83,7 +83,7 @@
     </a>
 
     <div class="aui-title">圈子</div>
-    <a class="aui-pull-right">
+    <a class="aui-pull-right" onclick="OpenWriteArticle();">
         <span class="aui-iconfont aui-icon-edit"></span>
     </a>
 </header>
@@ -232,6 +232,13 @@
                 circleId: circleId,
                 circleName: circleName
             }
+        });
+    }
+
+    function OpenWriteArticle(){
+        api.openWin({
+            name: 'writeArticle',
+            url:'./writeArticle.html'
         });
     }
 </script>
