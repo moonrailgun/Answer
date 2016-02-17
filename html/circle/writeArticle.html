@@ -60,7 +60,7 @@
 
     <div class="aui-title">发表话题</div>
     <a class="aui-pull-right">
-        <span class="aui-iconfont aui-icon-check" onclick="api.closeWin();"></span>
+        <span class="aui-iconfont aui-icon-check" onclick=""></span>
     </a>
 </header>
 <div class="aui-content">
@@ -70,7 +70,7 @@
         <textarea id="articleContent" style="padding: 10px;" class="message" maxlength="100" rows="6" placeholder="说点什么吧.." onfocus="HideEmotion();"></textarea>
         <div class="buttonList">
             <button class="messageButton" onclick="ToggleEmotion();return false;"><i class="aui-iconfont aui-icon-emoji"></i></button>
-            <button class="messageButton" onclick="return false;"><i class="aui-iconfont aui-icon-camera"></i></button>
+            <button class="messageButton" onclick="OpenCamera();return false;"><i class="aui-iconfont aui-icon-camera"></i></button>
         </div>
         <div id="emotion">
 
@@ -80,6 +80,7 @@
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    var selectPic;
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
 
@@ -219,6 +220,55 @@
     function InputEmotion(text){
         var $articleContent = $api.dom('#articleContent');
         $api.append($articleContent, text);
+    }
+
+    function OpenCamera(){
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['照片','相机']
+        },function( ret, err ){
+            if( !!ret ){
+                var index = ret.buttonIndex;
+                var sourceType = 'library';
+                if(index == 1){
+                    sourceType = 'library';
+                }else if(index == 2){
+                    sourceType = 'camera';
+                }
+
+                api.getPicture({
+                    sourceType: sourceType,
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'url',
+                    allowEdit: true,
+                    quality: 50,
+                    targetWidth: 512,
+                    saveToPhotoAlbum: false
+                }, function( ret, err ){
+                    if(ret){
+                        var data = ret.data;
+                        var cache = api.cacheDir;
+                        var tmp = data.split('Cache/');
+                        var picUrl = tmp[tmp.length - 1];
+                        var url = 'cache://' + picUrl;
+                        selectPic = url;
+                        var contentOffset = $api.offset($api.dom('#articleContent'));
+                        api.openFrame({
+                            name: 'pic',
+                            bgColor: url,
+                            rect: {
+                                x: api.winWidth - 40 - 8,
+                                y: contentOffset.h + contentOffset.t + 8,
+                                w: 40,
+                                h: 40
+                            },
+                            bounces: false
+                        });
+                    }
+                });
+            }
+        });
     }
 </script>
 </html>
