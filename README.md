@@ -171,6 +171,7 @@
 	- authorId 发布者ID
 	- articleContent 文章内容
 	- articleLikedUserId 喜欢该文章用户列表
+	- articlePic 文章图片文件
 	- articleReply (关联CircleArticleReply) 学习圈文章回复列表
 - CircleArticleReply 学习圈文章回复列表
 	- authorId (关联_user) 回复者ID

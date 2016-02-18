@@ -169,7 +169,7 @@
                             articleList.push(article);
                             UpdateArticle();
 
-                            (function(article,id){
+                            (function (article, id) {
                                 var relation_m = api.require('relation');
                                 relation_m.count({
                                     class: 'CircleArticle',
@@ -189,9 +189,9 @@
         });
     }
 
-    function UpdateArticle(){
+    function UpdateArticle() {
         $api.html($api.dom('#articleList'), '');
-        for(var i = 0;i< articleList.length;i++){
+        for (var i = 0; i < articleList.length; i++) {
             AddArticle(articleList[i]);
         }
     }
@@ -209,7 +209,7 @@
 
         var $articleList = $api.dom('#articleList');
         var str = '';
-        str += '<div class="article" onclick=\'EnterArticle("'+id+'")\'><div class="articleInfo">' +
+        str += '<div class="article" onclick=\'EnterArticle("' + id + '")\'><div class="articleInfo">' +
                 '<img src="' + headImg + '" class="circleHead articleHead">' +
                 '<div class="articleAuthor aui-ellipsis-1">' + author + '</div>' +
                 '<p class="articleTime">' + time + '</p></div>' +
@@ -223,11 +223,11 @@
         $api.append($articleList, str);
     }
 
-    function EnterArticle(articleId){
+    function EnterArticle(articleId) {
         api.openWin({
             name: 'circleArticleFrame',
             url: './circleArticleFrame.html',
-            pageParam:{
+            pageParam: {
                 articleId: articleId,
                 circleId: circleId,
                 circleName: circleName
@@ -235,10 +235,14 @@
         });
     }
 
-    function OpenWriteArticle(){
+    function OpenWriteArticle() {
         api.openWin({
             name: 'writeArticle',
-            url:'./writeArticle.html'
+            url: './writeArticle.html',
+            pageParam: {
+                circleId: circleId,
+                circleName: circleName
+            }
         });
     }
 </script>
