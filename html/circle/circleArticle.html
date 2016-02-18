@@ -73,6 +73,11 @@
         .articleContent {
             padding: 0 15px;
         }
+
+        img.emotion{
+            width: 30px;
+            height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -134,9 +139,10 @@
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/utils.js"></script>
+<script type="text/javascript" src="../../script/emotions.js"></script>
 <script type="text/javascript">
     var defaultHeadImg = '../../image/default_head.jpg';
-    var articleId, circleId,circleName;
+    var articleId, circleId, circleName;
     var replyList = [];
     apiready = function () {
         var pageParam = api.pageParam;
@@ -154,7 +160,7 @@
             textDown: '下拉刷新...',
             textUp: '松开刷新...',
             showTime: true
-        }, function( ret, err ){
+        }, function (ret, err) {
             GetArticle();
             api.refreshHeaderLoadDone();
         });
@@ -179,21 +185,24 @@
                         var headImg = article.authorId.avatar ? article.authorId.avatar.url : defaultHeadImg;
                         var str = '';
                         str += '<div class="userInfoHead"><img src="' + headImg + '"></div>' +
-                                '<div class="userInfoName">'+article.authorId.nickname+'</div>' +
+                                '<div class="userInfoName">' + article.authorId.nickname + '</div>' +
                                 '<div class="userInfoTime">' +
                                 '<div class="floor">楼主</div>' +
                                 '<div class="time">' + Utils.GetTimeDate(article.createdAt) + '</div></div>';
                         $api.html($api.dom('#articleMainContent .userInfoBar'), str);
 
                         //文章内容
-                        $api.html($api.dom('#articleMainContent .articleContent'), article.articleContent);
+                        str = '';
+                        str += TextToEmotion(article.articleContent) +
+                                (!!article.articlePic && !!article.articlePic.url ? '<img width="100%" height="auto" src="' + article.articlePic.url + '"></div></div>' : '');
+                        $api.html($api.dom('#articleMainContent .articleContent'), str);
 
                         //回复列表
                         GetReplyList();
 
                         //文章标题信息
                         $api.text($api.dom('#articleHeader .articleTitle'), article.articleTitle);
-                        $api.html($api.dom('#articleHeader .circleName'),circleName);
+                        $api.html($api.dom('#articleHeader .circleName'), circleName);
 
                         //统计信息
                         $api.html($api.dom('#statistics .articleLike span'), article.articleLikedUserId.length);
@@ -267,6 +276,18 @@
                     '<div class="articleContent">' + reply.content + '</div></div>';
         }
         $api.html($articleReplyList, str);
+    }
+
+    /**
+     * @return {string}
+     */
+    function TextToEmotion(text){
+        var str = text;
+        for(var i = 0;i<emotions.length;i++){
+            var emo = emotions[i];
+            str = str.split(emo.text).join('<img class="emotion" src="../../image/emotion/'+ emo.name +'.png">');
+        }
+        return str;
     }
 </script>
 </html>
