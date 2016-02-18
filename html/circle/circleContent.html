@@ -163,6 +163,7 @@
                                 time: Utils.ParseTime(item.updatedAt),
                                 title: item.articleTitle,
                                 content: item.articleContent,
+                                picUrl: item.articlePic? item.articlePic.url : null,
                                 replyNum: 0,
                                 likeNum: item.articleLikedUserId.length
                             };
@@ -203,7 +204,7 @@
         var time = article.time;
         var title = article.title;
         var summmary = article.content;
-        var firstImg = article.firstImg;
+        var picUrl = article.picUrl;
         var likeNum = article.likeNum;
         var replyNum = article.replyNum;
 
@@ -215,7 +216,7 @@
                 '<p class="articleTime">' + time + '</p></div>' +
                 '<div class="articleContent"><h1 class="articleTitle">' + title + '</h1>' +
                 '<div class="articleContentSummary">' + summmary +
-                (!!firstImg ? '<img width="100%" height="auto" src="' + firstImg + '"></div></div>' : '') +
+                (!!picUrl ? '<img width="100%" height="auto" src="' + picUrl + '"></div></div>' : '') +
                 '<div class="articleInteract"><div class="articleLike"><i class="aui-iconfont aui-icon-like aui-text-blue"></i>' +
                 '<span class="aui-text-default">' + likeNum + '</span></div>&nbsp;' +
                 '<div class="articleReply"><i class="aui-iconfont aui-icon-message aui-text-blue"></i>' +
