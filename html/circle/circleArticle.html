@@ -74,7 +74,7 @@
             padding: 0 15px;
         }
 
-        img.emotion{
+        img.emotion {
             width: 30px;
             height: 30px;
         }
@@ -281,11 +281,11 @@
     /**
      * @return {string}
      */
-    function TextToEmotion(text){
+    function TextToEmotion(text) {
         var str = text;
-        for(var i = 0;i<emotions.length;i++){
+        for (var i = 0; i < emotions.length; i++) {
             var emo = emotions[i];
-            str = str.split(emo.text).join('<img class="emotion" src="../../image/emotion/'+ emo.name +'.png">');
+            str = str.split(emo.text).join('<img class="emotion" src="../../image/emotion/' + emo.name + '.png">');
         }
         return str;
     }
