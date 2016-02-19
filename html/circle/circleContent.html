@@ -101,7 +101,7 @@
             </div>
         </li>
         <li class="aui-list-view-cell circleHandleBlock">
-            <div class="aui-btn aui-btn-block aui-btn-danger circleHandle">
+            <div id="likeButton" class="aui-btn aui-btn-block aui-btn-danger circleHandle" onclick="AddLike();">
                 <strong class="aui-iconfont aui-icon-add"></strong>关注
             </div>
             <div class="aui-btn aui-btn-block aui-btn-warning circleHandle">
@@ -129,6 +129,8 @@
     var defaultHeadImg = '../../image/default_head.jpg';
     var articleList = [];
     var circleId, circleName;
+    var circleMemberIds;
+
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
 
@@ -156,7 +158,11 @@
                         var info = ret[0];
                         var headUrl = info.circleHeader ? info.circleHeader.url : defaultHeadImg;
                         var master= info.circleMasterId;
-                        var circleMemberIds = info.circleMemberIds;
+                        circleMemberIds = info.circleMemberIds;
+                        //修改关注按钮
+                        if(IsCircleMember()){
+                            ChangeLikeButton('cancel');
+                        }
 
                         //查询文件数量
                         query.createQuery(function (ret, err) {
@@ -285,14 +291,101 @@
     }
 
     function OpenWriteArticle() {
-        api.openWin({
-            name: 'writeArticle',
-            url: './writeArticle.html',
-            pageParam: {
-                circleId: circleId,
-                circleName: circleName
+        if(IsCircleMember()){
+            api.openWin({
+                name: 'writeArticle',
+                url: './writeArticle.html',
+                pageParam: {
+                    circleId: circleId,
+                    circleName: circleName
+                }
+            });
+        }else{
+            api.alert({msg:'你还不是圈子成员'});
+        }
+    }
+
+    /**
+     * @return {boolean}
+     */
+    function IsCircleMember(){
+        var userInfo = $api.getStorage('userInfo');
+        if(!!userInfo && !!circleMemberIds){
+            var userId = userInfo.userId;
+            return circleMemberIds.indexOf(userId) >= 0;
+        }else{
+            return false;
+        }
+    }
+
+    //关注
+    function AddLike(){
+        if(!!circleMemberIds){return;}//如果成员列表没有加载完毕，直接退出
+
+        var userInfo = $api.getStorage('userInfo');
+        if(!!userInfo){
+            var userId = userInfo.userId;
+
+            if(!IsCircleMember()){
+                circleMemberIds.push(userId);
+                var model = api.require('model');
+                model.updateById({
+                    class: 'Circle',
+                    id: circleId,
+                    value: {
+                        circleMemberIds: circleMemberIds
+                    }
+                }, function(ret, err){
+                    if(ret){
+                        api.toast({msg:'成功关注圈子'});
+                    }else{
+                        api.toast({msg:'关注失败,请检查你的网络环境'});
+                        ChangeLikeButton('add');
+                    }
+                });
             }
-        });
+
+            ChangeLikeButton('cancel');
+        }else{
+            api.alert({msg: '您尚未登录，请先登录'});
+        }
+
+    }
+    //取消关注
+    function CancelLike(){
+        if(IsCircleMember()){
+            var index = circleMemberIds.indexOf(userId);
+            circleMemberIds.splice(index,1);
+            var model = api.require('model');
+            model.updateById({
+                class: 'Circle',
+                id: circleId,
+                value: {
+                    circleMemberIds: circleMemberIds
+                }
+            }, function(ret, err){
+                if(ret){
+                    api.toast({msg:'成功取消关注'});
+                }else{
+                    api.toast({msg:'取消关注失败,请检查你的网络环境'});
+                    ChangeLikeButton('cancel');
+                }
+            });
+        }
+
+        ChangeLikeButton('add');
+    }
+    function ChangeLikeButton(dir) {
+        var $button = $api.byId('likeButton');
+        if(dir == 'add'){
+            //改为添加关注
+            $api.attr($button,'onclick','AddLike();');
+            $api.html($button,'<strong class="aui-iconfont aui-icon-add"></strong>关注');
+        }else if(dir=='cancel'){
+            //改为已关注
+            $api.attr($button,'onclick','CancelLike();');
+            $api.html($button,'已关注');
+        }
     }
 </script>
 </html>
