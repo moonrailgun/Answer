@@ -142,7 +142,7 @@
         GetArticleList(circleId);
     };
 
-    function GetCircleInfo(){
+    function GetCircleInfo() {
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -153,14 +153,14 @@
                 model.findAll({
                     class: "Circle",
                     qid: queryId
-                },function(ret, err){
-                    if(!!ret){
+                }, function (ret, err) {
+                    if (!!ret) {
                         var info = ret[0];
                         var headUrl = info.circleHeader ? info.circleHeader.url : defaultHeadImg;
-                        var master= info.circleMasterId;
+                        var master = info.circleMasterId;
                         circleMemberIds = info.circleMemberIds;
                         //修改关注按钮
-                        if(IsCircleMember()){
+                        if (IsCircleMember()) {
                             ChangeLikeButton('cancel');
                         }
 
@@ -172,16 +172,16 @@
                                 model.findAll({
                                     class: "CircleArticle",
                                     qid: queryId
-                                }, function (ret,err) {
-                                    if(ret){
+                                }, function (ret, err) {
+                                    if (ret) {
                                         var circleArticleNum = ret.length;
 
                                         var str = '';
-                                        str +='<img src="'+headUrl+'" class="aui-img-object aui-pull-left circleHead">' +
+                                        str += '<img src="' + headUrl + '" class="aui-img-object aui-pull-left circleHead">' +
                                                 '<div class="aui-img-body aui-arrow-right">' +
-                                                '<span>'+circleName+'</span>' +
-                                                '<p>圈主:'+ master.nickname +'</p>' +
-                                                '<p>关注:'+circleMemberIds.length+' 帖子:'+circleArticleNum+'</p></div>'
+                                                '<span>' + circleName + '</span>' +
+                                                '<p>圈主:' + master.nickname + '</p>' +
+                                                '<p>关注:' + circleMemberIds.length + ' 帖子:' + circleArticleNum + '</p></div>'
                                         $api.html($api.byId('circleInfo'), str);
                                     }
                                 });
@@ -217,7 +217,7 @@
                                 time: Utils.ParseTime(item.updatedAt),
                                 title: item.articleTitle,
                                 content: item.articleContent,
-                                picUrl: item.articlePic? item.articlePic.url : null,
+                                picUrl: item.articlePic ? item.articlePic.url : null,
                                 replyNum: 0,
                                 likeNum: item.articleLikedUserId.length
                             };
@@ -291,7 +291,7 @@
     }
 
     function OpenWriteArticle() {
-        if(IsCircleMember()){
+        if (IsCircleMember()) {
             api.openWin({
                 name: 'writeArticle',
                 url: './writeArticle.html',
@@ -300,33 +300,35 @@
                     circleName: circleName
                 }
             });
-        }else{
-            api.alert({msg:'你还不是圈子成员'});
+        } else {
+            api.alert({msg: '你还不是圈子成员'});
         }
     }
 
     /**
      * @return {boolean}
      */
-    function IsCircleMember(){
+    function IsCircleMember() {
         var userInfo = $api.getStorage('userInfo');
-        if(!!userInfo && !!circleMemberIds){
+        if (!!userInfo && !!circleMemberIds) {
             var userId = userInfo.userId;
             return circleMemberIds.indexOf(userId) >= 0;
-        }else{
+        } else {
             return false;
         }
     }
 
     //关注
-    function AddLike(){
-        if(!!circleMemberIds){return;}//如果成员列表没有加载完毕，直接退出
+    function AddLike() {
+        if (!!circleMemberIds) {
+            return;
+        }//如果成员列表没有加载完毕，直接退出
 
         var userInfo = $api.getStorage('userInfo');
-        if(!!userInfo){
+        if (!!userInfo) {
             var userId = userInfo.userId;
 
-            if(!IsCircleMember()){
+            if (!IsCircleMember()) {
                 circleMemberIds.push(userId);
                 var model = api.require('model');
                 model.updateById({
@@ -335,27 +337,27 @@
                     value: {
                         circleMemberIds: circleMemberIds
                     }
-                }, function(ret, err){
-                    if(ret){
-                        api.toast({msg:'成功关注圈子'});
-                    }else{
-                        api.toast({msg:'关注失败,请检查你的网络环境'});
+                }, function (ret, err) {
+                    if (ret) {
+                        api.toast({msg: '成功关注圈子'});
+                    } else {
+                        api.toast({msg: '关注失败,请检查你的网络环境'});
                         ChangeLikeButton('add');
                     }
                 });
             }
 
             ChangeLikeButton('cancel');
-        }else{
+        } else {
             api.alert({msg: '您尚未登录，请先登录'});
         }
 
     }
     //取消关注
-    function CancelLike(){
-        if(IsCircleMember()){
+    function CancelLike() {
+        if (IsCircleMember()) {
             var index = circleMemberIds.indexOf(userId);
-            circleMemberIds.splice(index,1);
+            circleMemberIds.splice(index, 1);
             var model = api.require('model');
             model.updateById({
                 class: 'Circle',
@@ -363,11 +365,11 @@
                 value: {
                     circleMemberIds: circleMemberIds
                 }
-            }, function(ret, err){
-                if(ret){
-                    api.toast({msg:'成功取消关注'});
-                }else{
-                    api.toast({msg:'取消关注失败,请检查你的网络环境'});
+            }, function (ret, err) {
+                if (ret) {
+                    api.toast({msg: '成功取消关注'});
+                } else {
+                    api.toast({msg: '取消关注失败,请检查你的网络环境'});
                     ChangeLikeButton('cancel');
                 }
             });
@@ -377,14 +379,14 @@
     }
     function ChangeLikeButton(dir) {
         var $button = $api.byId('likeButton');
-        if(dir == 'add'){
+        if (dir == 'add') {
             //改为添加关注
-            $api.attr($button,'onclick','AddLike();');
-            $api.html($button,'<strong class="aui-iconfont aui-icon-add"></strong>关注');
-        }else if(dir=='cancel'){
+            $api.attr($button, 'onclick', 'AddLike();');
+            $api.html($button, '<strong class="aui-iconfont aui-icon-add"></strong>关注');
+        } else if (dir == 'cancel') {
             //改为已关注
-            $api.attr($button,'onclick','CancelLike();');
-            $api.html($button,'已关注');
+            $api.attr($button, 'onclick', 'CancelLike();');
+            $api.html($button, '已关注');
         }
     }
 </script>
