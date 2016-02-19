@@ -89,15 +89,15 @@
 </header>
 <div class="aui-content">
     <ul class="aui-list-view">
-        <li class="aui-list-view-cell aui-img">
+        <li id="circleInfo" class="aui-list-view-cell aui-img">
             <img src="../../image/default_head.jpg" class="aui-img-object aui-pull-left circleHead">
 
             <div class="aui-img-body aui-arrow-right">
-                <span>大学生自拍交友</span>
+                <span>&nbsp;</span>
 
-                <p>圈主:moonrailgun</p>
+                <p>圈主:</p>
 
-                <p>关注:999 帖子:233</p>
+                <p>关注:&nbsp; 帖子:&nbsp;</p>
             </div>
         </li>
         <li class="aui-list-view-cell circleHandleBlock">
@@ -136,8 +136,56 @@
         circleId = pageParam.circleId;
         circleName = pageParam.circleName;
 
+        GetCircleInfo();
         GetArticleList(circleId);
     };
+
+    function GetCircleInfo(){
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({qid: queryId, column: 'id', value: circleId});
+                query.include({qid: queryId, column: 'circleMasterId'});
+                var model = api.require('model');
+                model.findAll({
+                    class: "Circle",
+                    qid: queryId
+                },function(ret, err){
+                    if(!!ret){
+                        var info = ret[0];
+                        var headUrl = info.circleHeader ? info.circleHeader.url : defaultHeadImg;
+                        var master= info.circleMasterId;
+                        var circleMemberIds = info.circleMemberIds;
+
+                        //查询文件数量
+                        query.createQuery(function (ret, err) {
+                            if (ret && ret.qid) {
+                                var queryId = ret.qid;
+                                query.whereEqual({qid: queryId, column: 'circleId', value: circleId});
+                                model.findAll({
+                                    class: "CircleArticle",
+                                    qid: queryId
+                                }, function (ret,err) {
+                                    if(ret){
+                                        var circleArticleNum = ret.length;
+
+                                        var str = '';
+                                        str +='<img src="'+headUrl+'" class="aui-img-object aui-pull-left circleHead">' +
+                                                '<div class="aui-img-body aui-arrow-right">' +
+                                                '<span>'+circleName+'</span>' +
+                                                '<p>圈主:'+ master.nickname +'</p>' +
+                                                '<p>关注:'+circleMemberIds.length+' 帖子:'+circleArticleNum+'</p></div>'
+                                        $api.html($api.byId('circleInfo'), str);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 
     function GetArticleList(circleId) {
         var query = api.require('query');
