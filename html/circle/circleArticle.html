@@ -78,6 +78,10 @@
             width: 30px;
             height: 30px;
         }
+
+        #articleReplyList{
+            padding-bottom: 46px;
+        }
     </style>
 </head>
 <body>
@@ -152,7 +156,33 @@
 
         GetArticle();
 
-        //下拉刷新
+        //配置回复框
+        var UIChatBox = api.require('UIChatBox');
+        UIChatBox.open({
+            placeholder: '',
+            maxRows: 4,
+            emotionPath: 'widget://image/emotion',
+            texts: {
+                recordBtn: {
+                    normalTitle: '按住 说话',
+                    activeTitle: '松开 结束'
+                },
+                sendBtn: {
+                    title: "send"
+                }
+            }
+        }, function (ret, err) {
+            if (ret) {
+                if (ret.eventType == 'send') {
+                    var msg = ret.msg;
+                    UIChatBox.closeBoard();
+                    UIChatBox.closeKeyboard();
+                    SendReply(msg);
+                }
+            }
+        });
+
+        //设置下拉刷新
         api.setRefreshHeaderInfo({
             visible: true,
             bgColor: '#f4f4f4',
@@ -288,6 +318,31 @@
             str = str.split(emo.text).join('<img class="emotion" src="../../image/emotion/' + emo.name + '.png">');
         }
         return str;
+    }
+
+    function SendReply(msg) {
+        var userInfo = $api.getStorage('userInfo');
+        if (!!articleId && !!userInfo && !!userInfo.userId) {
+            var relation_m = api.require('relation');
+            relation_m.insert({
+                class: 'CircleArticle',
+                id: articleId,
+                column: 'articleReply',
+                value: {
+                    replyContent: msg,
+                    authorId: userInfo.userId
+                }
+            }, function (ret, err) {
+                if (!!ret) {
+                    api.toast({msg:'发表成功'});
+                    GetArticle();//重新获取文章
+                }else{
+                    api.toast({msg:'发表失败请检查您的网络环境'});
+                }
+            });
+        } else {
+            api.alert({msg: '请登陆后再发表回复'});
+        }
     }
 </script>
 </html>
