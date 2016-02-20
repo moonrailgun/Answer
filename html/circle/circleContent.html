@@ -77,16 +77,6 @@
     </style>
 </head>
 <body>
-<header class="aui-bar aui-bar-nav aui-bar-info">
-    <a class="aui-pull-left">
-        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
-    </a>
-
-    <div class="aui-title">圈子</div>
-    <a class="aui-pull-right" onclick="OpenWriteArticle();">
-        <span class="aui-iconfont aui-icon-edit"></span>
-    </a>
-</header>
 <div class="aui-content">
     <ul class="aui-list-view">
         <li id="circleInfo" class="aui-list-view-cell aui-img">
@@ -140,6 +130,20 @@
 
         GetCircleInfo();
         GetArticleList(circleId);
+
+        //设置下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            bgColor: '#f4f4f4',
+            textColor: '#000',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function (ret, err) {
+            GetCircleInfo();
+            GetArticleList(circleId);
+            api.refreshHeaderLoadDone();
+        });
     };
 
     function GetCircleInfo() {
@@ -208,6 +212,7 @@
                     qid: queryId
                 }, function (ret, err) {
                     if (ret) {
+                        articleList = [];
                         for (var i = 0; i < ret.length; i++) {
                             var item = ret[i];
                             var article = {
