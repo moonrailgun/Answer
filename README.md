@@ -76,6 +76,9 @@
 	- name
 	- time
 	- site
+- im
+	- id
+	- token
 
 # 数据库架构 #
 ## 数据库 ##

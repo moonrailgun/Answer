@@ -198,6 +198,7 @@
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/mrg.js"></script>
+<script type="text/javascript" src="../../script/im.js"></script>
 <script type="text/javascript">
     //登陆相关
     function OnLogin() {
@@ -239,6 +240,7 @@
                             avatar: avatar
                         };
                         $api.setStorage('userInfo', userInfo);//存入本地
+                        SetIMToken(id,nickname);//配置IM信息
                         //页面跳转
                         switchPage(1);
                     }
@@ -258,6 +260,35 @@
     }
     function OnForgotPassword() {
         api.alert({msg: "你记性真差"});
+    }
+
+    function SetIMToken(userId,userName){
+        api.loadSecureValue({
+            key: 'rongcloudSecret'
+        },function(ret, err){
+            if(!!ret){
+                var appKey = 'z3v5yqkbvtci0';
+                var appSecret = ret.value;
+
+                rongcloud_im.init(appKey, appSecret);
+                rongcloud_im.getUserToken(userId,userName, function (ret, err) {
+                    if(!!ret) {
+                        var data = {
+                            userId: ret.userId,
+                            token: ret.token
+                        };
+                        $api.setStorage('im', data);
+                        api.sendEvent({
+                            name: 'IM_login',
+                            extra: {
+                                userId: ret.userId,
+                                token: ret.token
+                            }
+                        });
+                    }
+                })
+            }
+        });
     }
 </script>
 <script type="text/javascript">

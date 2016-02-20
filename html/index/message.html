@@ -11,12 +11,42 @@
 </head>
 <body>
 <div style="position: relative;height: 100%;width: 100%;">
-    <p style="position: absolute;margin: auto;height: 24px;width: 100%;left: 0;right: 0;top: 0;bottom: 0;text-align: center">你还没有任何消息哦~</p>
+    <p style="position: absolute;margin: auto;height: 24px;width: 100%;left: 0;right: 0;top: 0;bottom: 0;text-align: center">
+        你还没有任何消息哦~
+    </p>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    var rong = null;
+    var userId,userToken;
     apiready = function () {
+        rong = api.require('rongCloud2');
+
+        Init();
+
+        api.addEventListener({
+            name: 'IM_login'
+        }, function (ret, err) {
+            if(!!ret){
+                userId = ret.userId;
+                userToken = ret.token;
+                Init();
+            }
+        });
     };
+
+    function Init(){
+        if(!!userToken){
+            rong.connect({
+                token: userToken
+            }, function (ret, err) {
+                if (ret.status == 'success')
+                    api.toast({msg: '登陆成功'});
+            });
+        }
+    }
+
+
 </script>
 </html>
