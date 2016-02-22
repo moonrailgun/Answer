@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        #circleHeader{
+            text-align: center;
+            padding: 10px 0;
+            background-color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+        #circleHeader img{
+            border-radius: 100%;
+            width: 120px;
+            height: 120px;
+        }
+        #circleHeader h1{
+            font-size: 20px;
+        }
+        #circleInfo{
+            background-color: #FFFFFF;
+            padding: 0 12px;
+        }
+        #circleInfo li{
+            border-bottom: 1px solid #e3e3e3;
+            line-height: 56px;
+        }
+        #circleInfo li:last-child{
+            border-bottom:0;
+        }
+        #circleInfo li div{
+            display: inline-block;
+            margin-right: 15px;
+            color: #8f8f94;
+        }
+        #circleInfo li img.circleMasterHeader{
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        #circleInfo li a{
+            color: #ff9634;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">圈子</div>
+</header>
+<div class="aui-content">
+    <div id="circleHeader">
+        <img src="../../image/default_head.jpg" />
+        <h1>大学生自拍交友</h1>
+    </div>
+    <ul id="circleInfo">
+        <li>
+            <div>成员</div>
+            <span>110</span>
+        </li>
+        <li>
+            <div>话题</div>
+            <span>110</span>
+        </li>
+        <li>
+            <div>圈主</div>
+            <span><img class="circleMasterHeader" src="../../image/default_head.jpg"><a>moonrailgun</a></span>
+        </li>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+        var pageParam = api.pageParam;
+        if(!!pageParam){
+            var circleId = pageParam.circleId;
+            var circleName = pageParam.circleName;
+        }
+    };
+</script>
+</html>
