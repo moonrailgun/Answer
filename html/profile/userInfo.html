@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        #userHeader{
+            text-align: center;
+            padding: 10px 0;
+            background-color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+        #userHeader img{
+            border-radius: 100%;
+            width: 120px;
+            height: 120px;
+        }
+        #userHeader h1{
+            font-size: 20px;
+        }
+        #userButton{
+            display: -webkit-box;
+        }
+        #userButton .aui-col-xs-6{
+            padding: 0 6px;
+        }
+        #userButton .aui-col-xs-6 .aui-btn{
+            width: 100%;
+            line-height: 26px;
+        }
+    </style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">资料</div>
+</header>
+<div class="aui-content">
+    <div id="userHeader">
+        <img src="../../image/default_head.jpg" />
+        <h1>moonrailgun</h1>
+    </div>
+    <div id="userButton">
+        <div class="aui-col-xs-6">
+            <div class="aui-btn aui-btn-default">关注</div>
+        </div>
+        <div class="aui-col-xs-6">
+            <div class="aui-btn aui-btn-danger">发消息</div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+    };
+</script>
+</html>
