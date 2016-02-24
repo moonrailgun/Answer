@@ -33,6 +33,24 @@
             width: 100%;
             line-height: 26px;
         }
+
+        #userInfo{
+            background-color: #FFFFFF;
+            padding: 0 12px;
+            margin-bottom: 10px;
+        }
+        #userInfo li{
+            border-bottom: 1px solid #e3e3e3;
+            line-height: 56px;
+        }
+        #userInfo li:last-child{
+            border-bottom:0;
+        }
+        #userInfo li div{
+            display: inline-block;
+            margin-right: 15px;
+            color: #8f8f94;
+        }
     </style>
 </head>
 <body>
@@ -48,6 +66,28 @@
         <img src="../../image/default_head.jpg" />
         <h1>moonrailgun</h1>
     </div>
+    <ul id="userInfo">
+        <li>
+            <div>性别</div>
+            <span>男</span>
+        </li>
+        <li>
+            <div>学校</div>
+            <span>辽宁工程技术大学</span>
+        </li>
+        <li>
+            <div>身份</div>
+            <span>学生</span>
+        </li>
+        <li>
+            <div>话题</div>
+            <span>111</span>
+        </li>
+        <li>
+            <div>回复</div>
+            <span>222</span>
+        </li>
+    </ul>
     <div id="userButton">
         <div class="aui-col-xs-6">
             <div class="aui-btn aui-btn-default">关注</div>
