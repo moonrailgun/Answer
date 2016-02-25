@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin();"></span>
+    </a>
+
+    <div class="aui-title">修改档案</div>
+    <a class="aui-pull-right">
+        <span class="aui-iconfont aui-icon-check" onclick="AddCountdownEvent();"></span>
+    </a>
+</header>
+<div class="aui-content">
+    <div class="aui-form">
+        <div class="aui-input-row">
+            <label class="aui-input-addon">昵称</label>
+            <input id="nickname" type="text" class="aui-input aui-text-right" placeholder="昵称"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">性别</span>
+            <input id="sex" type="text" readonly="readonly" class="aui-input aui-text-right" placeholder="性别" onclick="OpenSexPicker();"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">身份</span>
+            <input id="role" type="text" class="aui-input aui-text-right" placeholder="身份"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">学校</span>
+            <input id="school" type="text" class="aui-input aui-text-right" placeholder="学校"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">学院</span>
+            <input id="college" type="text" class="aui-input aui-text-right" placeholder="学院"/>
+        </div>
+        <div class="aui-input-row">
+            <span class="aui-input-addon">专业</span>
+            <input id="major" type="text" class="aui-input aui-text-right" placeholder="学院"/>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+        var pageParam = api.pageParam;
+    };
+
+    function OpenSexPicker(){
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['男','女','保密']
+        },function( ret, err ){
+            if(!!ret ){
+                var index = ret.buttonIndex;
+                if(index == 1){
+                    $api.val($api.byId('sex'), '男');
+                }else if(index==2){
+                    $api.val($api.byId('sex'), '女');
+                }else if(index == 3){
+                    $api.val($api.byId('sex'), '保密');
+                }
+            }
+        });
+    }
+
+    function SaveProfile(){
+
+    }
+</script>
+</html>
