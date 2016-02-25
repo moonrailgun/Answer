@@ -79,7 +79,7 @@
             height: 30px;
         }
 
-        #articleReplyList{
+        #articleReplyList {
             padding-bottom: 46px;
         }
     </style>
@@ -215,7 +215,7 @@
                         var headImg = article.authorId.avatar ? article.authorId.avatar.url : defaultHeadImg;
                         var str = '';
                         str += '<div class="userInfoHead"><img src="' + headImg + '"></div>' +
-                                '<div class="userInfoName">' + article.authorId.nickname + '</div>' +
+                                '<div class="userInfoName" onclick=\'OpenUserInfo("' + article.authorId.id + '")\'>' + article.authorId.nickname + '</div>' +
                                 '<div class="userInfoTime">' +
                                 '<div class="floor">楼主</div>' +
                                 '<div class="time">' + Utils.GetTimeDate(article.createdAt) + '</div></div>';
@@ -275,6 +275,7 @@
                                     if (ret) {
                                         var user = ret[0];
                                         reply.author = {
+                                            id: user.id,
                                             name: user.nickname,
                                             headUrl: user.avatar ? user.avatar.url : defaultHeadImg
                                         };
@@ -299,13 +300,24 @@
             var reply = replyList[i];
             str += '<div class="article whiteBlock"><div class="userInfoBar">' +
                     '<div class="userInfoHead"><img src="' + (!!reply.author ? reply.author.headUrl : defaultHeadImg) + '"></div>' +
-                    '<div class="userInfoName">' + (!!reply.author ? reply.author.name : '&nbsp;') + '</div>' +
+                    '<div class="userInfoName"' + (!!reply.author ? ' onclick=\'OpenUserInfo("' + reply.author.id + '");\'' : '') + '>' +
+                    (!!reply.author ? reply.author.name : '&nbsp;') + '</div>' +
                     '<div class="userInfoTime"><div class="floor">' + (i + 2) + '楼</div>' +
                     '<div class="time">' + Utils.GetTimeDate(reply.time) + '</div>' +
                     '</div></div>' +
                     '<div class="articleContent">' + reply.content + '</div></div>';
         }
         $api.html($articleReplyList, str);
+    }
+
+    function OpenUserInfo(userId) {
+        api.openWin({
+            name: 'userInfo',
+            url: '../profile/userInfo.html',
+            pageParam: {
+                userId: userId
+            }
+        })
     }
 
     /**
@@ -334,10 +346,10 @@
                 }
             }, function (ret, err) {
                 if (!!ret) {
-                    api.toast({msg:'发表成功'});
+                    api.toast({msg: '发表成功'});
                     GetArticle();//重新获取文章
-                }else{
-                    api.toast({msg:'发表失败请检查您的网络环境'});
+                } else {
+                    api.toast({msg: '发表失败请检查您的网络环境'});
                 }
             });
         } else {

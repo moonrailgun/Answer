@@ -9,44 +9,53 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
-        #userHeader{
+        #userHeader {
             text-align: center;
             padding: 10px 0;
             background-color: #FFFFFF;
             margin-bottom: 10px;
         }
-        #userHeader img{
+
+        #userHeader img {
             border-radius: 100%;
             width: 120px;
             height: 120px;
         }
-        #userHeader h1{
+
+        #userHeader h1 {
             font-size: 20px;
         }
-        #userButton{
+
+        #userButton {
             display: -webkit-box;
+            padding-bottom: 10px;
         }
-        #userButton .aui-col-xs-6{
+
+        #userButton .aui-col-xs-6 {
             padding: 0 6px;
         }
-        #userButton .aui-col-xs-6 .aui-btn{
+
+        #userButton .aui-col-xs-6 .aui-btn {
             width: 100%;
             line-height: 26px;
         }
 
-        #userInfo{
+        #userInfo {
             background-color: #FFFFFF;
             padding: 0 12px;
             margin-bottom: 10px;
         }
-        #userInfo li{
+
+        #userInfo li {
             border-bottom: 1px solid #e3e3e3;
             line-height: 56px;
         }
-        #userInfo li:last-child{
-            border-bottom:0;
+
+        #userInfo li:last-child {
+            border-bottom: 0;
         }
-        #userInfo li div{
+
+        #userInfo li div {
             display: inline-block;
             margin-right: 15px;
             color: #8f8f94;
@@ -63,29 +72,34 @@
 </header>
 <div class="aui-content">
     <div id="userHeader">
-        <img src="../../image/default_head.jpg" />
-        <h1>moonrailgun</h1>
+        <img id="info-head" src="../../image/default_head.jpg"/>
+
+        <h1 id="info-name">moonrailgun</h1>
     </div>
     <ul id="userInfo">
         <li>
             <div>性别</div>
-            <span>男</span>
+            <span id="info-sex">&nbsp;</span>
         </li>
         <li>
             <div>学校</div>
-            <span>辽宁工程技术大学</span>
+            <span id="info-school">&nbsp;</span>
         </li>
         <li>
             <div>身份</div>
-            <span>学生</span>
+            <span id="info-role">&nbsp;</span>
+        </li>
+        <li>
+            <div>简介</div>
+            <span id="info-intro">&nbsp;</span>
         </li>
         <li>
             <div>话题</div>
-            <span>111</span>
+            <span id="info-topic-num">&nbsp;</span>
         </li>
         <li>
             <div>回复</div>
-            <span>222</span>
+            <span id="info-reply-num">&nbsp;</span>
         </li>
     </ul>
     <div id="userButton">
@@ -100,8 +114,48 @@
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    var userId;
+    var defaultHeadImg = '../../image/default_head.jpg';
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
+        var pageParam = api.pageParam;
+        userId = pageParam.userId || '';
+
+        UpdateUserInfo(userId);
     };
+
+    function UpdateUserInfo(userId) {
+        var model = api.require('model');
+        var query = api.require('query');
+        query.createQuery(function (ret, err) {
+            if (ret && ret.qid) {
+                var queryId = ret.qid;
+                query.whereEqual({qid: ret.qid, column: 'id', value: userId});
+                query.include({qid: ret.qid, column: 'profile'});
+                model.findAll({
+                    class: "user",
+                    qid: queryId
+                }, function (ret, err) {
+                    if (ret) {
+                        var userInfo = ret[0];
+                        var nickname = userInfo.nickname;
+                        var url = userInfo.avatar ? userInfo.avatar.url : defaultHeadImg;
+                        var profile = userInfo.profile || {
+                                    role: '未知',
+                                    school: '未知',
+                                    intro: '这家伙很懒什么都没写',
+                                    sex: '未知'
+                                };
+                        $api.attr($api.byId('info-head'), 'src', url);
+                        $api.html($api.byId('info-name'), nickname);
+                        $api.html($api.byId('info-sex'), profile.sex);
+                        $api.html($api.byId('info-school'), profile.school);
+                        $api.html($api.byId('info-role'), profile.school);
+                        $api.html($api.byId('info-intro'), profile.intro);
+                    }
+                });
+            }
+        });
+    }
 </script>
 </html>

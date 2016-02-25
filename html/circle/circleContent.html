@@ -217,7 +217,8 @@
                             var item = ret[i];
                             var article = {
                                 id: item.id,
-                                author: item.authorId.nickname,
+                                authorId: item.authorId.id,
+                                authorName: item.authorId.nickname,
                                 headImg: item.authorId.avatar ? item.authorId.avatar.url : defaultHeadImg,
                                 time: Utils.ParseTime(item.updatedAt),
                                 title: item.articleTitle,
@@ -255,10 +256,12 @@
             AddArticle(articleList[i]);
         }
     }
+    alert('a');
 
     function AddArticle(article) {
         var id = article.id;
-        var author = article.author;
+        var authorId = article.authorId;
+        var authorName = article.authorName;
         var headImg = article.headImg || defaultHeadImg;
         var time = article.time;
         var title = article.title;
@@ -271,7 +274,7 @@
         var str = '';
         str += '<div class="article" onclick=\'EnterArticle("' + id + '")\'><div class="articleInfo">' +
                 '<img src="' + headImg + '" class="circleHead articleHead">' +
-                '<div class="articleAuthor aui-ellipsis-1">' + author + '</div>' +
+                '<div class="articleAuthor aui-ellipsis-1" onclick=\'OpenUserInfo("' + authorId + '")\'>' + authorName + '</div>' +
                 '<p class="articleTime">' + time + '</p></div>' +
                 '<div class="articleContent"><h1 class="articleTitle">' + title + '</h1>' +
                 '<div class="articleContentSummary">' + summmary +
@@ -308,6 +311,16 @@
         } else {
             api.alert({msg: '你还不是圈子成员'});
         }
+    }
+
+    function OpenUserInfo(userId) {
+        api.openWin({
+            name: 'userInfo',
+            url: '../profile/userInfo.html',
+            pageParam: {
+                userId: userId
+            }
+        })
     }
 
     /**
