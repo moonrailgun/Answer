@@ -28,7 +28,8 @@
         </div>
         <div class="aui-input-row">
             <span class="aui-input-addon">性别</span>
-            <input id="sex" type="text" readonly="readonly" class="aui-input aui-text-right" placeholder="性别" onclick="OpenSexPicker();"/>
+            <input id="sex" type="text" readonly="readonly" class="aui-input aui-text-right" placeholder="性别"
+                   onclick="OpenSexPicker();"/>
         </div>
         <div class="aui-input-row">
             <span class="aui-input-addon">身份</span>
@@ -51,13 +52,13 @@
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
-    var preProfile,userId;
+    var preProfile, userId;
 
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
         var profile = api.pageParam;
 
-        if(!!profile) {
+        if (!!profile) {
             userId = profile.userId;
             var nickname = profile.nickname || '';
             var sex = profile.sex || '保密';
@@ -74,30 +75,30 @@
             $api.val($api.byId('major'), major);
 
             preProfile = profile;
-        }else{
-            api.toast({msg:'非法操作'});
+        } else {
+            api.toast({msg: '非法操作'});
         }
     };
 
-    function OpenSexPicker(){
+    function OpenSexPicker() {
         api.actionSheet({
             cancelTitle: '取消',
-            buttons: ['男','女','保密']
-        },function( ret, err ){
-            if(!!ret ){
+            buttons: ['男', '女', '保密']
+        }, function (ret, err) {
+            if (!!ret) {
                 var index = ret.buttonIndex;
-                if(index == 1){
+                if (index == 1) {
                     $api.val($api.byId('sex'), '男');
-                }else if(index==2){
+                } else if (index == 2) {
                     $api.val($api.byId('sex'), '女');
-                }else if(index == 3){
+                } else if (index == 3) {
                     $api.val($api.byId('sex'), '保密');
                 }
             }
         });
     }
 
-    function SaveProfile(){
+    function SaveProfile() {
         var profile = {
             nickname: $api.val($api.byId('nickname')),
             sex: $api.val($api.byId('sex')),
@@ -110,39 +111,39 @@
         UpdateProfile(profile);
     }
 
-    function UpdateProfile(profile){
+    function UpdateProfile(profile) {
         api.showProgress({
             style: 'default',
             animationType: 'fade',
             title: '努力加载中...',
             text: '先喝杯茶...'
         });
-        if(!!userId){
+        if (!!userId) {
             var model = api.require('model');
             var query = api.require('query');
-            query.createQuery(function(ret, err) {
+            query.createQuery(function (ret, err) {
                 if (ret && ret.qid) {
                     var queryId = ret.qid;
                     query.whereEqual({qid: queryId, column: 'userId', value: userId});
                     model.findAll({
                         class: 'UserProfile',
                         qid: queryId
-                    }, function(ret, err) {
+                    }, function (ret, err) {
                         if (ret) {
                             var profileId = ret[0].id;
                             model.updateById({
                                 class: 'UserProfile',
                                 id: profileId,
                                 value: profile
-                            }, function(ret, err){
-                                if(!!ret){
-                                    if(profile.nickname != preProfile.nickname){
+                            }, function (ret, err) {
+                                if (!!ret) {
+                                    if (profile.nickname != preProfile.nickname) {
                                         //修改过用户昵称
                                         UpdateNickName(profile.nickname);
-                                    }else{
+                                    } else {
                                         api.hideProgress();
                                         api.alert({msg: '成功更新用户资料，回到首页'}, function (ret, err) {
-                                            if(!!ret && ret.buttonIndex == 1){
+                                            if (!!ret && ret.buttonIndex == 1) {
                                                 api.closeWin();
                                             }
                                         });
@@ -153,14 +154,14 @@
                     });
                 }
             });
-        }else{
+        } else {
             api.hideProgress();
             api.toast({msg: '非法操作'});
         }
     }
 
-    function UpdateNickName(nickname){
-        if(!!userId){
+    function UpdateNickName(nickname) {
+        if (!!userId) {
             var model = api.require('model');
             model.updateById({
                 class: 'user',
@@ -168,11 +169,11 @@
                 value: {
                     nickname: nickname
                 }
-            }, function(ret, err){
-                if(!!ret){
+            }, function (ret, err) {
+                if (!!ret) {
                     api.hideProgress();
                     api.alert({msg: '成功更新用户资料，回到首页'}, function (ret, err) {
-                        if(!!ret && ret.buttonIndex == 1){
+                        if (!!ret && ret.buttonIndex == 1) {
                             api.closeWin();
                         }
                     });
