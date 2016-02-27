@@ -16,9 +16,7 @@
     </a>
 
     <div class="aui-title">我的资料</div>
-    <a class="aui-pull-right">
-        <span class="aui-iconfont aui-icon-scan" onclick="OpenScanner();"></span>
-    </a>
+    <a class="aui-pull-right" onclick="SetProfile();">修改资料</a>
 </header>
 
 <div class="aui-text-center">
@@ -73,6 +71,52 @@
             }
         });
     };
+
+    function SetProfile() {
+        var userInfo = $api.getStorage('userInfo');
+        if (!userInfo) {
+            api.toast({msg: '非法操作'});
+        } else {
+            var query = api.require('query');
+            query.createQuery(function (ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    query.whereEqual({qid: ret.qid, column: 'userId', value: userInfo.userId});
+                    var model = api.require('model');
+                    model.findAll({
+                        class: "UserProfile",
+                        qid: queryId
+                    }, function (ret, err) {
+                        if (ret) {
+                            var profile;
+                            if(ret.length >= 1){
+                                //正常获取
+                                profile = ret[0];
+                            }else{
+                                //创建新数据
+                                profile = {
+                                    userId: userInfo.userId,
+                                    nickname: userInfo.nickname,
+                                    role: '学生',
+                                    intro: '这家伙很懒什么都没写',
+                                    sex: '男'
+                                };
+                                model.insert({
+                                    class:'UserProfile',
+                                    value: profile
+                                });
+                            }
+                            api.openWin({
+                                name: 'setProfile',
+                                url: './setProfile.html',
+                                pageParam: profile
+                            })
+                        }
+                    });
+                }
+            });
+        }
+    }
 
     function CloseWin() {
         api.closeFrame({
