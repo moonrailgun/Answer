@@ -49,6 +49,9 @@
         <li tapmode="liActive" class="aui-list-view-cell" data-win="list_arrow" onclick="Feedback();">
             <div class="aui-arrow-right">意见反馈</div>
         </li>
+        <li tapmode="liActive" class="aui-list-view-cell" data-win="list_arrow" onclick="More();">
+            <div class="aui-arrow-right">常见问题</div>
+        </li>
         <li tapmode="liActive" class="aui-list-view-cell" data-win="list_arrow" onclick="About();">
             <div class="aui-arrow-right">关于作品</div>
         </li>
@@ -141,6 +144,13 @@
         api.openWin({
             name: 'writeMessage',
             url: '../message/writeMessage.html'
+        });
+    }
+    //常见问题
+    function More(){
+        api.openWin({
+            name: 'more',
+            url: './more.html'
         });
     }
     //关于作品
