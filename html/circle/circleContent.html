@@ -184,7 +184,7 @@
                                         str += '<img src="' + headUrl + '" class="aui-img-object aui-pull-left circleHead">' +
                                                 '<div class="aui-img-body aui-arrow-right">' +
                                                 '<span>' + circleName + '</span>' +
-                                                '<p>圈主:' + master.nickname + '</p>' +
+                                                '<p>圈主:' + (master.nickname || '暂无圈主') + '</p>' +
                                                 '<p>关注:' + circleMemberIds.length + ' 帖子:' + circleArticleNum + '</p></div>'
                                         $api.html($api.byId('circleInfo'), str);
                                     }
@@ -256,7 +256,6 @@
             AddArticle(articleList[i]);
         }
     }
-    alert('a');
 
     function AddArticle(article) {
         var id = article.id;

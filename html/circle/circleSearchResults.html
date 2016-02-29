@@ -8,6 +8,34 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .circleItem {
+            background-color: #FFFFFF;
+            margin-bottom: 10px;
+            height: 100px;
+            display: -webkit-box;
+        }
+
+        .circleItem .circleHead {
+            width: 100px;
+            height: 100px;
+            padding: 16px;
+            border-radius: 100%;
+        }
+
+        .circleItem .circleInfo {
+            height: 100px;
+            -webkit-box-flex: 1;
+            padding: 26px 0;
+        }
+
+        .circleItem span.aui-iconfont {
+            color: #bbbbbb;
+            line-height: 100px;
+            vertical-align: middle;
+            width: 28px;
+        }
+    </style>
 </head>
 <body>
 <header class="aui-bar aui-bar-nav aui-bar-primary">
@@ -15,12 +43,14 @@
         <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
     </a>
 
-    <div class="aui-title">搜索结果 - </div>
+    <div class="aui-title">搜索结果 -</div>
 </header>
-<div id="result"></div>
+<div id="result">
+</div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
+    var defaultCircleHeadImg = '../../image/default_head.jpg';
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));//标题
         var circleName = api.pageParam.text;
@@ -33,6 +63,7 @@
             title: '努力加载中...',
             text: '先喝杯茶...'
         });
+
         var query = api.require('query');
         query.createQuery(function (ret, err) {
             if (ret && ret.qid) {
@@ -53,17 +84,30 @@
                         if (ret.length == 1) {
                             dat.push(ret[0]);
                             api.openWin({
-                                name: 'circleContent',
-                                url: './circleContent.html',
+                                name: 'circleContentFrame',
+                                url: './circleContentFrame.html',
                                 pageParam: {
-                                    data: dat[0]
+                                    circleId: dat[0].id,
+                                    circleName: dat[0].circleName
                                 }
                             });
+                            api.closeWin();//关闭当前窗口
                         } else {
                             for (var i = 0; i < ret.length; i++) {
-                                dat.push(ret[0]);
+                                dat.push(ret[i]);
                             }
-                            alert(JSON.stringify(dat));
+
+                            var str = '';
+                            for (i = 0; i < dat.length; i++) {
+                                var circle = dat[i];
+                                str += '<div class="circleItem" onclick=\'EnterCircle("' + circle.id + '","' + circle.circleName + '")\'>' +
+                                '<img class="circleHead" src="' + circle.circleHeader ? circle.circleHeader.url : defaultCircleHeadImg + '">' +
+                                '<div class="circleInfo"><h1>' + circle.circleName + '</h1>' +
+                                '<p>' + (circle.circleSummary || '&nbsp;') + '</p></div><div>' +
+                                '<span class="aui-iconfont aui-icon-right"></span></div></div>'
+                            }
+
+                            $api.html($api.dom('#result'), str);
                         }
                     } else {
                         $api.html($api.dom('#result'), '<div style="text-align: center"><img src="../../image/nodata_s01.png"></div>');
@@ -72,5 +116,16 @@
             }
         });
     };
+
+    function EnterCircle(circleId, circleName) {
+        api.openWin({
+            name: 'circleContentFrame',
+            url: './circleContentFrame.html',
+            pageParam: {
+                circleId: circleId,
+                circleName: circleName
+            }
+        });
+    }
 </script>
 </html>
