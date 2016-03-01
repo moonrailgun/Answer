@@ -116,7 +116,8 @@
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/utils.js"></script>
 <script type="text/javascript">
-    var defaultHeadImg = '../../image/default_circle_head.jpg';
+    var defaultCircleHeadImg = '../../image/default_circle_head.jpg';
+    var defaultHeadImg = '../../image/default_head.jpg';
     var articleList = [];
     var circleId, circleName;
     var circleMemberIds;
@@ -160,7 +161,7 @@
                 }, function (ret, err) {
                     if (!!ret) {
                         var info = ret[0];
-                        var headUrl = info.circleHeader ? info.circleHeader.url : defaultHeadImg;
+                        var headUrl = info.circleHeader ? info.circleHeader.url : defaultCircleHeadImg;
                         var master = info.circleMasterId;
                         circleMemberIds = info.circleMemberIds;
                         //修改关注按钮
@@ -185,7 +186,7 @@
                                                 '<div class="aui-img-body aui-arrow-right">' +
                                                 '<span>' + circleName + '</span>' +
                                                 '<p>圈主:' + (master.nickname || '暂无圈主') + '</p>' +
-                                                '<p>关注:' + circleMemberIds.length + ' 帖子:' + circleArticleNum + '</p></div>'
+                                                '<p>关注:' + circleMemberIds.length + ' 帖子:' + circleArticleNum + '</p></div>';
                                         $api.html($api.byId('circleInfo'), str);
                                     }
                                 });
@@ -286,25 +287,29 @@
     }
 
     function EnterArticle(articleId) {
-        api.openWin({
-            name: 'circleArticleFrame',
-            url: './circleArticleFrame.html',
-            pageParam: {
-                articleId: articleId,
-                circleId: circleId,
-                circleName: circleName
-            }
-        });
+        if (!!articleId) {
+            api.openWin({
+                name: 'circleArticleFrame',
+                url: './circleArticleFrame.html',
+                pageParam: {
+                    articleId: articleId,
+                    circleId: circleId,
+                    circleName: circleName
+                }
+            });
+        }
     }
 
     function OpenUserInfo(userId) {
-        api.openWin({
-            name: 'userInfo',
-            url: '../profile/userInfo.html',
-            pageParam: {
-                userId: userId
-            }
-        })
+        if (!!userId) {
+            api.openWin({
+                name: 'userInfo',
+                url: '../profile/userInfo.html',
+                pageParam: {
+                    userId: userId
+                }
+            });
+        }
     }
 
     /**
@@ -389,13 +394,14 @@
             $api.html($button, '已关注');
         }
     }
-    function EnterRecommendArticle(){
-        if(!!circleId){
+    function EnterRecommendArticle() {
+        if (!!circleId) {
             api.openWin({
                 name: 'circleRecommendArticleFrame',
                 url: './circleRecommendArticleFrame.html',
                 pageParam: {
-                    circleId: circleId
+                    circleId: circleId,
+                    circleName: circleName
                 }
             });
         }

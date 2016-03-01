@@ -23,14 +23,15 @@
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
         var pageParam = api.pageParam;
-        if(!!pageParam){
+        if (!!pageParam) {
             var circleId = pageParam.circleId;
-            OpenFrame(circleId);
+            var circleName = pageParam.circleName;
+            OpenFrame(circleId, circleName);
         }
     };
 
-    function OpenFrame(circleId){
-        if(!!circleId){
+    function OpenFrame(circleId, circleName) {
+        if (!!circleId) {
             api.showProgress({
                 style: 'default',
                 animationType: 'fade',
@@ -38,7 +39,7 @@
                 text: '先喝杯茶...'
             });
             var query = api.require('query');
-            query.createQuery(function(ret, err) {
+            query.createQuery(function (ret, err) {
                 if (ret && ret.qid) {
                     var queryId = ret.qid;
                     query.whereEqual({qid: queryId, column: 'circleId', value: circleId});
@@ -48,13 +49,18 @@
                     model.findAll({
                         class: "CircleArticle",
                         qid: queryId
-                    }, function(ret, err) {
+                    }, function (ret, err) {
+                        api.hideProgress();
                         if (ret) {
                             var headerHeight = $api.offset($api.dom('header')).h;
                             api.openFrame({
                                 name: 'circleRecommendArticle',
                                 url: './circleRecommendArticle.html',
-                                pageParam: ret,
+                                pageParam: {
+                                    circleId: circleId,
+                                    circleName: circleName,
+                                    articleList: ret
+                                },
                                 rect: {
                                     x: 0,
                                     y: headerHeight,
@@ -62,12 +68,14 @@
                                     h: api.winHeight - headerHeight
                                 }
                             })
+                        } else {
+                            api.toast({msg: '获取失败,请检查您的网络'});
                         }
                     });
                 }
             });
 
-            api.hideProgress();
+
         }
     }
 </script>

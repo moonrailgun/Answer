@@ -8,13 +8,154 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .article {
+            background-color: #FFFFFF;
+            display: block;
+            margin-bottom: 10px;
+            border-top: 1px solid rgba(200, 199, 204, 0.5);
+            border-bottom: 1px solid rgba(200, 199, 204, 0.5);
+            padding: 12px 15px;
+        }
+
+        .articleInfo {
+            display: -webkit-box;
+
+        }
+
+        .articleHead {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .articleAuthor {
+            -webkit-box-flex: 1;
+            line-height: 40px;
+            color: #c47c0c;
+        }
+
+        .articleTime {
+            line-height: 40px;
+        }
+
+        .articleInteract {
+            text-align: right;
+        }
+
+        .articleInteract div {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
+<div id="articleList" class="aui-content"></div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/utils.js"></script>
 <script type="text/javascript">
+    var circleId, circleName;
+    var defaultHeadImg = '../../image/default_head.jpg';
+    var recommendArticleList = [];
     apiready = function () {
-        $api.html($api.dom('body'),JSON.stringify(api.pageParam));
+        var pageParam = api.pageParam;
+        if (!!pageParam) {
+            var articleList = pageParam.articleList;
+            circleId = pageParam.circleId;
+            circleName = pageParam.circleName;
+            for (var i = 0; i < articleList.length; i++) {
+                var item = articleList[i];
+                var article = {
+                    id: item.id,
+                    authorId: item.authorId ? item.authorId.id : '',
+                    authorName: item.authorId ? item.authorId.nickname : '',
+                    headImg: item.authorId ? (item.authorId.avatar ? item.authorId.avatar.url : defaultHeadImg) : defaultHeadImg,
+                    time: Utils.ParseTime(item.updatedAt),
+                    title: item.articleTitle,
+                    content: item.articleContent,
+                    picUrl: item.articlePic ? item.articlePic.url : null,
+                    replyNum: 0,
+                    likeNum: item.articleLikedUserId.length
+                };
+                recommendArticleList.push(article);
+                UpdateArticle();
+
+                (function (article, id) {
+                    var relation_m = api.require('relation');
+                    relation_m.count({
+                        class: 'CircleArticle',
+                        id: id,
+                        column: 'articleReply'
+                    }, function (ret, err) {
+                        if (ret) {
+                            article.replyNum = ret.count;
+                            UpdateArticle();
+                        }
+                    });
+                })(article, item.id);
+            }
+        }
     };
+
+    function UpdateArticle() {
+        $api.html($api.dom('#articleList'), '');
+        for (var i = 0; i < articleList.length; i++) {
+            AddArticle(articleList[i]);
+        }
+    }
+
+    function AddArticle(article) {
+        var id = article.id;
+        var authorId = article.authorId;
+        var authorName = article.authorName;
+        var headImg = article.headImg || defaultHeadImg;
+        var time = article.time;
+        var title = article.title;
+        var summmary = article.content;
+        var picUrl = article.picUrl;
+        var likeNum = article.likeNum;
+        var replyNum = article.replyNum;
+
+        var $articleList = $api.dom('#articleList');
+        var str = '';
+        str += '<div class="article" onclick=\'EnterArticle("' + id + '")\'><div class="articleInfo">' +
+                '<img src="' + headImg + '" class="circleHead articleHead">' +
+                '<div class="articleAuthor aui-ellipsis-1" onclick=\'OpenUserInfo("' + authorId + '")\'>' + authorName + '</div>' +
+                '<p class="articleTime">' + time + '</p></div>' +
+                '<div class="articleContent"><h1 class="articleTitle">' + title + '</h1>' +
+                '<div class="articleContentSummary">' + summmary +
+                (!!picUrl ? '<img width="100%" height="auto" src="' + picUrl + '"></div></div>' : '') +
+                '<div class="articleInteract"><div class="articleLike"><i class="aui-iconfont aui-icon-like aui-text-blue"></i>' +
+                '<span class="aui-text-default">' + likeNum + '</span></div>&nbsp;' +
+                '<div class="articleReply"><i class="aui-iconfont aui-icon-message aui-text-blue"></i>' +
+                '<span class="aui-text-default">' + replyNum + '</span></div></div></div>';
+        $api.append($articleList, str);
+    }
+
+    function EnterArticle(articleId) {
+        if (!!articleId) {
+            api.openWin({
+                name: 'circleArticleFrame',
+                url: './circleArticleFrame.html',
+                pageParam: {
+                    articleId: articleId,
+                    circleId: circleId,
+                    circleName: circleName
+                }
+            });
+        }
+    }
+
+    function OpenUserInfo(userId) {
+        if (!!userId) {
+            api.openWin({
+                name: 'userInfo',
+                url: '../profile/userInfo.html',
+                pageParam: {
+                    userId: userId
+                }
+            });
+        }
+    }
 </script>
 </html>
