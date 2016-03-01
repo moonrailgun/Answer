@@ -94,7 +94,7 @@
             <div id="likeButton" class="aui-btn aui-btn-block aui-btn-danger circleHandle" onclick="AddLike();">
                 <strong class="aui-iconfont aui-icon-add"></strong>关注
             </div>
-            <div class="aui-btn aui-btn-block aui-btn-warning circleHandle">
+            <div class="aui-btn aui-btn-block aui-btn-warning circleHandle" onclick="EnterRecommendArticle();">
                 <strong class="aui-iconfont aui-icon-favor"></strong>精华
             </div>
             <div class="aui-btn aui-btn-block aui-btn-info circleHandle">
@@ -387,6 +387,17 @@
             //改为已关注
             $api.attr($button, 'onclick', 'CancelLike();');
             $api.html($button, '已关注');
+        }
+    }
+    function EnterRecommendArticle(){
+        if(!!circleId){
+            api.openWin({
+                name: 'circleRecommendArticleFrame',
+                url: './circleRecommendArticleFrame.html',
+                pageParam: {
+                    circleId: circleId
+                }
+            });
         }
     }
 </script>
