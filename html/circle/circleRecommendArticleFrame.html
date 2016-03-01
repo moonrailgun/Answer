@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav aui-bar-info">
+    <a class="aui-pull-left">
+        <span class="aui-iconfont aui-icon-left" onclick="api.closeWin()"></span>
+    </a>
+
+    <div class="aui-title">精华帖</div>
+</header>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        $api.fixStatusBar($api.dom('header'));
+        var pageParam = api.pageParam;
+        if(!!pageParam){
+            var circleId = pageParam.circleId;
+            OpenFrame(circleId);
+        }
+    };
+
+    function OpenFrame(circleId){
+        if(!!circleId){
+            api.showProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '正在查找精华帖...',
+                text: '先喝杯茶...'
+            });
+            var query = api.require('query');
+            query.createQuery(function(ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    query.whereEqual({qid: queryId, column: 'circleId', value: circleId});
+                    query.whereEqual({qid: queryId, column: 'isRecommend', value: true});
+                    query.include({qid: queryId, column: 'authorId'});
+                    var model = api.require('model');
+                    model.findAll({
+                        class: "CircleArticle",
+                        qid: queryId
+                    }, function(ret, err) {
+                        if (ret) {
+                            var headerHeight = $api.offset($api.dom('header')).h;
+                            api.openFrame({
+                                name: 'circleRecommendArticle',
+                                url: './circleRecommendArticle.html',
+                                pageParam: ret,
+                                rect: {
+                                    x: 0,
+                                    y: headerHeight,
+                                    w: api.winWidth,
+                                    h: api.winHeight - headerHeight
+                                }
+                            })
+                        }
+                    });
+                }
+            });
+
+            api.hideProgress();
+        }
+    }
+</script>
+</html>

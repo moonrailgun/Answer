@@ -322,14 +322,13 @@
 
     //关注
     function AddLike() {
-        if (!!circleMemberIds) {
+        if (!circleMemberIds) {
             return;
         }//如果成员列表没有加载完毕，直接退出
 
         var userInfo = $api.getStorage('userInfo');
         if (!!userInfo) {
             var userId = userInfo.userId;
-
             if (!IsCircleMember()) {
                 circleMemberIds.push(userId);
                 var model = api.require('model');
@@ -342,14 +341,13 @@
                 }, function (ret, err) {
                     if (ret) {
                         api.toast({msg: '成功关注圈子'});
+                        ChangeLikeButton('cancel');
                     } else {
                         api.toast({msg: '关注失败,请检查你的网络环境'});
                         ChangeLikeButton('add');
                     }
                 });
             }
-
-            ChangeLikeButton('cancel');
         } else {
             api.alert({msg: '您尚未登录，请先登录'});
         }
