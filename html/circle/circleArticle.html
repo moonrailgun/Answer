@@ -116,19 +116,19 @@
 
         </div>
         <div class="articleOperate">
-            <div class="articleOperateItem">
+            <div class="articleOperateItem" onclick="AddFavorite();">
                 <div class="articleOperateIcon">
                     <i class="aui-iconfont aui-icon-favor" style="background-color: #9effa1;"></i>
                 </div>
                 <p>收藏</p>
             </div>
-            <div class="articleOperateItem">
+            <div class="articleOperateItem" onclick="AddLike();">
                 <div class="articleOperateIcon">
                     <i class="aui-iconfont aui-icon-appreciate" style="background-color: #ffb769;"></i>
                 </div>
                 <p>点赞</p>
             </div>
-            <div class="articleOperateItem">
+            <div class="articleOperateItem" onclick="Share();">
                 <div class="articleOperateIcon">
                     <i class="aui-iconfont aui-icon-share" style="background-color: #69d8ff;"></i>
                 </div>
@@ -148,6 +148,7 @@
     var defaultHeadImg = '../../image/default_head.jpg';
     var articleId, circleId, circleName;
     var replyList = [];
+    var article;
     apiready = function () {
         var pageParam = api.pageParam;
         articleId = pageParam.articleId;
@@ -211,7 +212,7 @@
                 }, function (ret, err) {
                     if (ret) {
                         //文章信息
-                        var article = ret[0];
+                        article = ret[0];
                         var headImg = article.authorId.avatar ? article.authorId.avatar.url : defaultHeadImg;
                         var str = '';
                         str += '<div class="userInfoHead"><img src="' + headImg + '"></div>' +
@@ -232,12 +233,102 @@
 
                         //文章标题信息
                         $api.text($api.dom('#articleHeader .articleTitle'), article.articleTitle);
-                        $api.html($api.dom('#articleHeader .circleName'), circleName);
+                        $api.html($api.dom('#articleHeader .circleName'), '>'+circleName);
 
                         //统计信息
                         $api.html($api.dom('#statistics .articleLike span'), article.articleLikedUserId.length);
                     }
                 });
+            }
+        });
+    }
+
+    //点赞
+    function AddLike(){
+        var userInfo = $api.getStorage('userInfo');
+        if(!!userInfo && !! userInfo.userId && !!article){
+            var userId = userInfo.userId;
+            var articleLikedUserId = article.articleLikedUserId || [];
+            if(articleLikedUserId.indexOf(userId) >= 0){
+                api.toast({msg: '已经点赞过了'});
+            }else{
+                articleLikedUserId.push(userId);
+                var model = api.require('model');
+                model.updateById({
+                    class: 'CircleArticle',
+                    id: articleId,
+                    value: {
+                        articleLikedUserId: article.articleLikedUserId
+                    }
+                },function(ret,err){
+                    if(!!ret){
+                        api.toast({msg:'点赞成功'});
+                    }
+                });
+            }
+        }
+    }
+
+    //添加收藏
+    function AddFavorite(){
+        var userInfo = $api.getStorage('userInfo');
+        if(!!userInfo && !!userInfo.userId){
+            var userId = userInfo.userId;
+            api.showProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '先喝杯茶...'
+            });
+
+            var query = api.require('query');
+            query.createQuery(function(ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    query.whereEqual({qid: queryId, column: 'userId', value: userId});
+                    var model = api.require('model');
+                    model.findAll({
+                        class: "Favorite",
+                        qid: queryId
+                    }, function(ret, err) {
+                        if (ret && ret.length > 0) {
+                            var favorite = ret[0];
+                            var favoriteId = favorite.id;
+                            var favoriteArticles = favorite.articles;
+                            favoriteArticles.push(articleId);
+                            model.updateById({
+                                class: 'Favorite',
+                                id: favoriteId,
+                                value: {
+                                    articles: favoriteArticles
+                                }
+                            }, function (ret, err) {
+                                api.hideProgress();
+                                if(ret){
+                                    api.toast({msg: '成功添加到收藏'});
+                                }else{
+                                    api.toast({msg: '添加失败请检查您的网络'});
+                                }
+                            })
+                        }else{
+                            api.hideProgress();
+                            api.toast({msg: '添加失败请检查您的网络'});
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    //分享
+    function Share(){
+        api.actionSheet({
+            title: '分享到',
+            cancelTitle: '取消',
+            buttons: ['Answer好友','QQ','微博']
+        },function( ret, err ){
+            if( ret ){
+                api.alert({msg:'暂未实现'});
             }
         });
     }

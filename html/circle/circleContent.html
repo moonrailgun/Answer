@@ -274,7 +274,7 @@
         var str = '';
         str += '<div class="article" onclick=\'EnterArticle("' + id + '")\'><div class="articleInfo">' +
                 '<img src="' + headImg + '" class="circleHead articleHead">' +
-                '<div class="articleAuthor aui-ellipsis-1" onclick=\'OpenUserInfo("' + authorId + '")\'>' + authorName + '</div>' +
+                '<div class="articleAuthor aui-ellipsis-1" onclick=\'OpenUserInfo("' + authorId + '",event);\'>' + authorName + '</div>' +
                 '<p class="articleTime">' + time + '</p></div>' +
                 '<div class="articleContent"><h1 class="articleTitle">' + title + '</h1>' +
                 '<div class="articleContentSummary">' + summmary +
@@ -313,7 +313,8 @@
         }
     }
 
-    function OpenUserInfo(userId) {
+    function OpenUserInfo(userId,e) {
+        e.stopPropagation();
         if (!!userId) {
             api.openWin({
                 name: 'userInfo',
