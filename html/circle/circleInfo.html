@@ -91,7 +91,7 @@
         </li>
         <li>
             <div>简介</div>
-            <span class="aui-ellipsis-1"></span>
+            <span id="summary" class="aui-ellipsis-1"></span>
         </li>
     </ul>
 </div>
@@ -134,7 +134,7 @@
                             $api.attr($api.dom('#circleHeader img'), 'src', circleHeader);
                             $api.text($api.dom('#circleHeader h1'), circleName);
                             $api.text($api.byId('members'), circleMemberNum);
-
+                            $api.text($api.byId('summary'), circleSummary);
                             if (!!circleMaster) {
                                 $api.attr($api.byId('masterHeader'), 'src', circleMaster.avatar ? circleMaster.avatar.url : defaultHeadImg);
                                 $api.text($api.byId('masterName'), circleMaster.nickname);

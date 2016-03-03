@@ -374,6 +374,8 @@
     //取消关注
     function CancelLike() {
         if (IsCircleMember()) {
+            var userInfo = $api.getStorage('userInfo');
+            var userId = userInfo.userId;
             var index = circleMemberIds.indexOf(userId);
             circleMemberIds.splice(index, 1);
             var model = api.require('model');
