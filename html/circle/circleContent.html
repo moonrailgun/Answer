@@ -87,7 +87,7 @@
 
                 <p>圈主:</p>
 
-                <p>关注:&nbsp; 帖子:&nbsp;</p>
+                <p>成员:&nbsp; 帖子:&nbsp;</p>
             </div>
         </li>
         <li class="aui-list-view-cell circleHandleBlock">
@@ -162,7 +162,7 @@
                     if (!!ret) {
                         var info = ret[0];
                         var headUrl = info.circleHeader ? info.circleHeader.url : defaultCircleHeadImg;
-                        var master = info.circleMasterId;
+                        var master = info.circleMasterId || {};
                         circleMemberIds = info.circleMemberIds;
                         //修改关注按钮
                         if (IsCircleMember()) {
@@ -186,7 +186,7 @@
                                                 '<div class="aui-img-body aui-arrow-right">' +
                                                 '<span>' + circleName + '</span>' +
                                                 '<p>圈主:' + (master.nickname || '暂无圈主') + '</p>' +
-                                                '<p>关注:' + circleMemberIds.length + ' 帖子:' + circleArticleNum + '</p></div>';
+                                                '<p>成员:' + circleMemberIds.length + ' 帖子:' + circleArticleNum + '</p></div>';
                                         $api.html($api.byId('circleInfo'), str);
                                     }
                                 });
