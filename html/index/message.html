@@ -10,43 +10,152 @@
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
 </head>
 <body>
-<div style="position: relative;height: 100%;width: 100%;">
-    <p style="position: absolute;margin: auto;height: 24px;width: 100%;left: 0;right: 0;top: 0;bottom: 0;text-align: center">
-        你还没有任何消息哦~
-    </p>
+<div class="aui-content">
+    <div style="position: relative;height: 100%;width: 100%;">
+        <p style="position: absolute;margin: auto;height: 24px;width: 100%;left: 0;right: 0;top: 0;bottom: 0;text-align: center">
+            你还没有任何消息哦~
+        </p>
+    </div>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/im.js"></script>
 <script type="text/javascript">
     var rong = null;
-    var userId,userToken;
+    var userId, userToken;
     apiready = function () {
         rong = api.require('rongCloud2');
 
         Init();
 
+        //登陆事件
         api.addEventListener({
             name: 'IM_login'
         }, function (ret, err) {
-            if(!!ret){
+            if (!!ret) {
                 userId = ret.userId;
                 userToken = ret.token;
                 Init();
             }
         });
+
+        //登出事件
+        api.addEventListener({
+            name: 'IM_logout'
+        }, function (ret, err) {
+            rong.logout(function (ret, err) {
+                if (!!ret && ret.status === 'success') {
+                    api.toast({msg: '已登出用户'});
+                }
+            });
+        });
     };
 
-    function Init(){
-        if(!!userToken){
-            rong.connect({
-                token: userToken
-            }, function (ret, err) {
-                if (ret.status == 'success')
-                    api.toast({msg: '登陆成功'});
+    //登陆融云
+    function Init() {
+        if (!!rong && !!userToken) {
+            rong.init(function (ret, err) {
+                if (!!ret && ret.status === 'success') {
+                    //初始化完毕，连接融云
+
+                    rong.setConnectionStatusListener(function (ret, err) {
+                        if (!!ret) {
+                            OnConnectionStatusChange(ret.result)
+                        }
+                    });
+
+                    rong.setOnReceiveMessageListener(function (ret, err) {
+                        if (!!ret) {
+                            OnReceiveMessage(ret.result);
+                        }
+                    });
+
+                    rong.connect({
+                        token: userToken
+                    }, function (ret, err) {
+                        if (ret.status == 'success')
+                            api.toast({msg: '登陆成功'});
+                    });
+
+                    //获取会话列表
+                    rong.getConversationList(function (ret, err) {
+                        if (!!ret && ret.status == 'success') {
+                            UpdateConversationList(ret.result);
+                        }
+                    })
+                }
             });
         }
     }
 
+    //当状态发生变化时会被调用
+    function OnConnectionStatusChange(result) {
+        if (result === 'CONNECTED') {
+            //连接成功
+        } else if (result === 'CONNECTING') {
+            //连接中
+        } else if (result === 'DISCONNECTED') {
+            //断开连接
+        } else if (result === 'KICKED') {
+            //用户账户在其他设备登录，本机会被踢掉线
+        } else if (result === 'NETWORK_UNAVAILABLE') {
+            //网络不可用
+        } else if (result === 'SERVER_INVALID') {
+            //服务器异常或无法连接
+        } else if (result === 'TOKEN_INCORRECT') {
+            //Token不正确
+        }
+    }
 
+    //当接受到消息时会被调用
+    function OnReceiveMessage(result) {
+        var left = result.left;
+        var message = result.message;
+
+        api.toast({msg: JSON.stringify(message)});
+    }
+
+    //更新会话列表
+    function UpdateConversationList(result) {
+        $api.html($api.dom('div.aui-content'), JSON.stringify(result));
+    }
+
+    //移除会话
+    function RemoveConversation(conversationType, targetId) {
+        rong.removeConversation({
+            conversationType: conversationType,
+            targetId: targetId
+        }, function (ret, err) {
+            api.toast({msg: ret.status});
+        })
+    }
+
+    //获取所有未读消息
+    function GetTotalUnreadCount() {
+        rong.getTotalUnreadCount(function (ret, err) {
+            api.toast({msg: ret.result});
+        })
+    }
+
+    function GetUnreadCount(conversationType, targetId) {
+        rong.getUnreadCount({
+            conversationType: conversationType,
+            targetId: targetId
+        }, function (ret, err) {
+            api.toast({msg: ret.result});
+        })
+    }
+
+    function CreateDiscussion(discussionName, memberList) {
+        rong.createDiscussion({
+            name: discussionName,
+            userIdList: memberList
+        }, function (ret, err) {
+            if (ret.status == 'success')
+                api.toast({msg: ret.result.discussionId});
+            else
+                api.toast({msg: err.code});
+        })
+    }
 </script>
 </html>

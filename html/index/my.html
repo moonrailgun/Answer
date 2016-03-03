@@ -277,7 +277,7 @@
                             userId: ret.userId,
                             token: ret.token
                         };
-                        $api.setStorage('im', data);
+                        $api.setStorage('im', data);//保存im信息
                         api.sendEvent({
                             name: 'IM_login',
                             extra: {

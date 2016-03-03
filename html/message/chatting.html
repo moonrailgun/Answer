@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+</head>
+<body>
+<div class="aui-content">
+
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var userId;
+    var targetId;
+    var conversationType;
+    var rong;
+    apiready = function () {
+        rong = api.require('rongCloud2');
+
+        var pageParam = api.pageParam;
+        if (!!pageParam) {
+            targetId = pageParam.targetId;
+            conversationType = pageParam.conversationType;
+        }
+        var userInfo = $api.getStorage('userInfo');
+        if (!!userInfo && !!userInfo.userId) {
+            userId = userInfo.userId;
+        }
+
+        //输入键盘
+        var UIChatBox = api.require('UIChatBox');
+        UIChatBox.open({
+            placeholder: '',
+            maxRows: 4,
+            emotionPath: 'widget://image/emotion',
+            texts: {
+                recordBtn: {
+                    normalTitle: '按住 说话',
+                    activeTitle: '松开 结束'
+                },
+                sendBtn: {
+                    title: "发送"
+                }
+            }
+        }, function (ret, err) {
+            if (ret) {
+                if (ret.eventType == 'send') {
+                    var msg = ret.msg;
+                    UIChatBox.closeBoard();
+                    UIChatBox.closeKeyboard();
+                    SendTextMessage(msg);
+                }
+            }
+        });
+    };
+
+    //发送文字消息
+    function SendTextMessage(text) {
+        if (!!rong && !!targetId && !!conversationType) {
+            rong.sendTextMessage({
+                conversationType: conversationType,
+                targetId: targetId,
+                text: text,
+                extra: ''
+            }, function (ret, err) {
+                if (ret.status == 'prepare')
+                    api.toast({msg: JSON.stringify(ret.result.message)});
+                else if (ret.status == 'success')
+                    api.toast({msg: ret.result.message.messageId});
+                else if (ret.status == 'error')
+                    api.toast({msg: err.code});
+            })
+        }
+    }
+
+    //发送图片消息
+    function SendImageMessage(imagePath) {
+        if (!!rong && !!targetId && !!conversationType) {
+            rong.sendImageMessage({
+                conversationType: conversationType,
+                targetId: targetId,
+                imagePath: imagePath,
+                extra: ''
+            }, function (ret, err) {
+                if (ret.status == 'prepare')
+                    api.toast({msg: JSON.stringify(ret.result.message)});
+                else if (ret.status == 'progress')
+                    api.toast({msg: ret.result.progress});
+                else if (ret.status == 'success')
+                    api.toast({msg: ret.result.message.messageId});
+                else if (ret.status == 'error')
+                    api.toast({msg: err.code});
+            })
+        }
+    }
+
+    //发送好友邀请
+    function SendAddFriend() {
+        if (!!rong && !!targetId && !!conversationType) {
+            rong.sendCommandNotificationMessage({
+                conversationType: 'PRIVATE',
+                targetId: '9527',
+                name: 'AddFriend',
+                data: '{"inviteUserId":"' + userId + '"}'
+            }, function (ret, err) {
+                if (ret.status == 'prepare')
+                    api.toast({msg: JSON.stringify(ret.result.message)});
+                else if (ret.status == 'success')
+                    api.toast({msg: ret.result.message.messageId});
+                else if (ret.status == 'error')
+                    api.toast({msg: err.code});
+            });
+        }
+    }
+
+    function GetLatestMessages() {
+        if (!!rong && !!targetId && !!conversationType) {
+            rong.getLatestMessages({
+                conversationType: conversationType,
+                targetId: targetId,
+                count: 20
+            }, function (ret, err) {
+                api.toast({msg: JSON.stringify(ret.result)});
+            });
+        }
+    }
+
+    function GetHistoryMessages(oldestMessageId) {
+        rong.getHistoryMessages({
+            conversationType: conversationType,
+            targetId: targetId,
+            oldestMessageId: oldestMessageId,
+            count: 20
+        }, function (ret, err) {
+            api.toast({msg: JSON.stringify(ret.result)});
+        })
+    }
+</script>
+</html>

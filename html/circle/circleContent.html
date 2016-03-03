@@ -286,8 +286,8 @@
         $api.append($articleList, str);
     }
 
-    function OpenCircleInfo(){
-        if(!!circleId && !!circleName){
+    function OpenCircleInfo() {
+        if (!!circleId && !!circleName) {
             api.openWin({
                 name: 'circleInfo',
                 url: './circleInfo.html',
@@ -313,7 +313,7 @@
         }
     }
 
-    function OpenUserInfo(userId,e) {
+    function OpenUserInfo(userId, e) {
         e.stopPropagation();
         if (!!userId) {
             api.openWin({
