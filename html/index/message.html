@@ -37,7 +37,8 @@
             display: -webkit-box;
             padding: 0 10px;
         }
-        .conversation.actived{
+
+        .conversation.actived {
             background-color: #f4f4f4;
         }
 
@@ -58,7 +59,7 @@
             margin-left: 10px;
         }
 
-        .conversation:last-of-type .conversationInfo{
+        .conversation:last-of-type .conversationInfo {
             border-bottom: 0;
         }
 
@@ -270,7 +271,8 @@
                     userName = userInfo.userName;
                 }
 
-                str += '<div class="conversation" tapmode="actived"><div class="conversationHeader">' +
+                str += '<div class="conversation" tapmode="actived" onclick=\'EnterChattingWindow("' + senderUserId + '","' + type + '")\'>' +
+                        '<div class="conversationHeader">' +
                         '<img src="' + (headUrl || defaultHeadImg) + '"></div>' +
                         '<div class="conversationInfo"><div class="conversationSummary">' +
                         '<div class="conversationTitle">' + (title != "" ? title : userName || '未知') + '</div>' +
@@ -310,6 +312,22 @@
             str = date.pattern('yyyy-MM-dd');
         }
         return str;
+    }
+
+    function EnterChattingWindow(targetId, conversationType) {
+        var userInfo = GetUserInfo(targetId);
+        if (!!userInfo) {
+            api.openWin({
+                name: 'chattingFrame',
+                url: '../message/chattingFrame.html',
+                pageParam: {
+                    targetId: targetId,
+                    targetName: userInfo.userName,
+                    headImgUrl: userInfo.userHeadUrl,
+                    conversationType: conversationType
+                }
+            });
+        }
     }
 
     //移除会话
