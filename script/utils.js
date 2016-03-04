@@ -57,6 +57,9 @@ var Utils = {
     GetTimeDate: function (time) {
         var date = new Date(time);
         return (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + this.Supply(date.getMinutes(), '0', 2) + ':' + this.Supply(date.getSeconds(), '0', 2);
+    },
+    GetMessageTime : function (timestamp) {
+
     }
 };
 

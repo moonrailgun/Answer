@@ -120,7 +120,7 @@
     </style>
 </head>
 <body>
-<div id="loginPage"  class="aui-content" style="display: block;">
+<div id="loginPage" class="aui-content" style="display: block;">
     <div id="head-img"><img src="../../image/default_head.jpg"/></div>
     <div id="login">
         <div class="arrow"></div>
@@ -133,71 +133,72 @@
         <a onclick="OnForgotPassword()" class="aui-pull-right"> 忘记密码？ </a>
     </div>
 </div>
-<div id="profilePage"  class="aui-content" style="display: none;">
-        <ul class="aui-list-view">
-            <li id="userInfo" class="aui-list-view-cell aui-img">
-                <div id="userHead" onclick="ChangePic();">
-                    <img class="aui-img-object" src="../../image/default_head.jpg">
-                </div>
-                <div id="userMain" class="aui-img-body" onclick="OpenInfoWin();">
-                    <div id="profile-nickname">游客</div>
-                    <div id="profile-username">游客</div>
-                </div>
-                <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right" onclick="OpenInfoWin();"></div>
-            </li>
-            <li class="infoBlock">
-                <div id="score" tapmode="liActive" class="infoBlockCell" style="border-right: 1px solid #c8c7cc;">
-                    <div class="infoBlockCellNum">0</div>
-                    <div>积分</div>
-                </div>
-                <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="ShowRank();">
-                    <div class="infoBlockCellNum">0</div>
-                    <div>排名</div>
-                </div>
-            </li>
-        </ul>
-        <ul class="aui-list-view">
-            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
-            <!--<a class="aui-arrow-right" onclick="NoFunction();">我的红包</a>-->
-            <!--</li>-->
-            <li tapmode="liActive" class="aui-list-view-cell">
+<div id="profilePage" class="aui-content" style="display: none;">
+    <ul class="aui-list-view">
+        <li id="userInfo" class="aui-list-view-cell aui-img">
+            <div id="userHead" onclick="ChangePic();">
+                <img class="aui-img-object" src="../../image/default_head.jpg">
+            </div>
+            <div id="userMain" class="aui-img-body" onclick="OpenInfoWin();">
+                <div id="profile-nickname">游客</div>
+                <div id="profile-username">游客</div>
+            </div>
+            <div id="userLeft" class="aui-iconfont aui-icon-qrcode aui-arrow-right" onclick="OpenInfoWin();"></div>
+        </li>
+        <li class="infoBlock">
+            <div id="score" tapmode="liActive" class="infoBlockCell" style="border-right: 1px solid #c8c7cc;">
+                <div class="infoBlockCellNum">0</div>
+                <div>积分</div>
+            </div>
+            <div id="rank" tapmode="liActive" class="infoBlockCell" onclick="ShowRank();">
+                <div class="infoBlockCellNum">0</div>
+                <div>排名</div>
+            </div>
+        </li>
+    </ul>
+    <ul class="aui-list-view">
+        <!--<li tapmode="liActive" class="aui-list-view-cell">-->
+        <!--<a class="aui-arrow-right" onclick="NoFunction();">我的红包</a>-->
+        <!--</li>-->
+        <li tapmode="liActive" class="aui-list-view-cell">
             <a class="aui-arrow-right" onclick="NoFunction();">我的好友</a>
-            </li>
-            <li tapmode="liActive" class="aui-list-view-cell">
-                <a class="aui-arrow-right" onclick="NoFunction();">我的话题</a>
-            </li>
-            <li tapmode="liActive" class="aui-list-view-cell">
-                <a id="favorite" class="aui-arrow-right" onclick="OpenFavoriteWin();">
-                    我的收藏
-                </a>
-            </li>
-            <li tapmode="liActive" class="aui-list-view-cell">
-                <a class="aui-arrow-right" onclick="ShowDownloadManager();">我的下载</a>
-            </li>
-        </ul>
-        <ul class="aui-list-view">
-            <li tapmode="liActive" class="aui-list-view-cell">
-                <a class="aui-arrow-right" onclick="OpenDocumentBank();">资料库</a>
-            </li>
-            <li tapmode="liActive" class="aui-list-view-cell">
-                <a class="aui-arrow-right" onclick="OpenCircle();">学习圈</a>
-            </li>
-            <li tapmode="liActive" class="aui-list-view-cell">
-                <a id="wrongSet" class="aui-arrow-right" onclick="OpenWrongSet();">错题集</a>
-            </li>
-            <!--<li tapmode="liActive" class="aui-list-view-cell">-->
-            <!--<a class="aui-arrow-right" onclick="NoFunction();">计划</a>-->
-            <!--</li>-->
-        </ul>
-        <ul class="aui-list-view">
-            <li tapmode="liActive" class="aui-list-view-cell">
-                <a class="aui-arrow-right" onclick="OpenSettings();">设置</a>
-            </li>
-        </ul>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right" onclick="NoFunction();">我的话题</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a id="favorite" class="aui-arrow-right" onclick="OpenFavoriteWin();">
+                我的收藏
+            </a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right" onclick="ShowDownloadManager();">我的下载</a>
+        </li>
+    </ul>
+    <ul class="aui-list-view">
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right" onclick="OpenDocumentBank();">资料库</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right" onclick="OpenCircle();">学习圈</a>
+        </li>
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a id="wrongSet" class="aui-arrow-right" onclick="OpenWrongSet();">错题集</a>
+        </li>
+        <!--<li tapmode="liActive" class="aui-list-view-cell">-->
+        <!--<a class="aui-arrow-right" onclick="NoFunction();">计划</a>-->
+        <!--</li>-->
+    </ul>
+    <ul class="aui-list-view">
+        <li tapmode="liActive" class="aui-list-view-cell">
+            <a class="aui-arrow-right" onclick="OpenSettings();">设置</a>
+        </li>
+    </ul>
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/mrg.js"></script>
+<script type="text/javascript" src="../../script/sha1.js"></script>
 <script type="text/javascript" src="../../script/im.js"></script>
 <script type="text/javascript">
     //登陆相关
@@ -240,7 +241,7 @@
                             avatar: avatar
                         };
                         $api.setStorage('userInfo', userInfo);//存入本地
-                        SetIMToken(id,nickname);//配置IM信息
+                        SetIMToken(id, nickname);//配置IM信息
                         //页面跳转
                         switchPage(1);
                     }
@@ -262,17 +263,17 @@
         api.alert({msg: "你记性真差"});
     }
 
-    function SetIMToken(userId,userName){
+    function SetIMToken(userId, userName) {
         api.loadSecureValue({
             key: 'rongcloudSecret'
-        },function(ret, err){
-            if(!!ret){
+        }, function (ret, err) {
+            if (!!ret) {
                 var appKey = 'z3v5yqkbvtci0';
                 var appSecret = ret.value;
 
                 rongcloud_im.init(appKey, appSecret);
-                rongcloud_im.getUserToken(userId,userName, function (ret, err) {
-                    if(!!ret) {
+                rongcloud_im.getUserToken(userId, userName, function (ret, err) {
+                    if (!!ret && ret.code == 200) {
                         var data = {
                             userId: ret.userId,
                             token: ret.token
@@ -281,8 +282,8 @@
                         api.sendEvent({
                             name: 'IM_login',
                             extra: {
-                                userId: ret.userId,
-                                token: ret.token
+                                userId: data.userId,
+                                token: data.token
                             }
                         });
                     }
@@ -457,7 +458,7 @@
     }
 
     //打开学习圈
-    function OpenCircle(){
+    function OpenCircle() {
         api.openWin({
             name: 'circle',
             url: '../circle/circle.html'
@@ -465,7 +466,7 @@
     }
 
     //打开设置页面
-    function OpenSettings(){
+    function OpenSettings() {
         api.openWin({
             name: 'settings',
             url: '../settings/setting.html'

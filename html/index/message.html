@@ -8,21 +8,93 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .noMessage {
+            position: absolute;
+            height: 100vh;
+            width: 100vw;
+            left: 0;
+            top: 0;
+        }
+
+        .noMessage p {
+            position: absolute;
+            margin: auto;
+            height: 24px;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            text-align: center
+        }
+
+        .conversationList {
+            background-color: #FFFFFF;
+        }
+
+        .conversation {
+            display: -webkit-box;
+            padding: 0 10px;
+        }
+        .conversation.actived{
+            background-color: #f4f4f4;
+        }
+
+        .conversation .conversationHeader {
+            padding: 4px;
+        }
+
+        .conversation .conversationHeader img {
+            border-radius: 100%;
+            width: 54px;
+            height: 54px;
+        }
+
+        .conversationInfo {
+            border-bottom: 1px solid #ebe8e7;
+            -webkit-box-flex: 1;
+            display: -webkit-box;
+            margin-left: 10px;
+        }
+
+        .conversation:last-of-type .conversationInfo{
+            border-bottom: 0;
+        }
+
+        .conversationInfo .conversationSummary {
+            -webkit-box-flex: 1;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            padding: 4px 8px 0 4px;
+        }
+
+        .conversationInfo .conversationTitle {
+            font-weight: 700;
+        }
+
+        .conversationInfo .latestMessage {
+            color: #8f8f94;
+        }
+
+        .conversationInfo .conversationUpdatedTime {
+            color: #8f8f94;
+        }
+    </style>
 </head>
 <body>
-<div class="aui-content">
-    <div style="position: relative;height: 100%;width: 100%;">
-        <p style="position: absolute;margin: auto;height: 24px;width: 100%;left: 0;right: 0;top: 0;bottom: 0;text-align: center">
-            你还没有任何消息哦~
-        </p>
-    </div>
-</div>
+<div class="noMessage"><p>你还没有任何消息哦~</p></div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/utils.js"></script>
+<script type="text/javascript" src="../../script/sha1.js"></script>
 <script type="text/javascript" src="../../script/im.js"></script>
 <script type="text/javascript">
     var rong = null;
-    var userId, userToken;
+    var userIMId, userIMToken;//IM信息
+    var conversationList = [];
+    var defaultHeadImg = '../../image/default_head.jpg';
+    var userInfoList = [];//用户信息，为用户对象如{userId:'123',userName:'456',userHeadUrl:'http://.../'}
     apiready = function () {
         rong = api.require('rongCloud2');
 
@@ -33,8 +105,8 @@
             name: 'IM_login'
         }, function (ret, err) {
             if (!!ret) {
-                userId = ret.userId;
-                userToken = ret.token;
+                userIMId = ret.value.userId;
+                userIMToken = ret.value.token;
                 Init();
             }
         });
@@ -49,15 +121,39 @@
                 }
             });
         });
+
+        //设置下拉刷新
+        api.setRefreshHeaderInfo({
+            visible: true,
+            bgColor: '#f4f4f4',
+            textColor: '#8f8f94',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function (ret, err) {
+            if (!!rong && !!userIMToken) {
+                rong.getConversationList(function (ret, err) {
+                    if (!!ret && ret.status == 'success') {
+                        UpdateConversationList(ret.result);
+                        api.refreshHeaderLoadDone();
+                    }
+                })
+            }
+        });
     };
 
     //登陆融云
     function Init() {
-        if (!!rong && !!userToken) {
+        var im = $api.getStorage('im');
+        if (!!im) {
+            userIMId = im.userId;
+            userIMToken = im.token;
+        }
+
+        if (!!rong && !!userIMToken) {
             rong.init(function (ret, err) {
                 if (!!ret && ret.status === 'success') {
                     //初始化完毕，连接融云
-
                     rong.setConnectionStatusListener(function (ret, err) {
                         if (!!ret) {
                             OnConnectionStatusChange(ret.result)
@@ -71,18 +167,19 @@
                     });
 
                     rong.connect({
-                        token: userToken
+                        token: userIMToken
                     }, function (ret, err) {
-                        if (ret.status == 'success')
+                        if (ret.status == 'success') {
                             api.toast({msg: '登陆成功'});
-                    });
 
-                    //获取会话列表
-                    rong.getConversationList(function (ret, err) {
-                        if (!!ret && ret.status == 'success') {
-                            UpdateConversationList(ret.result);
+                            //获取会话列表
+                            rong.getConversationList(function (ret, err) {
+                                if (!!ret && ret.status == 'success') {
+                                    UpdateConversationList(ret.result);
+                                }
+                            });
                         }
-                    })
+                    });
                 }
             });
         }
@@ -115,9 +212,104 @@
         api.toast({msg: JSON.stringify(message)});
     }
 
-    //更新会话列表
+    function GetUserInfo(userId) {
+        var userInfo = null;
+        for (var i = 0; i < userInfoList.length; i++) {
+            if (userInfoList[i].userId == userId) {
+                userInfo = userInfoList[i];
+                return userInfo;
+            }
+        }
+
+        var model = api.require('model');
+        model.findById({
+            class: 'user',
+            id: userId
+        }, function (ret, err) {
+            if (!!ret) {
+                var user = {
+                    userId: userId,
+                    userName: ret.nickname,
+                    userHeadUrl: ret.avatar ? ret.avatar.url : defaultHeadImg
+                };
+                userInfoList.push(user);
+                UpdateConversationList();
+            }
+        });
+
+        return userInfo;//这里的userInfo永远为null
+    }
+
+    //更新会话列表,参数可以为空
     function UpdateConversationList(result) {
-        $api.html($api.dom('div.aui-content'), JSON.stringify(result));
+        if (!!result) {
+            conversationList = result;
+        }
+
+        var str = '';
+        if (conversationList.length == 0) {
+            str += '<div class="noMessage"><p>你还没有任何消息哦~</p></div>';
+            $api.html($api.dom('body'), str)
+        } else {
+            str += '<div class="aui-content"><div class="conversationList">';
+            for (var i = 0; i < conversationList.length; i++) {
+                var conversation = conversationList[i];
+                var senderUserId = conversation.senderUserId;
+                var title = conversation.conversationTitle;
+                var type = conversation.conversationType;
+                var receivedStatus = conversation.receivedStatus;
+                var unreadMessageCount = conversation.unreadMessageCount;
+                var sentTime = conversation.sentTime;
+                var latestMessageId = conversation.latestMessageId;
+                var latestMessage = conversation.latestMessage;
+
+                var userInfo = GetUserInfo(senderUserId);
+                var headUrl, userName;
+                if (!!userInfo) {
+                    headUrl = userInfo.userHeadUrl;
+                    userName = userInfo.userName;
+                }
+
+                str += '<div class="conversation" tapmode="actived"><div class="conversationHeader">' +
+                        '<img src="' + (headUrl || defaultHeadImg) + '"></div>' +
+                        '<div class="conversationInfo"><div class="conversationSummary">' +
+                        '<div class="conversationTitle">' + (title != "" ? title : userName || '未知') + '</div>' +
+                        '<div class="latestMessage">' + latestMessage.text + '</div></div>' +
+                        '<div class="conversationUpdatedTime">' + GetChattingTime(sentTime) + '</div></div></div>';
+            }
+            str += '</div></div>';
+        }
+        $api.html($api.dom('body'), str);
+        api.parseTapmode();
+    }
+
+    /**
+     * @return {string}
+     */
+    function GetChattingTime(time) {
+        var date = new Date();
+        var now = Date.now();
+        date.setTime(time);
+
+        var diff = now - time;
+        var diffSec = parseInt(diff / 1000);//间隔秒数
+        var diffMin = parseInt(diffSec / 60);//间隔分钟
+        var diffHour = parseInt(diffMin / 60);//间隔小时
+        var diffDay = parseInt(diffHour / 24);//间隔天数
+
+        var str = '';
+        if (diffHour < 24) {
+            str = date.pattern('HH:mm');
+        } else if (diffDay < 2) {
+            str = '昨天';
+        } else if (diffDay < 7) {
+            str = date.pattern('EEE');
+        } else if (diffDay < 365) {
+            str = date.pattern('MM-dd');
+        } else {
+            str = date.pattern('yyyy-MM-dd');
+        }
+        return str;
     }
 
     //移除会话
@@ -130,13 +322,14 @@
         })
     }
 
-    //获取所有未读消息
+    //获取所有未读消息数量
     function GetTotalUnreadCount() {
         rong.getTotalUnreadCount(function (ret, err) {
             api.toast({msg: ret.result});
         })
     }
 
+    //获取威盾消息数量
     function GetUnreadCount(conversationType, targetId) {
         rong.getUnreadCount({
             conversationType: conversationType,
@@ -146,6 +339,7 @@
         })
     }
 
+    //创建讨论组
     function CreateDiscussion(discussionName, memberList) {
         rong.createDiscussion({
             name: discussionName,

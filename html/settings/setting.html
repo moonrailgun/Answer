@@ -169,9 +169,10 @@
         });
         var user = api.require('user');
         user.logout(function (ret, err) {
-            $api.rmStorage('userInfo');
             api.hideProgress();
             if (ret) {
+                $api.rmStorage('userInfo');
+                $api.rmStorage('im');
                 api.execScript({
                     name:'main',
                     frameName: 'my',
