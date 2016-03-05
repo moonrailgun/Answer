@@ -255,7 +255,7 @@
             str += '<div class="aui-content"><div class="conversationList">';
             for (var i = 0; i < conversationList.length; i++) {
                 var conversation = conversationList[i];
-                var senderUserId = conversation.senderUserId;
+                var targetId = conversation.targetId;
                 var title = conversation.conversationTitle;
                 var type = conversation.conversationType;
                 var receivedStatus = conversation.receivedStatus;
@@ -264,14 +264,14 @@
                 var latestMessageId = conversation.latestMessageId;
                 var latestMessage = conversation.latestMessage;
 
-                var userInfo = GetUserInfo(senderUserId);
+                var userInfo = GetUserInfo(targetId);
                 var headUrl, userName;
                 if (!!userInfo) {
                     headUrl = userInfo.userHeadUrl;
                     userName = userInfo.userName;
                 }
 
-                str += '<div class="conversation" tapmode="actived" onclick=\'EnterChattingWindow("' + senderUserId + '","' + type + '")\'>' +
+                str += '<div class="conversation" tapmode="actived" onclick=\'EnterChattingWindow("' + targetId + '","' + type + '","' + latestMessageId + '")\'>' +
                         '<div class="conversationHeader">' +
                         '<img src="' + (headUrl || defaultHeadImg) + '"></div>' +
                         '<div class="conversationInfo"><div class="conversationSummary">' +
@@ -314,7 +314,7 @@
         return str;
     }
 
-    function EnterChattingWindow(targetId, conversationType) {
+    function EnterChattingWindow(targetId, conversationType, latestMessageId) {
         var userInfo = GetUserInfo(targetId);
         if (!!userInfo) {
             api.openWin({

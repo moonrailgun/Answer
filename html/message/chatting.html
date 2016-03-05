@@ -8,18 +8,30 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        div.aui-content {
+            margin-bottom: 0;
+        }
+        p.history-date{
+            float: left;
+            width: 100%;
+            clear: both;
+        }
+    </style>
 </head>
 <body>
-<div class="aui-content">
-
+<div class="aui-content-padded">
+    
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/utils.js"></script>
 <script type="text/javascript">
     var userId;
     var targetId;
     var conversationType;
     var rong;
+    var messageList = [];
     apiready = function () {
         rong = api.require('rongCloud2');
 
@@ -28,6 +40,8 @@
             targetId = pageParam.targetId;
             conversationType = pageParam.conversationType;
         }
+        GetLatestMessages();//获取最新消息
+
         var userInfo = $api.getStorage('userInfo');
         if (!!userInfo && !!userInfo.userId) {
             userId = userInfo.userId;
@@ -69,12 +83,14 @@
                 text: text,
                 extra: ''
             }, function (ret, err) {
-                if (ret.status == 'prepare')
-                    api.toast({msg: JSON.stringify(ret.result.message)});
-                else if (ret.status == 'success')
-                    api.toast({msg: ret.result.message.messageId});
+                if (ret.status == 'prepare') {
+                    //api.toast({msg: JSON.stringify(ret.result.message)});
+                }
+                else if (ret.status == 'success') {
+                    //api.toast({msg: ret.result.message.messageId});
+                }
                 else if (ret.status == 'error')
-                    api.toast({msg: err.code});
+                    api.toast({msg: '发生错误:' + err.code});
             })
         }
     }
@@ -119,15 +135,67 @@
         }
     }
 
+    //获取最新历史记录，只调用一次
     function GetLatestMessages() {
         if (!!rong && !!targetId && !!conversationType) {
             rong.getLatestMessages({
                 conversationType: conversationType,
                 targetId: targetId,
-                count: 20
+                count: 10
             }, function (ret, err) {
-                api.toast({msg: JSON.stringify(ret.result)});
+                if (!!ret && !!ret.result) {
+                    var result = ret.result;
+                    for (var i = 0; i < result.length; i++) {
+                        var message = result[i];
+                        var content = message.content;
+                        var conversationType = message.conversationType;
+                        var messageDirection = message.messageDirection;
+                        var senderUserId = message.senderUserId;
+                        var messageId = message.messageId;
+                        var sentTime = message.sentTime;
+
+                        messageList.push({
+                            content: content.text,
+                            messageDirection: messageDirection,
+                            senderUserId: senderUserId,
+                            messageId: messageId,
+                            sentTime: sentTime
+                        });
+                    }
+                    messageList.reverse();//倒序一次
+                    UpdateMessageList();
+                }
             });
+        }
+    }
+
+    //更新消息列表
+    function UpdateMessageList() {
+        if (!!messageList && messageList.length > 0) {
+            var str = '';
+            var time = 0;
+            for (var i = 0; i < messageList.length; i++) {
+                var message = messageList[i];
+                //时间信息
+                if (!!message.sentTime && message.sentTime - time > 1000 * 60 * 60) {
+                    //如果消息间隔大于一小时
+                    time = message.sentTime;
+                    var date = new Date();
+                    date.setTime(time);
+                    str += '<p class="aui-text-center history-date">' + date.pattern('MM-dd hh:mm') + '</p>'
+                }
+                //文字信息
+                if (message.messageDirection == 'SEND') {
+                    str += '<div class="aui-chat-sender"><div class="aui-chat-sender-avatar"><img src="../../image/default_head.jpg"></div>' +
+                            '<div class="aui-chat-sender-cont"><div class="aui-chat-right-triangle"></div>' +
+                            '<span>' + message.content + '</span></div></div>';
+                } else {
+                    str += '<div class="aui-chat-receiver"><div class="aui-chat-receiver-avatar"><img src="../../image/default_head.jpg"></div>' +
+                            '<div class="aui-chat-receiver-cont"><div class="aui-chat-left-triangle"></div>' +
+                            '<span>' + message.content + '</span></div></div>';
+                }
+            }
+            $api.html($api.dom('div.aui-content-padded'), str);
         }
     }
 
