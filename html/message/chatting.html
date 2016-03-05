@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="aui-content-padded">
-    
+
 </div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
@@ -32,6 +32,7 @@
     var conversationType;
     var rong;
     var messageList = [];
+    var targetHeadImgUrl = '../../image/default_head.jpg';
     apiready = function () {
         rong = api.require('rongCloud2');
 
@@ -39,6 +40,7 @@
         if (!!pageParam) {
             targetId = pageParam.targetId;
             conversationType = pageParam.conversationType;
+            targetHeadImgUrl = pageParam.headImgUrl || '../../image/default_head.jpg';
         }
         GetLatestMessages();//获取最新消息
 
@@ -171,6 +173,12 @@
 
     //更新消息列表
     function UpdateMessageList() {
+        var myHeadUrl = '../../image/default_head.jpg';
+        var userInfo = $api.getStorage('userInfo');
+        if(!!userInfo && !!userInfo.avatar){
+            myHeadUrl = userInfo.avatar.url;
+        }
+
         if (!!messageList && messageList.length > 0) {
             var str = '';
             var time = 0;
@@ -186,11 +194,11 @@
                 }
                 //文字信息
                 if (message.messageDirection == 'SEND') {
-                    str += '<div class="aui-chat-sender"><div class="aui-chat-sender-avatar"><img src="../../image/default_head.jpg"></div>' +
+                    str += '<div class="aui-chat-sender"><div class="aui-chat-sender-avatar"><img src="'+myHeadUrl+'"></div>' +
                             '<div class="aui-chat-sender-cont"><div class="aui-chat-right-triangle"></div>' +
                             '<span>' + message.content + '</span></div></div>';
                 } else {
-                    str += '<div class="aui-chat-receiver"><div class="aui-chat-receiver-avatar"><img src="../../image/default_head.jpg"></div>' +
+                    str += '<div class="aui-chat-receiver"><div class="aui-chat-receiver-avatar"><img src="'+targetHeadImgUrl+'"></div>' +
                             '<div class="aui-chat-receiver-cont"><div class="aui-chat-left-triangle"></div>' +
                             '<span>' + message.content + '</span></div></div>';
                 }
