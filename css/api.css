@@ -79,3 +79,8 @@ td,th {
 .loading_more:after {
 	content: '加载更多';	
 }
+
+/*自定义部分*/
+img[src*="loading.gif"]{
+	padding-top: 30vh;
+}
