@@ -12,7 +12,8 @@
         div.aui-content {
             margin-bottom: 0;
         }
-        p.history-date{
+
+        p.history-date {
             float: left;
             width: 100%;
             clear: both;
@@ -79,6 +80,7 @@
     //发送文字消息
     function SendTextMessage(text) {
         if (!!rong && !!targetId && !!conversationType) {
+            var message;
             rong.sendTextMessage({
                 conversationType: conversationType,
                 targetId: targetId,
@@ -86,10 +88,19 @@
                 extra: ''
             }, function (ret, err) {
                 if (ret.status == 'prepare') {
-                    //api.toast({msg: JSON.stringify(ret.result.message)});
+                    message = ret.result.message;
                 }
                 else if (ret.status == 'success') {
-                    //api.toast({msg: ret.result.message.messageId});
+                    if(!!message){
+                        messageList.push({
+                            content: message.content.text,
+                            messageDirection: message.messageDirection,
+                            senderUserId: message.senderUserId,
+                            messageId: message.messageId,
+                            sentTime: message.sentTime
+                        });
+                        UpdateMessageList();
+                    }
                 }
                 else if (ret.status == 'error')
                     api.toast({msg: '发生错误:' + err.code});
@@ -97,7 +108,7 @@
         }
     }
 
-    //发送图片消息
+    //todo 发送图片消息
     function SendImageMessage(imagePath) {
         if (!!rong && !!targetId && !!conversationType) {
             rong.sendImageMessage({
@@ -118,7 +129,7 @@
         }
     }
 
-    //发送好友邀请
+    //todo 发送好友邀请
     function SendAddFriend() {
         if (!!rong && !!targetId && !!conversationType) {
             rong.sendCommandNotificationMessage({
@@ -175,7 +186,7 @@
     function UpdateMessageList() {
         var myHeadUrl = '../../image/default_head.jpg';
         var userInfo = $api.getStorage('userInfo');
-        if(!!userInfo && !!userInfo.avatar){
+        if (!!userInfo && !!userInfo.avatar) {
             myHeadUrl = userInfo.avatar.url;
         }
 
@@ -194,11 +205,11 @@
                 }
                 //文字信息
                 if (message.messageDirection == 'SEND') {
-                    str += '<div class="aui-chat-sender"><div class="aui-chat-sender-avatar"><img src="'+myHeadUrl+'"></div>' +
+                    str += '<div class="aui-chat-sender"><div class="aui-chat-sender-avatar"><img src="' + myHeadUrl + '"></div>' +
                             '<div class="aui-chat-sender-cont"><div class="aui-chat-right-triangle"></div>' +
                             '<span>' + message.content + '</span></div></div>';
                 } else {
-                    str += '<div class="aui-chat-receiver"><div class="aui-chat-receiver-avatar"><img src="'+targetHeadImgUrl+'"></div>' +
+                    str += '<div class="aui-chat-receiver"><div class="aui-chat-receiver-avatar"><img src="' + targetHeadImgUrl + '"></div>' +
                             '<div class="aui-chat-receiver-cont"><div class="aui-chat-left-triangle"></div>' +
                             '<span>' + message.content + '</span></div></div>';
                 }
@@ -207,6 +218,7 @@
         }
     }
 
+    //todo 获取历史聊天记录
     function GetHistoryMessages(oldestMessageId) {
         rong.getHistoryMessages({
             conversationType: conversationType,

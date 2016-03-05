@@ -186,7 +186,7 @@
         }
     }
 
-    //当状态发生变化时会被调用
+    //todo 当状态发生变化时会被调用
     function OnConnectionStatusChange(result) {
         if (result === 'CONNECTED') {
             //连接成功
@@ -205,7 +205,7 @@
         }
     }
 
-    //当接受到消息时会被调用
+    //todo 当接受到消息时会被调用
     function OnReceiveMessage(result) {
         var left = result.left;
         var message = result.message;
@@ -330,7 +330,7 @@
         }
     }
 
-    //移除会话
+    //todo 移除会话
     function RemoveConversation(conversationType, targetId) {
         rong.removeConversation({
             conversationType: conversationType,
@@ -340,14 +340,14 @@
         })
     }
 
-    //获取所有未读消息数量
+    //todo 获取所有未读消息数量
     function GetTotalUnreadCount() {
         rong.getTotalUnreadCount(function (ret, err) {
             api.toast({msg: ret.result});
         })
     }
 
-    //获取威盾消息数量
+    //todo 获取未读消息数量
     function GetUnreadCount(conversationType, targetId) {
         rong.getUnreadCount({
             conversationType: conversationType,
@@ -357,7 +357,7 @@
         })
     }
 
-    //创建讨论组
+    //todo 创建讨论组
     function CreateDiscussion(discussionName, memberList) {
         rong.createDiscussion({
             name: discussionName,
