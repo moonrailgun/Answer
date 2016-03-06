@@ -9,10 +9,15 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
+
         .noMessage {
             position: absolute;
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
             left: 0;
             top: 0;
         }
@@ -26,7 +31,7 @@
             right: 0;
             top: 0;
             bottom: 0;
-            text-align: center
+            text-align: center;
         }
 
         .conversationList {
@@ -209,6 +214,8 @@
     function OnReceiveMessage(result) {
         var left = result.left;
         var message = result.message;
+        var targetId = message.targetId;
+        var conversationType = message.conversationType;
 
         var conversation = GetConversation(message.targetId, message.conversationType);
         if (!!conversation) {
@@ -220,11 +227,19 @@
             conversation.latestMessageId = message.messageId;
 
             //更新到聊天窗口
+            api.sendEvent({
+                name: 'IM_receiveMessage',
+                extra: {
+                    targetId: targetId,
+                    conversationType: conversationType,
+                    message: message
+                }
+            });
 
             UpdateConversationList();//更新会话列表
         } else {
             //创建新会话
-            AddConversation(message);
+            AddConversation(targetId, conversationType);
         }
 
         //api.toast({msg: JSON.stringify(message)});
@@ -245,19 +260,18 @@
     }
 
     //添加会话
-    function AddConversation(message) {
-        var targetId = message.targetId;
-        var conversationType = message.conversationType;
-
-        rong.getConversation({
-            conversationType: conversationType,
-            targetId: targetId
-        }, function (ret, err) {
-            if (!!ret && ret.status == 'success') {
-                conversationList.push(ret.result);
-                UpdateConversationList();//更新会话列表
-            }
-        });
+    function AddConversation(targetId, conversationType) {
+        if (!!targetId && !!conversationType) {
+            rong.getConversation({
+                conversationType: conversationType,
+                targetId: targetId
+            }, function (ret, err) {
+                if (!!ret && ret.status == 'success') {
+                    conversationList.push(ret.result);
+                    UpdateConversationList();//更新会话列表
+                }
+            });
+        }
     }
 
     function GetUserInfo(userId) {

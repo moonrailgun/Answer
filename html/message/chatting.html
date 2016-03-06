@@ -9,8 +9,14 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
-        div.aui-content {
+        html, body {
+            min-height: 100%;
+            height: auto;
+        }
+
+        div.aui-content-padded {
             margin-bottom: 0;
+            padding-bottom: 120px;
         }
 
         p.history-date {
@@ -75,6 +81,23 @@
                 }
             }
         });
+
+        //添加消息接收事件
+        api.addEventListener({
+            name: 'IM_receiveMessage'
+        }, function (ret, err) {
+            if (!!ret && !!ret.value && ret.value.targetId == targetId && ret.value.conversationType == conversationType) {
+                var message = ret.value.message;
+                messageList.push({
+                    content: message.content.text,
+                    messageDirection: message.messageDirection,
+                    senderUserId: message.senderUserId,
+                    messageId: message.messageId,
+                    sentTime: message.sentTime
+                });
+                UpdateMessageList();
+            }
+        });
     };
 
     //发送文字消息
@@ -91,7 +114,7 @@
                     message = ret.result.message;
                 }
                 else if (ret.status == 'success') {
-                    if(!!message){
+                    if (!!message) {
                         messageList.push({
                             content: message.content.text,
                             messageDirection: message.messageDirection,
@@ -154,7 +177,7 @@
             rong.getLatestMessages({
                 conversationType: conversationType,
                 targetId: targetId,
-                count: 10
+                count: 20
             }, function (ret, err) {
                 if (!!ret && !!ret.result) {
                     var result = ret.result;
@@ -214,6 +237,17 @@
                             '<span>' + message.content + '</span></div></div>';
                 }
             }
+            //自动控制高度，当滚动条之前就在底部时依旧锁定在底部
+            var screenheight = document.documentElement.clientHeight;
+            var scrollTop = document.body.scrollTop;
+            var scrollHeight = document.body.scrollHeight;
+            if (screenheight + scrollTop > scrollHeight - 100) {
+                //滚动条在底部
+                setTimeout(function () {
+                    api.pageDown({bottom: true});//滚动到底部
+                }, 100);
+            }
+
             $api.html($api.dom('div.aui-content-padded'), str);
         }
     }
