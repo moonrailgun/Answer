@@ -93,7 +93,7 @@
 <script type="text/javascript">
     var rong = null;
     var userIMId, userIMToken;//IM信息
-    var conversationList = [];
+    var conversationList = [];//会话列表
     var defaultHeadImg = '../../image/default_head.jpg';
     var userInfoList = [];//用户信息，为用户对象如{userId:'123',userName:'456',userHeadUrl:'http://.../'}
     apiready = function () {
@@ -205,12 +205,59 @@
         }
     }
 
-    //todo 当接受到消息时会被调用
+    //当接受到消息时会被调用
     function OnReceiveMessage(result) {
         var left = result.left;
         var message = result.message;
 
-        api.toast({msg: JSON.stringify(message)});
+        var conversation = GetConversation(message.targetId, message.conversationType);
+        if (!!conversation) {
+            //已有会话，更新会话属性
+            conversation.latestMessage = message.content;
+            conversation.unreadMessageCount++;
+            conversation.sentTime = message.sentTime;
+            conversation.receivedTime = message.receivedTime;
+            conversation.latestMessageId = message.messageId;
+
+            //更新到聊天窗口
+
+            UpdateConversationList();//更新会话列表
+        } else {
+            //创建新会话
+            AddConversation(message);
+        }
+
+        //api.toast({msg: JSON.stringify(message)});
+    }
+
+    //从会话列表获取会话对象
+    function GetConversation(targetId, conversationType) {
+        var conversation = null;
+        if (!!conversationList) {
+            for (var i = 0; i < conversationList.length; i++) {
+                if (targetId == conversationList[i].targetId && conversationType == conversationList[i].conversationType) {
+                    conversation = conversationList[i];
+                    break;
+                }
+            }
+        }
+        return conversation;
+    }
+
+    //添加会话
+    function AddConversation(message) {
+        var targetId = message.targetId;
+        var conversationType = message.conversationType;
+
+        rong.getConversation({
+            conversationType: conversationType,
+            targetId: targetId
+        }, function (ret, err) {
+            if (!!ret && ret.status == 'success') {
+                conversationList.push(ret.result);
+                UpdateConversationList();//更新会话列表
+            }
+        });
     }
 
     function GetUserInfo(userId) {
@@ -252,6 +299,10 @@
             str += '<div class="noMessage"><p>你还没有任何消息哦~</p></div>';
             $api.html($api.dom('body'), str)
         } else {
+            conversationList.sort(function (a, b) {
+                return a.sentTime - b.sentTime < 0 ? 1 : -1;
+            });//数组排序
+
             str += '<div class="aui-content"><div class="conversationList">';
             for (var i = 0; i < conversationList.length; i++) {
                 var conversation = conversationList[i];
@@ -300,7 +351,7 @@
         var diffDay = parseInt(diffHour / 24);//间隔天数
 
         var str = '';
-        if (diffHour < 24) {
+        if (diffHour < 24 && date.getDay() == (new Date()).getDay()) {
             str = date.pattern('HH:mm');
         } else if (diffDay < 2) {
             str = '昨天';
