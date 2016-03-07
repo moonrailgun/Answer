@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+</head>
+<body>
+<div style="text-align: center"><img src="../../image/loading.gif"></div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var localFriendsInfo;
+    var friendsList;
+    var defaultHeadImg = '../../image/default_head.jpg';
+    apiready = function () {
+        GetFriendsList(function () {
+            CheckFriendsInfo(function () {
+                UpdateFriendList();
+            });
+        });
+    };
+
+    //获取好友列表
+    function GetFriendsList(callback){
+        var userInfo = $api.getStorage('userInfo');
+        if(!!userInfo && !!userInfo.userId){
+            var userId = userInfo.userId;
+
+            //从数据库获取好友ID列表
+            var model = api.require('model');
+            var query = api.require('query');
+            query.createQuery(function(ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    query.whereEqual({qid: queryId, column: 'userId', value: userId});
+                    model.findAll({
+                        class: "Friends",
+                        qid: queryId
+                    }, function(ret, err) {
+                        if (ret && ret.length > 0) {
+                            friendsList = ret[0].friends;
+                            callback();//成功回调
+                        }else{
+                            //新建一条记录
+                            var blankList = {"default" : []};
+                            model.insert({
+                                class:'Friends',
+                                value:{
+                                    userId: userId,
+                                    friends: blankList
+                                }
+                            }, function (ret, err) {
+                                callback();//成功回调
+                            });
+                            friendsList = blankList;
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    //检查好友列表信息，并从网络获取本地没有的数据
+    function CheckFriendsInfo(callback){
+        if(!!friendsList){
+            GetLocalFriendsList();//获取本地列表 todo 本地时间过旧需要全部重新获取
+
+            for(var group in friendsList){//迭代组
+                var friendsIdList = friendsList[group];
+                for(var i = 0;i< friendsIdList.length;i++){//迭代组内id
+                    if(HaveLocalInfo(friendsIdList[i])){
+                        //如果本地已有信息
+                        var info = GetLocalInfo(friendsIdList[i]);
+                        if(!!info){
+                            friendsIdList[i] = {
+                                id: friendsIdList[i],
+                                nickname: info.nickname,
+                                headImg : info.headImg
+                            }
+                        }else{
+                            api.toast({msg: '获取好友信息失败'});
+                        }
+                    }else {
+                        //如果本地还没有信息，则从数据库中获取
+                        (function (friendsIdList,index) {
+                            var id = friendsIdList[index];
+                            var model = api.require('model');
+                            model.findById({
+                                class: 'user',
+                                id: id
+                            },function(ret, err){
+                                if(!!ret){
+                                    var info = {
+                                        id: ret.id,
+                                        nickname: ret.nickname,
+                                        headImg: ret.avatar? ret.avatar.url:defaultHeadImg
+                                    };
+                                    friendsIdList[index] =info;
+                                    
+                                    //存储到本地
+                                    localFriendsInfo.friendsInfo.push(info);
+                                    SetLocalFriendsList();
+                                }
+                            });
+                        })(friendsIdList,i)
+                    }
+                    callback();
+                }
+            }
+
+
+        }
+    }
+
+    //todo 更新用户列表
+    function UpdateFriendList(){
+        if(!!friendsList){
+            for(var group in friendsList){
+                var groupFriends = friendsList[group];
+                for(var i = 0;i<friendsList.length ;i++){
+                    var friend = friendsList[i];
+                    var friendId = friend.id;
+                    var friendName = friend.nickname;
+                    var friendHead = friend.headImg;
+
+                    //todo append html
+                }
+            }
+        }
+    }
+
+    /**
+     * 根据用户id检测是否拥有本地信息
+     * @return {boolean}
+     */
+    function HaveLocalInfo(id){
+        if(!!localFriendsInfo && !!localFriendsInfo.friendsInfo){
+            var infoList = localFriendsInfo.friendsInfo;
+            for(var i = 0;i<infoList.length;i++){
+                if(infoList[i].id == id){
+                    return true;
+                }
+            }
+        }else{
+            return false
+        }
+    }
+
+    /**
+     * 根据用户id获取本地信息
+     * @return {null}
+     */
+    function GetLocalInfo(id){
+        if(!!localFriendsInfo){
+            var infoList = localFriendsInfo.friendsInfo;
+            for(var i = 0;i<infoList.length;i++){
+                if(infoList[i].id == id){
+                    return infoList[i];
+                }
+            }
+        }
+        return null;
+    }
+
+    //获取本地好友信息
+    function GetLocalFriendsList(){
+        localFriendsInfo = $api.getStorage('friends');
+        if(!localFriendsInfo){
+            localFriendsInfo = {
+                friendsInfo:[],
+                updatedAt:Date.now()
+            }
+        }
+    }
+
+    //设置本地好友信息
+    function SetLocalFriendsList(){
+        if(!!localFriendsInfo) {
+            localFriendsInfo.updatedAt = Date.now();//更新为当前时间戳
+            $api.setStorage('friends', localFriendsInfo);
+        }
+    }
+</script>
+</html>

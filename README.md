@@ -79,6 +79,12 @@
 - im
 	- id
 	- token
+- friends
+	- friendsInfo(数组)
+		- id
+		- nickname
+		- headImg
+	- updatedAt
 
 # 数据库架构 #
 ## 数据库 ##
@@ -179,6 +185,9 @@
 - CircleArticleReply 学习圈文章回复列表
 	- authorId (关联_user) 回复者ID
 	- replyContent 回复内容
+- Friends 好友列表
+	- userId 用户ID
+	- friends 好友对象{分组名:["id","id","id"]}
 
 
 # 关于开源 #
