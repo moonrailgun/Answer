@@ -18,6 +18,10 @@
             height: auto;
         }
 
+        #groupList{
+            display: block;
+        }
+
         .group {
             border-bottom: 1px solid #ebe8e7;
             background-color: #FFFFFF;
@@ -73,6 +77,7 @@
         .friendList {
             background-color: #FFFFFF;
             overflow: hidden;
+            position: relative;
         }
 
         .friend {
@@ -122,10 +127,9 @@
     </style>
 </head>
 <body>
-<div style="text-align: center"><img src="../../image/loading.gif"></div>
 <div class="aui-content">
     <ul id="groupList" class="groupList">
-        
+        <div style="text-align: center"><img src="../../image/loading.gif"></div>
     </ul>
 </div>
 </body>
@@ -186,7 +190,6 @@
     function CheckFriendsInfo(callback) {
         if (!!friendsList) {
             GetLocalFriendsList();//获取本地列表 todo 本地时间过旧需要全部重新获取
-
             for (var group in friendsList) {//迭代组
                 var friendsIdList = friendsList[group];
                 for (var i = 0; i < friendsIdList.length; i++) {//迭代组内id
@@ -198,7 +201,7 @@
                                 id: friendsIdList[i],
                                 nickname: info.nickname,
                                 headImg: info.headImg
-                            }
+                            };
                         } else {
                             api.toast({msg: '获取好友信息失败'});
                         }
@@ -222,13 +225,14 @@
                                     //存储到本地
                                     localFriendsInfo.friendsInfo.push(info);
                                     SetLocalFriendsList();
+                                    callback();//重新更新用户列表 todo 可能会影响第一次操作不便，待改进
                                 }
                             });
                         })(friendsIdList, i)
                     }
-                    callback();
                 }
             }
+            callback();
         }
     }
 
@@ -237,17 +241,17 @@
         if (!!friendsList) {
             var str = '';
             for (var group in friendsList) {
-                str += '<li class="group" onclick="ToggleGroup(this)"><div class="groupName">' + group == 'default' ? '默认' : group.toString() + '</div>';
+                str += '<li class="group" onclick="ToggleGroup(this)"><div class="groupName">' + (group == 'default' ? '默认' : group.toString()) + '</div>';
                 var groupFriends = friendsList[group];
-                for (var i = 0; i < friendsList.length; i++) {
-                    var friend = friendsList[i];
+                for (var i = 0; i < groupFriends.length; i++) {
+                    var friend = groupFriends[i];
                     var friendId = friend.id;
                     var friendName = friend.nickname;
                     var friendHead = friend.headImg;
 
                     str += '<div class="friendList">' +
                             '<div class="friend" onclick=\'CreateChatting("' + friendId + '", "' + friendName + '", "' + friendHead + '")\'>' +
-                            '<div class="friendHeader"><img src="' + friendHead || defaultHeadImg + '"></div>' +
+                            '<div class="friendHeader"><img src="' + (friendHead || defaultHeadImg) + '"/></div>' +
                             '<div class="friendInfo"><div class="friendSummary">' +
                             '<div class="friendName">' + friendName + '</div></div></div></div></div>';
                 }
