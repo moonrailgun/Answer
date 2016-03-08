@@ -8,9 +8,146 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+        .group{
+            border-bottom: 1px solid #ebe8e7;
+            background-color: #FFFFFF;
+        }
+        .group:first-of-type{
+            border-top: 1px solid #ebe8e7;
+        }
+        .group .groupName{
+            display: block;
+            padding: 2px 6px 2px 26px;
+            position: relative;
+            line-height: 26px;
+            font-size: 18px;
+            color: #6d6a69;
+        }
+        .group .groupName:before{
+            content: '';
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 8px;
+            left: 6px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 12px solid #d9d6d5;
+            display: inline-block;
+        }
+        .group .groupName.closed:before{
+            content: '';
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            border-top:  8px solid transparent;
+            border-left:12px solid #d9d6d5;
+            border-bottom: 8px solid transparent;
+            display: inline-block;
+        }
+
+        .friendList {
+            background-color: #FFFFFF;
+            overflow: hidden;
+        }
+
+        .friend {
+            display: -webkit-box;
+            padding: 0 10px;
+            position: relative;
+            -webkit-transform: translateX(0px);
+        }
+
+        .friend.actived {
+            background-color: #f4f4f4;
+        }
+
+        .friend .friendHeader {
+            padding: 4px;
+        }
+
+        .friend .friendHeader img {
+            border-radius: 100%;
+            width: 54px;
+            height: 54px;
+        }
+
+        .friendInfo {
+            border-bottom: 1px solid #ebe8e7;
+            -webkit-box-flex: 1;
+            display: -webkit-box;
+            margin-left: 10px;
+        }
+
+        .friend:last-of-type .friendInfo {
+            border-bottom: 0;
+        }
+
+        .friendInfo .friendSummary {
+            -webkit-box-flex: 1;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            padding: 4px 8px 0 4px;
+        }
+
+        .friendInfo .friendName {
+            font-weight: 700;
+        }
+
+        .friendInfo .friendIntro {
+            color: #8f8f94;
+        }
+    </style>
 </head>
 <body>
 <div style="text-align: center"><img src="../../image/loading.gif"></div>
+<div class="aui-content">
+    <ul class="groupList">
+        <li class="group">
+            <div class="groupName">组名</div>
+            <div class="friendList">
+                <div class="friend">
+                    <div class="friendHeader">
+                        <img src="../../image/default_head.jpg"></div>
+                    <div class="friendInfo">
+                        <div class="friendSummary">
+                            <div class="friendName">名字</div>
+                            <div class="friendIntro">介绍</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="friend">
+                    <div class="friendHeader">
+                        <img src="../../image/default_head.jpg"></div>
+                    <div class="friendInfo">
+                        <div class="friendSummary">
+                            <div class="friendName">名字</div>
+                            <div class="friendIntro">介绍</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="group">
+            <div class="groupName">组名</div>
+            <div class="friendList">
+                <div class="friend">
+                    <div class="friendHeader">
+                        <img src="../../image/default_head.jpg"></div>
+                    <div class="friendInfo">
+                        <div class="friendSummary">
+                            <div class="friendName">名字</div>
+                            <div class="friendIntro">介绍</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
