@@ -9,44 +9,65 @@
     <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
     <style>
-        .group{
+        html {
+            height: 100%;
+            background-color: #f4f4f4;
+        }
+
+        body {
+            height: auto;
+        }
+
+        .group {
             border-bottom: 1px solid #ebe8e7;
             background-color: #FFFFFF;
         }
-        .group:first-of-type{
+
+        .group:first-of-type {
             border-top: 1px solid #ebe8e7;
         }
-        .group .groupName{
+
+        .group .groupName {
             display: block;
             padding: 2px 6px 2px 26px;
             position: relative;
-            line-height: 26px;
+            line-height: 34px;
             font-size: 18px;
             color: #6d6a69;
         }
-        .group .groupName:before{
+
+        .group .groupName:before {
             content: '';
             width: 0;
             height: 0;
             position: absolute;
-            top: 8px;
-            left: 6px;
+            top: 12px;
+            left: 8px;
             border-left: 8px solid transparent;
             border-right: 8px solid transparent;
             border-top: 12px solid #d9d6d5;
             display: inline-block;
         }
-        .group .groupName.closed:before{
+
+        .group.closed .groupName:before {
             content: '';
             width: 0;
             height: 0;
             position: absolute;
-            top: 6px;
-            left: 8px;
-            border-top:  8px solid transparent;
-            border-left:12px solid #d9d6d5;
+            top: 10px;
+            left: 10px;
+            border-top: 8px solid transparent;
+            border-left: 12px solid #d9d6d5;
             border-bottom: 8px solid transparent;
             display: inline-block;
+        }
+
+        .group .friendList {
+            display: block;
+        }
+
+        .group.closed .friendList {
+            display: none;
         }
 
         .friendList {
@@ -94,58 +115,17 @@
         }
 
         .friendInfo .friendName {
-            font-weight: 700;
-        }
-
-        .friendInfo .friendIntro {
-            color: #8f8f94;
+            font-weight: 600;
+            line-height: 48px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
 <div style="text-align: center"><img src="../../image/loading.gif"></div>
 <div class="aui-content">
-    <ul class="groupList">
-        <li class="group">
-            <div class="groupName">组名</div>
-            <div class="friendList">
-                <div class="friend">
-                    <div class="friendHeader">
-                        <img src="../../image/default_head.jpg"></div>
-                    <div class="friendInfo">
-                        <div class="friendSummary">
-                            <div class="friendName">名字</div>
-                            <div class="friendIntro">介绍</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="friend">
-                    <div class="friendHeader">
-                        <img src="../../image/default_head.jpg"></div>
-                    <div class="friendInfo">
-                        <div class="friendSummary">
-                            <div class="friendName">名字</div>
-                            <div class="friendIntro">介绍</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </li>
-        <li class="group">
-            <div class="groupName">组名</div>
-            <div class="friendList">
-                <div class="friend">
-                    <div class="friendHeader">
-                        <img src="../../image/default_head.jpg"></div>
-                    <div class="friendInfo">
-                        <div class="friendSummary">
-                            <div class="friendName">名字</div>
-                            <div class="friendIntro">介绍</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </li>
+    <ul id="groupList" class="groupList">
+        
     </ul>
 </div>
 </body>
@@ -249,15 +229,15 @@
                     callback();
                 }
             }
-
-
         }
     }
 
-    //todo 更新用户列表
+    //更新用户列表
     function UpdateFriendList() {
         if (!!friendsList) {
+            var str = '';
             for (var group in friendsList) {
+                str += '<li class="group" onclick="ToggleGroup(this)"><div class="groupName">' + group == 'default' ? '默认' : group.toString() + '</div>';
                 var groupFriends = friendsList[group];
                 for (var i = 0; i < friendsList.length; i++) {
                     var friend = friendsList[i];
@@ -265,10 +245,35 @@
                     var friendName = friend.nickname;
                     var friendHead = friend.headImg;
 
-                    //todo append html
+                    str += '<div class="friendList">' +
+                            '<div class="friend" onclick=\'CreateChatting("' + friendId + '", "' + friendName + '", "' + friendHead + '")\'>' +
+                            '<div class="friendHeader"><img src="' + friendHead || defaultHeadImg + '"></div>' +
+                            '<div class="friendInfo"><div class="friendSummary">' +
+                            '<div class="friendName">' + friendName + '</div></div></div></div></div>';
                 }
+                str += '</li>';
             }
+            $api.html($api.byId('groupList'), str);
         }
+    }
+
+    //切换分组展开与折叠
+    function ToggleGroup(dom) {
+        $api.toggleCls(dom, 'closed');
+    }
+
+    //发起私聊
+    function CreateChatting(id, name, headUrl) {
+        api.openWin({
+            name: 'chattingFrame',
+            url: '../message/chattingFrame.html',
+            pageParam: {
+                targetId: id,
+                targetName: name,
+                headImgUrl: headUrl,
+                conversationType: 'PRIVATE'
+            }
+        })
     }
 
     /**
