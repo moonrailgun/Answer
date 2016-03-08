@@ -362,7 +362,7 @@
                         '<div class="conversationTitle">' + (title != "" ? title : userName || '未知') + '</div>' +
                         '<div class="latestMessage">' + latestMessage.text + '</div></div>' +
                         '<div class="conversationUpdatedTime">' + GetChattingTime(sentTime) + '</div></div>' +
-                        '<div class="btn" onclick=\'RemoveConversation("' + targetId + '","' + type + '",this)\'>删除</div></div>';
+                        '<div class="btn" onclick=\'RemoveConversation("' + targetId + '","' + type + '",this,event);\'>删除</div></div>';
             }
             str += '</div></div>';
         }
@@ -478,15 +478,14 @@
     }
 
     //移除会话
-    function RemoveConversation(targetId, conversationType, dom) {
+    function RemoveConversation(targetId, conversationType, dom, event) {
+        event.stopPropagation();//阻止事件冒泡
         var $conversation = $api.closest(dom, '.conversation');
         $api.remove($conversation);
 
         rong.removeConversation({
             conversationType: conversationType,
             targetId: targetId
-        }, function (ret) {
-            api.toast({msg: JSON.stringify(ret)});
         });
     }
 
