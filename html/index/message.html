@@ -36,15 +36,30 @@
 
         .conversationList {
             background-color: #FFFFFF;
+            overflow: hidden;
         }
 
         .conversation {
             display: -webkit-box;
             padding: 0 10px;
+            position: relative;
+            -webkit-transform: translateX(0px);
         }
 
         .conversation.actived {
             background-color: #f4f4f4;
+        }
+
+        .conversation .btn {
+            position: absolute;
+            top: 0;
+            right: -80px;
+            text-align: center;
+            background-color: #e74c3c;
+            color: #fff;
+            width: 80px;
+            line-height: 68px;
+            font-weight: 600;
         }
 
         .conversation .conversationHeader {
@@ -143,10 +158,13 @@
                         UpdateConversationList(ret.result);
                         api.refreshHeaderLoadDone();
                     }
-                })
+                });
             }
         });
+
+        AddListTouchEvent();
     };
+
 
     //登陆融云
     function Init() {
@@ -259,6 +277,7 @@
         return conversation;
     }
 
+
     //添加会话
     function AddConversation(targetId, conversationType) {
         if (!!targetId && !!conversationType) {
@@ -342,7 +361,8 @@
                         '<div class="conversationInfo"><div class="conversationSummary">' +
                         '<div class="conversationTitle">' + (title != "" ? title : userName || '未知') + '</div>' +
                         '<div class="latestMessage">' + latestMessage.text + '</div></div>' +
-                        '<div class="conversationUpdatedTime">' + GetChattingTime(sentTime) + '</div></div></div>';
+                        '<div class="conversationUpdatedTime">' + GetChattingTime(sentTime) + '</div></div>' +
+                        '<div class="btn" onclick=\'RemoveConversation("' + targetId + '","' + type + '",this)\'>删除</div></div>';
             }
             str += '</div></div>';
         }
@@ -395,14 +415,79 @@
         }
     }
 
-    //todo 移除会话
-    function RemoveConversation(conversationType, targetId) {
+    //添加列表触摸事件
+    function AddListTouchEvent() {
+        var initX;
+        var moveX;
+        var X = 0;
+        var objX = 0;
+
+        window.addEventListener('touchstart', function (event) {
+            event.preventDefault();
+            var obj = $api.closest(event.target, '.conversation');
+            if (!!obj) {
+                initX = event.targetTouches[0].pageX;
+                objX = (obj.style.WebkitTransform.replace(/translateX\(/g, "").replace(/px\)/g, "")) * 1;
+            }
+        });
+        window.addEventListener('touchmove', function (event) {
+            event.preventDefault();
+            var obj = $api.closest(event.target, '.conversation');
+            if (!!obj) {
+                moveX = event.targetTouches[0].pageX;
+                X = moveX - initX;
+                if (objX == 0) {
+                    if (X > 0) {
+                        obj.style.WebkitTransform = "translateX(" + 0 + "px)";
+                    }
+                    else if (X < 0) {
+                        var l = Math.abs(X);
+                        obj.style.WebkitTransform = "translateX(" + -l + "px)";
+                        if (l > 80) {
+                            l = 80;
+                            obj.style.WebkitTransform = "translateX(" + -l + "px)";
+                        }
+                    }
+                } else if (objX < 0) {
+                    if (X > 0) {
+                        var r = -80 + Math.abs(X);
+                        obj.style.WebkitTransform = "translateX(" + r + "px)";
+                        if (r > 0) {
+                            r = 0;
+                            obj.style.WebkitTransform = "translateX(" + r + "px)";
+                        }
+                    }
+                    else {     //向左滑动
+                        obj.style.WebkitTransform = "translateX(" + -80 + "px)";
+                    }
+                }
+            }
+        });
+        window.addEventListener('touchend', function (event) {
+            event.preventDefault();
+            var obj = $api.closest(event.target, '.conversation');
+            if (!!obj) {
+                objX = (obj.style.WebkitTransform.replace(/translateX\(/g, "").replace(/px\)/g, "")) * 1;
+                if (objX > -40) {
+                    obj.style.WebkitTransform = "translateX(" + 0 + "px)";
+                } else {
+                    obj.style.WebkitTransform = "translateX(" + -80 + "px)";
+                }
+            }
+        });
+    }
+
+    //移除会话
+    function RemoveConversation(targetId, conversationType, dom) {
+        var $conversation = $api.closest(dom, '.conversation');
+        $api.remove($conversation);
+
         rong.removeConversation({
             conversationType: conversationType,
             targetId: targetId
-        }, function (ret, err) {
-            api.toast({msg: ret.status});
-        })
+        }, function (ret) {
+            api.toast({msg: JSON.stringify(ret)});
+        });
     }
 
     //todo 获取所有未读消息数量
