@@ -22,6 +22,7 @@
 </header>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/qrcode.js"></script>
 <script type="text/javascript">
     apiready = function () {
         var $header = $api.dom('header');
@@ -43,9 +44,120 @@
         });
     };
 
-    //todo 添加好友
-    function AddFriend(){
+    //添加好友
+    function AddFriend() {
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['文本搜索', '二维码扫描']
+        }, function (ret, err) {
+            if (!!ret) {
+                if (ret.buttonIndex == 1) {
+                    //文本搜索
+                    var UISearchBar = api.require('UISearchBar');
+                    UISearchBar.open({
+                        placeholder: '请输入搜索关键字',
+                        historyCount: 10,
+                        showRecordBtn: true,
+                        texts: {
+                            cancelText: '取消',
+                            clearText: '清除搜索记录'
+                        },
+                        styles: {
+                            navBar: {
+                                bgColor: '#FFFFFF',
+                                borderColor: '#ccc'
+                            },
+                            searchBox: {
+                                bgImg: '',
+                                color: '#000',
+                                height: 44
+                            },
+                            cancel: {
+                                bg: 'rgba(0,0,0,0)',
+                                color: '#D2691E',
+                                size: 16
+                            },
+                            list: {
+                                color: '#696969',
+                                bgColor: '#FFFFFF',
+                                borderColor: '#eee',
+                                size: 16
+                            },
+                            clear: {
+                                color: '#000000',
+                                borderColor: '#ccc',
+                                size: 16
+                            }
+                        }
+                    }, function (ret, err) {
+                        if (!!ret && ret.text != '') {
+                            api.showProgress({
+                                style: 'default',
+                                animationType: 'fade',
+                                title: '努力加载中...',
+                                text: '先喝杯茶...'
+                            });
+                            var text = ret.text;
+                            var query = api.require('query');
+                            query.createQuery(function (ret, err) {
+                                if (ret && ret.qid) {
+                                    var queryId = ret.qid;
+                                    //todo 添加相关名字获取，将查找匹配变为包含匹配
+                                    query.whereEqual({
+                                        qid: queryId,
+                                        column: 'nickname',
+                                        value: text
+                                    });
+                                    var model = api.require('model');
+                                    model.findAll({
+                                        class: "user",
+                                        qid: queryId
+                                    }, function (ret, err) {
+                                        api.hideProgress();
+                                        if (!!ret && ret.length > 0) {
+                                            ShowUserInfo(ret[0].id);
+                                        } else {
+                                            api.alert({msg: '未能找到该用户，请检查您的输入'});
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else if (ret.buttonIndex == 2) {
+                    //二维码扫描
+                    var scanner = api.require('FNScanner');
+                    scanner.openScanner({
+                        autorotation: true,
+                        saveToAlbum: false
+                    }, function (ret) {
+                        if (ret && (ret.eventType == 'success')) {
+                            var content = ret.content;
+                            var qr = new QRCode();
+                            qr.Analysis(content, function (type, code) {
+                                if (type == 'user') {
+                                    ShowUserInfo(code);
+                                }
+                            });
+                        }
+                        else if (ret && ret.eventType == 'fail') {
+                            api.alert({msg: '扫码失败。请重试'});
+                        }
+                    });
+                }
+            }
+        });
+    }
 
+    //显示用户信息
+    function ShowUserInfo(userId) {
+        api.openWin({
+            name: 'userInfo',
+            url: './userInfo.html',
+            pageParam: {
+                userId: userId
+            }
+        })
     }
 </script>
 </html>

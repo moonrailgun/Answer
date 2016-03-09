@@ -3,12 +3,12 @@
  */
 
 var QRCode = function () {
-    this.Analysis = function (codeStr) {
+    this.Analysis = function (codeStr,callback) {
         var tmp = codeStr.split('://');
         var type = tmp[0];
         var code = tmp[1];
         if (type == 'user') {
-            AddFriend(code);
+            callback(type, code);
         } else if (type == 'http' || type == 'https') {
             OpenWebsite(codeStr);
         } else {
@@ -21,10 +21,6 @@ var QRCode = function () {
      */
     this.GenerateCode = function (type, str) {
         return type + "://" + str;
-    };
-
-    var AddFriend = function (userId) {
-        //暂未实现
     };
 
     var OpenWebsite = function (url) {
