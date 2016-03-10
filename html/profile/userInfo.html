@@ -74,7 +74,7 @@
     <div id="userHeader">
         <img id="info-head" src="../../image/default_head.jpg"/>
 
-        <h1 id="info-name">moonrailgun</h1>
+        <h1 id="info-name">&nbsp;</h1>
     </div>
     <ul id="userInfo">
         <li>
@@ -93,21 +93,21 @@
             <div>简介</div>
             <span id="info-intro">&nbsp;</span>
         </li>
-        <li>
-            <div>话题</div>
-            <span id="info-topic-num">&nbsp;</span>
-        </li>
-        <li>
-            <div>回复</div>
-            <span id="info-reply-num">&nbsp;</span>
-        </li>
+        <!--<li>-->
+            <!--<div>话题</div>-->
+            <!--<span id="info-topic-num">&nbsp;</span>-->
+        <!--</li>-->
+        <!--<li>-->
+            <!--<div>回复</div>-->
+            <!--<span id="info-reply-num">&nbsp;</span>-->
+        <!--</li>-->
     </ul>
     <div id="userButton">
         <div class="aui-col-xs-6">
-            <div class="aui-btn aui-btn-default">关注</div>
+            <div class="aui-btn aui-btn-default" onclick="AddFriend();">关注</div>
         </div>
         <div class="aui-col-xs-6">
-            <div class="aui-btn aui-btn-danger">发消息</div>
+            <div class="aui-btn aui-btn-danger" onclick="SendMessage();">发消息</div>
         </div>
     </div>
 </div>
@@ -115,6 +115,7 @@
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
     var userId;
+    var userName, headImgUrl;
     var defaultHeadImg = '../../image/default_head.jpg';
     apiready = function () {
         $api.fixStatusBar($api.dom('header'));
@@ -138,8 +139,8 @@
                 }, function (ret, err) {
                     if (ret) {
                         var userInfo = ret[0];
-                        var nickname = userInfo.nickname;
-                        var url = userInfo.avatar ? userInfo.avatar.url : defaultHeadImg;
+                        var nickname = userName = userInfo.nickname;
+                        var url = headImgUrl = userInfo.avatar ? userInfo.avatar.url : defaultHeadImg;
                         var profile = userInfo.profile || {
                                     role: '未知',
                                     school: '未知',
@@ -156,6 +157,97 @@
                 });
             }
         });
+    }
+
+    //添加好友
+    function AddFriend() {
+        var myUserInfo = $api.getStorage('userInfo');
+        if (!!myUserInfo && !!myUserInfo.userId && !!userId) {
+            api.showProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '先喝杯茶...'
+            });
+
+            var myUserId = myUserInfo.userId;
+
+            var model = api.require('model');
+            var query = api.require('query');
+            query.createQuery(function (ret, err) {
+                if (ret && ret.qid) {
+                    var queryId = ret.qid;
+                    query.whereEqual({qid: queryId, column: 'userId', value: myUserId});
+                    model.findAll({
+                        class: "Friends",
+                        qid: queryId
+                    }, function (ret, err) {
+                        if (!!ret && ret.length > 0) {
+                            //有该条数据
+                            var data = ret[0];
+                            var id = data.id;
+                            var friends = data.friends;
+                            if (!!friends.default) {
+                                if (friends.default.indexOf(userId) >= 0) {
+                                    //已经添加过
+                                    api.toast({msg: '已经添加过该好友了'});
+                                    return;
+                                } else {
+                                    friends.default.push(userId);
+                                }
+                            } else {
+                                friends.default = [userId];
+                            }
+                            model.updateById({
+                                class: 'Friends',
+                                id: id,
+                                value: {
+                                    friends: friends
+                                }
+                            }, function (ret, err) {
+                                api.hideProgress();
+                                if (!!ret) {
+                                    api.toast({msg: '添加好友成功'});
+                                } else {
+                                    api.toast({msg: '网络异常'});
+                                }
+                            })
+                        } else if (!!ret && ret.length == 0) {
+                            //没有该条数据
+                            api.hideProgress();
+                            model.insert({
+                                class: 'Friends',
+                                value: {
+                                    userId: userId,
+                                    friends: {
+                                        default: [userId]
+                                    }
+                                }
+                            });
+                            api.toast({msg: '添加好友成功'});
+                        }
+                    });
+                }
+            });
+        } else {
+            api.toast({msg: '您尚未登录'});
+        }
+    }
+
+    //发送消息
+    function SendMessage() {
+        if (!!userId && !!userName && !!headImgUrl) {
+            api.openWin({
+                name: 'chattingFrame',
+                url: '../message/chattingFrame.html',
+                pageParam: {
+                    targetId: userId,
+                    targetName: userName,
+                    headImgUrl: headImgUrl,
+                    conversationType: 'PRIVATE'
+                }
+            });
+        }
     }
 </script>
 </html>
