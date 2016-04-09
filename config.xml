@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<widget id="A6999447157608" version="0.0.1"> 
+<widget id="A6999447157608" version="0.1.0"> 
   <name>Answer</name>  
-  <description>Answer先生.</description>  
+  <description>Answer先生</description>  
   <author email="developer@apicloud.com" href="http://www.apicloud.com">Developer</author>  
-  <content src="index.html"/>  
+  <content src="html/main.html"/>  
   <preference name="pageBounce" value="false"/>  
   <preference name="appBackground" value="rgba(0,0,0,0.0)"/>  
   <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>  
@@ -14,7 +14,7 @@
   <preference name="autoLaunch" value="true"/>  
   <preference name="fullScreen" value="false"/>  
   <preference name="autoUpdate" value="true"/>  
-  <preference name="smartUpdate" value="false"/>  
+  <preference name="smartUpdate" value="true"/>  
   <preference name="debug" value="true"/>  
   <preference name="statusBarAppearance" value="true"/>  
   <permission name="readPhoneState"/>  
@@ -27,8 +27,8 @@
   <permission name="hardware"/>  
   <permission name="sms"/>  
   <permission name="contact"/>  
-  <access origin="*"/>
-  <feature name="rongCloud2">
-    <param name="appKey" value="z3v5yqkbvtci0" />
-  </feature>
+  <access origin="*"/>  
+  <feature name="rongCloud2"> 
+    <param name="appKey" value="z3v5yqkbvtci0"/> 
+  </feature> 
 </widget>

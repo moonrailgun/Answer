@@ -145,7 +145,23 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function () {
+    	api.loadSecureValue({
+            key: 'appKey'
+        }, function (ret, err) {
+            if(!!ret){
+                var appKey = ret.value;
+                var model = api.require('model');
+
+                model.config({
+                    appId: 'A6999447157608',
+                    appKey: appKey,
+                    host: 'https://d.apicloud.com'
+                });
+            }
+        });
+        
         Init();//初始化框架
+        exitApp();
     };
 
     function Init() {
@@ -205,6 +221,30 @@
             index: index
         });
     }
+
+    //双击退出
+    function exitApp(){
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err){
+            api.toast({
+            	msg: '再按一次返回键退出'
+            });
+            
+            api.addEventListener({
+                name: 'keyback'
+            }, function(ret, err){
+                api.closeWidget({silent:true});
+            });
+            
+            setTimeout(function(){
+            	api.removeEventListener({
+	                name:'keyback'
+                });
+                exitApp();
+            },3000)
+        });
+}
 </script>
 
 </html>
