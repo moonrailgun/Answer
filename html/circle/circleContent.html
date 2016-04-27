@@ -326,6 +326,21 @@
         }
     }
 
+    function OpenWriteArticle(){
+        if (IsCircleMember()) {
+            api.openWin({
+                name: 'writeArticle',
+                url: './writeArticle.html',
+                pageParam: {
+                    circleId: circleId,
+                    circleName: circleName
+                }
+            });
+        } else {
+            api.alert({msg: '你还不是圈子成员，加入圈子以后才能发表哦'});
+        }
+    }
+
     /**
      * @return {boolean}
      */

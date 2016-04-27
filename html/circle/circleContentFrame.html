@@ -43,25 +43,16 @@
         });
     }
 
-    function CloseWin(){
+    function CloseWin() {
         api.closeFrame({name: 'circleContent'});
         api.closeWin();
     }
 
-
     function OpenWriteArticle() {
-        if (IsCircleMember()) {
-            api.openWin({
-                name: 'writeArticle',
-                url: './writeArticle.html',
-                pageParam: {
-                    circleId: circleId,
-                    circleName: circleName
-                }
-            });
-        } else {
-            api.alert({msg: '你还不是圈子成员'});
-        }
+        api.execScript({
+            frameName: 'circleContent',
+            script: 'OpenWriteArticle();'
+        });
     }
 </script>
 </html>

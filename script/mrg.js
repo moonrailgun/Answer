@@ -670,7 +670,7 @@ function GenerateDocumentList($parent, dat) {
                         + '<div class="docListTitle">' + name + '</div>'
                         + '<div class="docListOperate">'
                         + '<div><div class="aui-iconfont aui-icon-form" onclick=\'OpenDocumentFile("' + url + '", "' + name + '")\'>预览</div></div>'
-                        + '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'
+                        /*+ '<div><div class="aui-iconfont aui-icon-down" onclick=\'EnqueueFile("' + url + '", "' + name + '")\'>下载</div></div>'*/
                         + favoriteStr
                         + '</div></li>';
                 }
