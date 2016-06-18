@@ -8,7 +8,7 @@
 ![](http://a4.mzstatic.com/us/r30/Purple69/v4/e9/0e/89/e90e8977-c974-53bd-cd92-ecc305983a5d/screen322x572.jpeg)
 
 ## 应用使用 ##
-ios版本已经发布到[iTunes](https://itunes.apple.com/cn/app/id1068447370)
+ios版本已经发布到[iTunes](https://itunes.apple.com/cn/app/id1068447370)  
 安卓:
 [apk下载](http://downloadpkg.apicloud.com/app/download?path=/zip/62/75/6275314fbb692492b8c18548ab86ea94.apk)
 
