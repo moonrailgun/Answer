@@ -1,4 +1,16 @@
 # Answer #
+基于APICloud的跨平台应用
+
+## 快照 ##
+![](http://a5.mzstatic.com/us/r30/Purple49/v4/54/42/61/54426151-5490-b7a7-86ba-82449412c6b7/screen322x572.jpeg)
+![](http://a4.mzstatic.com/us/r30/Purple49/v4/9e/8d/13/9e8d131c-c058-08b3-a479-797b4d2cbb77/screen322x572.jpeg)
+![](http://a5.mzstatic.com/us/r30/Purple49/v4/32/cc/56/32cc56c0-b35a-8c9c-d12e-0c1ce991913f/screen322x572.jpeg)
+![](http://a4.mzstatic.com/us/r30/Purple69/v4/e9/0e/89/e90e8977-c974-53bd-cd92-ecc305983a5d/screen322x572.jpeg)
+
+## 应用使用 ##
+ios版本已经发布到[iTunes](https://itunes.apple.com/cn/app/id1068447370)
+安卓:
+[apk下载](http://downloadpkg.apicloud.com/app/download?path=/zip/62/75/6275314fbb692492b8c18548ab86ea94.apk)
 
 ## todo-list ##
 - 答题详解
